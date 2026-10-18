@@ -9,6 +9,44 @@
   var _salt = 137;
   var _real = _enc.map(function(c){ return String.fromCharCode(c - _salt); }).join('');
 
+  // === 解锁状态持久化: 修复"刷新后又要重新输入密码" ===
+  var _gK = '__dm_gate_v1';       // localStorage   : 跨会话长期记住(带有效期)
+  var _sK = '__dm_gate_sess_v1';  // sessionStorage : 当前标签页内始终有效
+  var _TTL = 30 * 24 * 60 * 60 * 1000; // 记住 30 天; 设为 0 则只在当前标签页有效(刷新不失效, 关标签页后需重输)
+  function _w(kind, key, val){
+    try {
+      var s = (kind === 'session') ? sessionStorage : localStorage;
+      if (val === null) { s.removeItem(key); } else { s.setItem(key, val); }
+      return true;
+    } catch(e) { return false; }
+  }
+  function _r(kind, key){
+    try {
+      var s = (kind === 'session') ? sessionStorage : localStorage;
+      return s.getItem(key);
+    } catch(e) { return null; }
+  }
+  function _markPassed(){
+    var now = String(Date.now());
+    _w('local', _gK, now);
+    _w('session', _sK, now);
+  }
+  function _alreadyPassed(){
+    if (_r('session', _sK)) return true;            // 当前标签页会话内 -> 刷新直接放行
+    if (_TTL <= 0) return false;
+    var t = _r('local', _gK);
+    if (!t) return false;
+    var n = parseInt(t, 10);
+    if (!n || isNaN(n)) return false;
+    if (Date.now() - n > _TTL) { _w('local', _gK, null); return false; }
+    // 长期票据仍有效: 补齐 session 标记, 后续刷新零开销
+    _w('session', _sK, t);
+    return true;
+  }
+
+  // 已解锁且在有效期内 -> 直接放行(不隐藏 body, 不注入遮罩)
+  if (_alreadyPassed()) return;
+
   // 注入样式(立即生效, 防页面闪烁)
   var _style = document.createElement('style');
   _style.id = '__pw_style';
@@ -68,6 +106,7 @@
     function verify(){
       var v = input.value.trim();
       if (v.length === _real.length && v === _real) {
+        _markPassed(); // 记住已解锁, 刷新/重开不再询问
         // 先解除 body 隐藏, 让页面内容显现
         var st = document.getElementById('__pw_style');
         if (st) st.remove();
