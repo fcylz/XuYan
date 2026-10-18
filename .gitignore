@@ -1,0 +1,10 @@
+# === 构建工具 ===
+obfuscate.js
+index.obfuscated.html
+package.json
+package-lock.json
+node_modules/
+
+# === 系统 ===
+.DS_Store
+Thumbs.db
