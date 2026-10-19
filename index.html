@@ -28185,5 +28185,422 @@ textarea.gm-input { min-height: 52px; resize: none; }
   else boot();
 })();
 </script>
+
+<!-- 多端自适应（电脑 / 平板 / 手机各尺寸） -->
+
+<!-- 多端自适应（电脑 / 平板 / 手机各尺寸） -->
+
+<!-- 多端自适应（电脑 / 平板 / 手机各尺寸） -->
+
+<!-- 多端自适应（电脑 / 平板 / 手机各尺寸） -->
+
+<!-- 多端自适应（电脑 / 平板 / 手机各尺寸） -->
+
+<!-- 多端自适应（电脑 / 平板 / 手机各尺寸） -->
+
+<!-- 多端自适应（电脑 / 平板 / 手机各尺寸） -->
+
+<!-- 多端自适应（电脑 / 平板 / 手机各尺寸） -->
+
+<!-- 多端自适应（电脑 / 平板 / 手机各尺寸） -->
+
+<!-- 多端自适应（电脑 / 平板 / 手机各尺寸） -->
+
+<!-- 多端自适应（电脑 / 平板 / 手机各尺寸） -->
+
+<!-- 多端自适应（电脑 / 平板 / 手机各尺寸） -->
+<style id="dm-adapt-css">
+/* ============================================================
+   渡念 · 多端自适应层
+   ------------------------------------------------------------
+   1) 手机：动态视口高度（地址栏收起/键盘弹起不再裁切）
+   2) 平板 / 桌面：所有全屏沉浸页收窄居中，和首页保持同一「应用道」
+   3) 桌面宽屏：环境光背景 + 应用道阴影，四周浮层贴回应用道边缘
+   4) 小屏 / 横屏矮屏：密度与顶栏、底栏高度补偿
+   5) 鼠标设备：细滚动条 + hover 反馈
+
+   规则一律放在最外层媒体查询 + 靠后声明，不修改原样式，方便回退。
+   ============================================================ */
+
+:root {
+  --dm-app-w: 480px;
+}
+
+/* ---------- 0. 补回被吞掉的容器宽度 ----------
+   原样式表里 body 规则后面多了一个孤立的 }，紧随其后的 #app 规则
+   被浏览器一并丢弃（实测 computed max-width = none），于是桌面端整个
+   页面一直是通栏。这里补回同一条声明，容器才真正居中。 */
+#app {
+  max-width: var(--dm-app-w);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ---------- 1. 视口高度 ---------- */
+/* 先给 vh 兜底，再给 dvh。老 WebView 不支持 dvh 会忽略第二条 */
+.page {
+  height: 100vh;
+  height: 100dvh;
+}
+#app {
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+/* ---------- 2. 比手机宽的屏：全屏页 / 底部面板收窄居中 ---------- */
+@media (min-width: 481px) {
+  .chat-page,
+  .tomato-page,
+  .music-page,
+  .read-page,
+  .cinema-page,
+  .tarot-page,
+  .diary-page,
+  .diary-edit-page,
+  .tide-page,
+  #music-lyric-full,
+  #page-garden,
+  #page-market,
+  #page-giftbox,
+  .read-bottom-bar,
+  .read-settings-panel,
+  .read-comments-panel,
+  .music-playlist-panel,
+  .emoji-panel,
+  .multi-select-bar {
+    width: min(100%, var(--dm-app-w));
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* 这张背景层原本只有 left，补 right 才能靠 auto margin 居中 */
+  .chat-bg-layer {
+    right: 0;
+    width: min(100%, var(--dm-app-w));
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .tab-bar {
+    max-width: var(--dm-app-w);
+  }
+}
+
+/* ---------- 3. 比手机宽的屏：应用道 + 环境光 ---------- */
+/* 下限取 481（只要视口比手机宽就收成一条道）；再用 min-height 排除横屏手机，
+   横屏手机走第 4 节的「铺满"策略，不做收窄 */
+@media (min-width: 481px) and (min-height: 521px) {
+  /* 环境底：直接画在 body 上（body 背景会传播到画布，可靠）
+     柔光用中性白 + 整体压暗，这样任何主题色底上都协调 */
+  body {
+    background-color: var(--chat-page-bg);
+    background-image:
+      radial-gradient(1040px 660px at 16% -12%, rgba(255, 255, 255, .48), transparent 58%),
+      radial-gradient(900px 580px at 86% 108%, rgba(255, 255, 255, .28), transparent 58%),
+      linear-gradient(180deg, rgba(28, 14, 56, .13), rgba(28, 14, 56, .19));
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+  }
+
+  /* 应用道直接用 #app 自己承载（父级伪元素会被 body 背景盖住，实测无效） */
+  #app {
+    background: var(--chat-page-bg);
+    /* 桌面不靠 body 滚动，去掉底部 70px 留白可消掉多余的窗口滚动条 */
+    padding-bottom: 0;
+    box-shadow:
+      0 0 0 1px var(--card-border),
+      0 22px 70px rgba(58, 28, 108, .24),
+      0 0 56px rgba(124, 58, 237, .14);
+  }
+
+  /* 用户自选首页背景时不压住它 */
+  body.has-home-bg #app {
+    background: transparent;
+  }
+
+  body.has-home-bg::before {
+    left: 0;
+    right: 0;
+    width: min(100%, var(--dm-app-w));
+    margin: 0 auto;
+  }
+
+  /* --- 贴在容器右下 / 左上的浮层，改为贴应用道边缘 --- */
+  .diary-fab {
+    right: calc(50% - var(--dm-app-w) / 2 + 20px);
+  }
+  .write-letter-btn {
+    right: calc(50% - var(--dm-app-w) / 2 + 20px);
+  }
+  .cinema-chat-fab {
+    right: calc(50% - var(--dm-app-w) / 2 + 14px);
+  }
+  .cinema-float-btn {
+    right: calc(50% - var(--dm-app-w) / 2 + 16px);
+  }
+  .cinema-fs-exit {
+    right: calc(50% - var(--dm-app-w) / 2 + 10px);
+  }
+  .radar-fab {
+    right: calc(50% - var(--dm-app-w) / 2 + 16px);
+  }
+  .immersive-back-btn {
+    left: calc(50% - var(--dm-app-w) / 2 + 12px);
+  }
+
+  /* 悬浮播放器默认右下角定位（拖动过会被内联 left/top 接管，此处不影响） */
+  .music-float-player {
+    right: calc(50% - var(--dm-app-w) / 2 + 16px);
+  }
+
+  /* --- 以 vw 计算宽度的横条，按应用道收窄 --- */
+  #dm-act-note {
+    width: min(86vw, calc(var(--dm-app-w) - 40px));
+  }
+  .cc-toast {
+    width: min(80vw, calc(var(--dm-app-w) - 48px));
+  }
+  #tts-player-bar {
+    max-width: calc(var(--dm-app-w) - 24px);
+  }
+  .cinema-chat-modal {
+    width: min(70vw, calc(var(--dm-app-w) - 40px));
+  }
+
+  /* --- 鼠标设备的手感 --- */
+  .tab-item:hover {
+    color: var(--text-secondary);
+  }
+}
+
+/* 超大屏：应用道略放宽，桌面观感不至于太窄 */
+@media (min-width: 1600px) {
+  :root {
+    --dm-app-w: 520px;
+  }
+  #app {
+    max-width: var(--dm-app-w);
+  }
+}
+
+/* ---------- 4a. 小屏（≤359px）：压缩横向密度 ---------- */
+@media (max-width: 359px) {
+  :root {
+    --global-font-size: 15px;
+  }
+  .home-header {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+  .daily-words-card {
+    padding: 15px 16px;
+    border-radius: 18px;
+  }
+  .func-grid {
+    gap: 2px;
+  }
+  .tab-item {
+    font-size: 10px;
+    gap: 2px;
+  }
+  .dm-glass-card {
+    width: calc(100vw - 32px);
+  }
+}
+
+/* ---------- 4b. 横屏矮屏（手机横放）：顶栏与底栏压扁 ---------- */
+@media (orientation: landscape) and (max-height: 540px) {
+  /* 横向空间够用，容器放宽，别缩成中间一条 */
+  :root {
+    --dm-app-w: min(760px, 94vw);
+  }
+  #app {
+    padding-bottom: 0;
+  }
+  .tab-bar {
+    height: 52px;
+  }
+  .home-header {
+    padding-top: calc(12px + env(safe-area-inset-top));
+    padding-bottom: 8px;
+  }
+  .modal,
+  .dm-glass-card {
+    max-height: 88vh;
+    overflow-y: auto;
+  }
+}
+
+/* ---------- 5. 鼠标设备：细滚动条 ---------- */
+@media (hover: hover) and (pointer: fine) {
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(124, 58, 237, .24) transparent;
+  }
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(124, 58, 237, .22);
+    border-radius: 99px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(124, 58, 237, .38);
+  }
+}
+
+</style>
+<script id="dm-adapt-js">
+/* ============================================================
+   渡念 · 多端自适应 · 行为层
+   ------------------------------------------------------------
+   CSS 已经把所有「全屏页 / 底部面板」收窄成居中的应用道，
+   但悬浮播放器是 JS 拖拽 + localStorage 记坐标的，坐标是视口绝对
+   值。宽屏下从手机形态换过来会落在应用道外面，这里负责把它拉回来。
+   ============================================================ */
+(function () {
+  'use strict';
+
+  var BALL_ID = 'music-float-player';
+
+  function vw() {
+    return window.innerWidth || document.documentElement.clientWidth || 0;
+  }
+  function vh() {
+    return window.innerHeight || document.documentElement.clientHeight || 0;
+  }
+
+  /* 与 CSS 的 --dm-app-w 保持同一数值（CSS 未加载时兜底 480） */
+  function appW() {
+    try {
+      var raw = getComputedStyle(document.documentElement).getPropertyValue('--dm-app-w');
+      var n = parseFloat(raw);
+      if (isFinite(n) && n > 0) return n;
+    } catch (e) { }
+    return 480;
+  }
+
+  /* 应用道的左右边界与中点 */
+  function box() {
+    var W = vw();
+    var w = Math.min(W, appW());
+    var l = (W - w) / 2;
+    return { l: l, r: l + w, c: l + w / 2, w: w };
+  }
+  window.dmAppBox = box;
+
+  function isWide() {
+    return vw() > 480;
+  }
+
+  /* ---------- 悬浮球：钳回应用道 ---------- */
+  var timer = null;
+
+  function fixBall() {
+    var a = document.getElementById(BALL_ID);
+    if (!a || !isWide()) return;
+
+    var sl = parseFloat(a.style.left);
+    var st = parseFloat(a.style.top);
+    /* 没被拖过就没有内联 left，走 CSS 的 right/bottom，本来就是对的 */
+    if (!isFinite(sl) || !isFinite(st)) return;
+
+    var b = box();
+    var w = a.offsetWidth || 48;
+    var h = a.offsetHeight || 48;
+    var minL = b.l + 6;
+    var maxL = Math.max(minL, b.r - w - 6);
+    var minT = 6;
+    var maxT = Math.max(minT, vh() - h - 6);
+
+    var nl = Math.min(Math.max(sl, minL), maxL);
+    var nt = Math.min(Math.max(st, minT), maxT);
+
+    if (Math.abs(nl - sl) > 0.5) a.style.left = nl + 'px';
+    if (Math.abs(nt - st) > 0.5) a.style.top = nt + 'px';
+  }
+
+  window.dmFixBall = fixBall;
+
+  function scheduleFix() {
+    if (timer) clearTimeout(timer);
+    timer = setTimeout(fixBall, 80);
+  }
+
+  /* ---------- 镜像判定：宽屏下以应用道中心为界 ----------
+     原实现用 window.innerWidth * 0.45，在 1920 屏上会把应用道左半边
+     误判成右半边，导致歌词跑到球左边出界。这里换成真实中线。 */
+  var mirrorImpl = function () {
+    var a = document.getElementById(BALL_ID);
+    if (!a) return;
+
+    if (!isWide()) {
+      if (mirrorImpl.orig) return mirrorImpl.orig.apply(this, arguments);
+      return;
+    }
+
+    var sl = parseFloat(a.style.left);
+    if (!isFinite(sl)) {
+      a.classList.remove('mirror');
+      return;
+    }
+    var w = a.offsetWidth || 48;
+    var b = box();
+    if (sl + w / 2 < b.c) a.classList.add('mirror');
+    else a.classList.remove('mirror');
+  };
+
+  function patchMirror() {
+    if (typeof window.mfUpdateMirror !== 'function') return;
+    if (window.mfUpdateMirror === mirrorImpl) return;
+    mirrorImpl.orig = window.mfUpdateMirror;
+    window.mfUpdateMirror = mirrorImpl;
+  }
+
+  /* ---------- 启动与事件 ---------- */
+  function boot() {
+    patchMirror();
+    fixBall();
+  }
+
+  window.addEventListener('resize', function () {
+    scheduleFix();
+    patchMirror();
+  }, { passive: true });
+
+  window.addEventListener('orientationchange', function () {
+    setTimeout(function () {
+      patchMirror();
+      fixBall();
+    }, 340);
+  });
+
+  /* 拖拽结束（pointer / 触摸 / 鼠标）后校正一次 */
+  function onRelease(e) {
+    var a = document.getElementById(BALL_ID);
+    if (!a) return;
+    var t = e && e.target;
+    if (t && a.contains(t)) setTimeout(fixBall, 60);
+  }
+  document.addEventListener('pointerup', onRelease, true);
+  document.addEventListener('touchend', onRelease, true);
+  document.addEventListener('mouseup', onRelease, true);
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', boot);
+  } else {
+    boot();
+  }
+
+  /* ui.obf.js 与浮球都可能在首帧之后才挂上来，补两次 */
+  setTimeout(boot, 1200);
+  setTimeout(boot, 3000);
+})();
+
+</script>
 </body>
 </html>
