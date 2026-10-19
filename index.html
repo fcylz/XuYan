@@ -16628,40 +16628,6 @@ try { if (navigator && navigator.storage && typeof navigator.storage.persist ===
   }
   .music-float-mini.paused .mfm-disc { animation-play-state: paused; }
 
-  /* 结束听歌：碟片右上角的小圆叉，点了停止播放并收起悬浮球 */
-  .mfm-end {
-    position: absolute;
-    right: 5px;
-    top: -2px;
-    width: 19px;
-    height: 19px;
-    padding: 0;
-    border-radius: 50%;
-    border: 1px solid rgba(255, 255, 255, .98);
-    background: linear-gradient(150deg, rgba(255, 252, 253, .99), rgba(255, 205, 222, .97));
-    box-shadow: 0 2px 6px rgba(188, 128, 152, .40);
-    cursor: pointer;
-    z-index: 3;
-    -webkit-tap-highlight-color: transparent;
-    -webkit-appearance: none;
-    appearance: none;
-  }
-  .mfm-end::before,
-  .mfm-end::after {
-    content: '';
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    width: 9px;
-    height: 1.7px;
-    margin: -0.85px 0 0 -4.5px;
-    border-radius: 1px;
-    background: #c9748f;
-  }
-  .mfm-end::before { transform: rotate(45deg); }
-  .mfm-end::after { transform: rotate(-45deg); }
-  .mfm-end:active { transform: scale(.88); }
-
   .mfm-lyric {
     position: absolute;
     right: 48px;
@@ -16731,7 +16697,7 @@ try { if (navigator && navigator.storage && typeof navigator.storage.persist ===
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 20px;
+    gap: 16px;
     margin-top: 14px;
   }
   .music-float-play-btn {
@@ -16766,6 +16732,33 @@ try { if (navigator && navigator.storage && typeof navigator.storage.persist ===
     transition: transform .18s;
   }
   .music-float-ctrl-btn:active { transform: scale(.9); }
+  /* 结束听歌：展开态里排在播放键左边，点了停止播放 + 收起悬浮球 */
+  .mf-end-btn {
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, .66);
+    border: 1px solid rgba(255, 255, 255, .94);
+    color: #c0738f;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 3px 10px rgba(190, 140, 162, .16);
+    transition: transform .18s;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  .mf-end-btn::before {
+    content: '';
+    width: 9px;
+    height: 9px;
+    border-radius: 2.5px;
+    background: currentColor;
+  }
+  .mf-end-btn:active { transform: scale(.86); }
   .music-float-ctrl-btn::before {
     content: '';
     width: 0;
@@ -26320,7 +26313,6 @@ body.dark-mode #tts-player-bar .tts-bar-stop {
     <div class="music-float-mini" id="music-float-mini" onclick="onMiniClick()">
       <span class="mfm-lyric" id="music-float-mini-lyric"><span class="mfm-lyric-t"></span></span>
       <span class="mfm-disc"></span>
-      <button class="mfm-end" id="music-float-end-btn" onclick="mfEndMusic(event)" title="结束听歌" aria-label="结束听歌"></button>
     </div>
 
     <!-- 展开态：只有歌词 + 播放暂停 + 下一首 -->
@@ -26342,6 +26334,7 @@ body.dark-mode #tts-player-bar .tts-bar-stop {
       </div>
       <div class="music-float-controls">
         <button class="music-float-ctrl-btn mf-off" onclick="musicPlayPrev()" title="上一首">⏮</button>
+        <button class="mf-end-btn" id="music-float-end-btn" onclick="mfEndMusic(event)" title="结束听歌" aria-label="结束听歌"></button>
         <button class="music-float-play-btn" id="music-float-play-btn" onclick="musicTogglePlay()" title="播放/暂停">▶</button>
         <button class="music-float-ctrl-btn" id="music-float-next-btn" onclick="musicPlayNext()" title="下一首"></button>
       </div>
