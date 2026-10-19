@@ -16589,26 +16589,26 @@ try { if (navigator && navigator.storage && typeof navigator.storage.persist ===
   }
   .mfm-disc {
     position: absolute;
-    left: 0;
-    top: 0;
-    width: 48px;
-    height: 48px;
+    left: 5px;
+    top: 5px;
+    width: 38px;
+    height: 38px;
     border-radius: 50%;
     background: linear-gradient(150deg, rgba(255, 253, 254, .96), rgba(255, 214, 230, .90));
     -webkit-backdrop-filter: blur(14px) saturate(165%);
     backdrop-filter: blur(14px) saturate(165%);
     border: 1px solid rgba(255, 255, 255, .96);
     box-shadow: 0 6px 18px rgba(190, 140, 162, .32), inset 0 1px 0 rgba(255, 255, 255, 1), inset 0 -3px 9px rgba(232, 175, 198, .40);
-    animation: discSpin 6s linear infinite;
+    animation: none;
   }
   .mfm-disc::after {
     content: '';
     position: absolute;
     left: 50%;
     top: 50%;
-    width: 14px;
-    height: 14px;
-    margin: -7px 0 0 -7px;
+    width: 11px;
+    height: 11px;
+    margin: -5.5px 0 0 -5.5px;
     border-radius: 50%;
     background: linear-gradient(140deg, #f6b8ce, #e07fa3);
     border: 1.5px solid rgba(255, 255, 255, .95);
@@ -16619,18 +16619,52 @@ try { if (navigator && navigator.storage && typeof navigator.storage.persist ===
     position: absolute;
     left: 50%;
     top: 50%;
-    width: 34px;
-    height: 34px;
-    margin: -17px 0 0 -17px;
+    width: 27px;
+    height: 27px;
+    margin: -13.5px 0 0 -13.5px;
     border-radius: 50%;
     border: 1px solid rgba(222, 152, 180, .42);
-    box-shadow: 0 0 0 3px rgba(222, 152, 180, .18), 0 0 0 7px rgba(222, 152, 180, .10);
+    box-shadow: 0 0 0 2px rgba(222, 152, 180, .18), 0 0 0 5px rgba(222, 152, 180, .10);
   }
   .music-float-mini.paused .mfm-disc { animation-play-state: paused; }
 
+  /* 结束听歌：碟片右上角的小圆叉，点了停止播放并收起悬浮球 */
+  .mfm-end {
+    position: absolute;
+    right: 5px;
+    top: -2px;
+    width: 19px;
+    height: 19px;
+    padding: 0;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, .98);
+    background: linear-gradient(150deg, rgba(255, 252, 253, .99), rgba(255, 205, 222, .97));
+    box-shadow: 0 2px 6px rgba(188, 128, 152, .40);
+    cursor: pointer;
+    z-index: 3;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  .mfm-end::before,
+  .mfm-end::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 9px;
+    height: 1.7px;
+    margin: -0.85px 0 0 -4.5px;
+    border-radius: 1px;
+    background: #c9748f;
+  }
+  .mfm-end::before { transform: rotate(45deg); }
+  .mfm-end::after { transform: rotate(-45deg); }
+  .mfm-end:active { transform: scale(.88); }
+
   .mfm-lyric {
     position: absolute;
-    right: 52px;
+    right: 48px;
     top: 50%;
     transform: translateY(-50%);
     max-width: 172px;
@@ -16672,7 +16706,7 @@ try { if (navigator && navigator.storage && typeof navigator.storage.persist ===
   }
   .music-float-player.mirror .mfm-lyric {
     right: auto;
-    left: 52px;
+    left: 48px;
     text-align: left;
     background: linear-gradient(270deg, rgba(255, 240, 246, 0) 0%, rgba(255, 244, 249, .58) 20%, rgba(255, 251, 253, .93) 100%);
   }
@@ -26286,6 +26320,7 @@ body.dark-mode #tts-player-bar .tts-bar-stop {
     <div class="music-float-mini" id="music-float-mini" onclick="onMiniClick()">
       <span class="mfm-lyric" id="music-float-mini-lyric"><span class="mfm-lyric-t"></span></span>
       <span class="mfm-disc"></span>
+      <button class="mfm-end" id="music-float-end-btn" onclick="mfEndMusic(event)" title="结束听歌" aria-label="结束听歌"></button>
     </div>
 
     <!-- 展开态：只有歌词 + 播放暂停 + 下一首 -->
@@ -27819,7 +27854,7 @@ textarea.gm-input { min-height: 52px; resize: none; }
 (function(){var a={'lines':[],'times':[],'els':[],'idx':-0x1,'trackId':null,'cur':0x0,'dur':0x0,'cache':{},'neg':{},'loading':![],'userScroll':0x0,'open':![]};function b(y){return document['getElementById'](y);}function c(y,z){var A=b(y);if(A&&A['textContent']!==z)A['textContent']=z;}function d(y){return String(y==null?'':y)['replace'](/[&<>"']/g,function(z){var A={'&':'&amp;','<':'&lt;','>':'&gt;','\x22':'&quot;','\x27':'&#39;'};return A[z]||z;});}function e(y){if(!isFinite(y)||y<0x0)y=0x0;var z=Math['floor'](y/0x3c),A=Math['floor'](y%0x3c);return z+':'+(A<0xa?'0'+A:A);}function f(y){var z=[],A=0x0,B,C,D=String(y)['match'](/\[offset:\s*(-?\d+)\s*\]/i);if(D)A=parseInt(D[0x1],0xa)/0x3e8;var E=String(y)['split'](/\r?\n/);for(B=0x0;B<E['length'];B++){var F=E[B],G=[],H=/\[(\d{1,3}):(\d{1,2})(?:[.:](\d{1,3}))?\]/g,I;while(I=H['exec'](F)){var J=parseInt(I[0x1],0xa),K=parseInt(I[0x2],0xa),L=I[0x3]?parseFloat('0.'+I[0x3]):0x0;G['push'](J*0x3c+K+L);}if(!G['length'])continue;var M=F['replace'](/\[[^\]]*\]/g,'')['trim']();if(!M)continue;for(C=0x0;C<G['length'];C++)z['push']({'t':G[C]+A,'s':M});}z['sort'](function(P,Q){return P['t']-Q['t'];});var N=[];for(B=0x0;B<z['length'];B++){var O=z[B];if(O['t']<1.2&&/(https?:\/\/|www\.)/i['test'](O['s']))continue;if(!isFinite(O['t']))continue;if(N['length']&&N[N['length']-0x1]['s']===O['s']&&Math['abs'](N[N['length']-0x1]['t']-O['t'])<0.05)continue;N['push'](O);}return N;}function g(y){return new Promise(function(z,A){var B=typeof AbortController!=='undefined'?new AbortController():null,C=![],D=setTimeout(function(){if(C)return;C=!![];if(B)try{B['abort']();}catch(F){}A(new Error('timeout'));},0x2ee0),E={};if(B)E['signal']=B['signal'];fetch(y,E)['then'](function(F){if(!F['ok'])throw new Error('HTTP\x20'+F['status']);return F['text']();})['then'](function(F){if(C)return;C=!![],clearTimeout(D),z(F);})['catch'](function(F){if(C)return;C=!![],clearTimeout(D),A(F);});});}function h(y){var z=[],A={};function B(E){typeof E==='string'&&E['length']>0x8&&!A[E]&&(A[E]=0x1,z['push'](E));}if(!y)return z;if(typeof y['lrcUrl']==='string')B(y['lrcUrl']);if(typeof y['lrc']==='string'&&/^https?:/i['test'](y['lrc']))B(y['lrc']);var C=y['onlineUrl']||'';if(C){var D=C['replace'](/\.(mp3|m4a|aac|ogg|flac|wav)(\?.*)?$/i,'.lrc');if(D!==C)B(D);}return z;}function i(y,z){var A=0x0,B=y['length']-0x1,C=-0x1,D=z+0.15;while(A<=B){var E=A+B>>0x1;if(y[E]<=D)C=E,A=E+0x1;else B=E-0x1;}return C;}function j(y,z){if(!y||!z)return;var A=y['getBoundingClientRect'](),B=z['getBoundingClientRect'](),C=y['scrollTop']+(B['top']-A['top'])-y['clientHeight']/0x2+z['offsetHeight']/0x2,D=y['scrollHeight']-y['clientHeight'];if(C<0x0)C=0x0;if(C>D)C=D;y['scrollTop']=C;}function k(){var y=b('mlf-body');if(!y)return;a['els']=[];if(!a['lines']['length']){y['innerHTML']='<div\x20class=\x22mlf-empty\x22>'+(a['loading']?'正在加载歌词…':'这首歌暂无歌词')+'</div>';return;}var z='';for(var A=0x0;A<a['lines']['length'];A++){z+='<div\x20class=\x22mlf-line\x22\x20onclick=\x22seekMusicLyric('+A+')\x22>'+d(a['lines'][A]['s'])+'</div>';}y['innerHTML']=z;var B=y['children'];for(var C=0x0;C<B['length'];C++)a['els']['push'](B[C]);}function l(y,z,A,B){var C=b(y);if(!C)return;var D=a['lines'],E=a['idx'];if(!D['length']){C['classList']['remove']('show');return;}C['classList']['add']('show'),c(z,E>0x0?D[E-0x1]['s']:''),c(A,E>=0x0?D[E]['s']:D[0x0]['s']),c(B,E+0x1<D['length']?D[E+0x1]['s']:'');}function m(){var y=b('room-lyric-card');if(!y)return;var z=a['lines'],A=a['idx'],B=typeof musicPlayerState!=='undefined'?musicPlayerState:null,C=B?B['currentTrackData']:null;y['classList']['add']('show'),z['length']?(c('rlc-prev',A>0x0?z[A-0x1]['s']:''),c('rlc-cur',A>=0x0?z[A]['s']:z[0x0]['s']),c('rlc-next',A+0x1<z['length']?z[A+0x1]['s']:'')):(c('rlc-prev',''),c('rlc-cur',C?'♪\x20这首歌暂无歌词':'先从歌单挑一首'),c('rlc-next',''));}function n(){var y=b('music-float-mini-lyric');if(!y)return;var z=y['firstElementChild'];if(!z)return;y['classList']['remove']('scrolling'),y['style']['removeProperty']('--roll-dist'),y['style']['removeProperty']('--roll-dur');var A=y['clientWidth']-0x10,B=z['scrollWidth'];if(A>0x0&&B>A+0x4){var C=B-A+0xa;y['style']['setProperty']('--roll-dist',C+'px'),y['style']['setProperty']('--roll-dur',Math['max'](0x5,Math['round'](C/0x16)+0x3)+'s'),y['classList']['add']('scrolling');}}window['mfFitMini']=n;function o(){var y=b('music-float-mini-lyric'),z=b('music-float-mini');if(!y||!z)return;var A=y['firstElementChild'];!A&&(A=document['createElement']('span'),A['className']='mfm-lyric-t',y['appendChild'](A));var B=a['lines'],C=a['idx'];B['length']&&C>=0x0?(A['textContent']!==B[C]['s']&&(A['textContent']=B[C]['s'],n()),z['classList']['add']('has-lyric')):(A['textContent']&&(A['textContent']='',y['classList']['remove']('scrolling')),z['classList']['remove']('has-lyric'));}var p={'sequence':'🔁','single':'🔂','random':'🔀'};function q(y){var z=y['currentTrackData'],A=b('room-control-card');if(A){if(z)A['classList']['remove']('idle');else A['classList']['add']('idle');}var B=b('room-now');if(B){var C=z?'正在播放\x20·\x20'+(z['name']||'未知歌曲'):'还没有在听的歌';if(B['textContent']!==C)B['textContent']=C;}var D=b('room-play-btn');if(D){var E=y['isPlaying']?'⏸':'▶';if(D['textContent']!==E)D['textContent']=E;}var F=b('room-loop-btn');if(F){var G=p[y['loopMode']]||p['sequence'];if(F['textContent']!==G)F['textContent']=G;if(y['loopMode']==='single')F['classList']['add']('single');else F['classList']['remove']('single');}}function r(){var y=a['lines'],z=a['idx'];l('music-lyric-card','mlc-prev','mlc-cur','mlc-next'),m(),o();var A=b('music-float-lyric');if(A){if(y['length']&&z>=0x0){if(A['textContent']!==y[z]['s'])A['textContent']=y[z]['s'];A['classList']['add']('show'),A['classList']['remove']('empty');}else{var B=typeof musicPlayerState!=='undefined'?musicPlayerState:null;if(B&&B['currentTrackData']){if(A['textContent']!=='♪\x20纯音乐')A['textContent']='♪\x20纯音乐';A['classList']['add']('show'),A['classList']['add']('empty');}else A['classList']['remove']('show');}}if(a['els']['length']){for(var C=0x0;C<a['els']['length'];C++)a['els'][C]['classList']['remove']('cur');var D=a['els'][z<0x0?0x0:z];if(D){D['classList']['add']('cur');if(a['open']&&Date['now']()-a['userScroll']>0xdac)j(b('mlf-body'),D);}}if(a['open'])c('mlf-time',e(a['cur'])+'\x20/\x20'+e(a['dur']));}function s(y){a['lines']=y,a['times']=[];for(var z=0x0;z<y['length'];z++)a['times']['push'](y[z]['t']);a['loading']=![];var A=typeof musicPlayerState!=='undefined'&&musicPlayerState?musicPlayerState['audio']:null;a['cur']=A?A['currentTime']||0x0:0x0,a['idx']=i(a['times'],a['cur']),k(),r();}function t(y){a['lines']=[],a['times']=[],a['els']=[],a['idx']=-0x1,a['loading']=!!y,k(),r();}function u(y,z,A){if(a['trackId']!==A)return;if(z>=y['length']){t(![]);return;}var B=y[z];if(a['neg'][B]){u(y,z+0x1,A);return;}if(a['cache'][B]){s(a['cache'][B]);return;}a['loading']=!![],k(),g(B)['then'](function(C){if(a['trackId']!==A)return;var D=f(C);if(!D['length']){a['neg'][B]=0x1,u(y,z+0x1,A);return;}a['cache'][B]=D,s(D);})['catch'](function(){if(a['trackId']!==A)return;a['neg'][B]=0x1,u(y,z+0x1,A);});}function v(y,z){var A=y['id'];t(!![]),c('mlf-title',y['name']||'正在播放'),c('mlf-artist',y['artist']||'');var B=function(C){if(a['trackId']!==A)return;var D=h(C||z||y);if(!D['length']){t(![]);return;}u(D,0x0,A);};try{typeof MusicDB!=='undefined'&&MusicDB['getTrack']?MusicDB['getTrack'](A)['then'](B)['catch'](function(){B(z);}):B(z);}catch(C){B(z);}}function w(){var y=typeof musicPlayerState!=='undefined'?musicPlayerState:null;if(!y)return;var z=y['currentTrackData'],A=z&&z['id']?z['id']:null;if(A!==a['trackId']){a['trackId']=A;if(A)v(z,z);else t(![]),c('mlf-title','未在播放'),c('mlf-artist','');}var B=y['audio'];B&&(a['cur']=B['currentTime']||0x0,a['dur']=B['duration']||0x0);if(a['open'])c('mlf-time',e(a['cur'])+'\x20/\x20'+e(a['dur']));q(y);if(!a['times']['length'])return;var C=i(a['times'],a['cur']);C!==a['idx']&&(a['idx']=C,r());}function x(){var y=b('mlf-body');if(!y||y['__lg'])return;y['__lg']=0x1,y['addEventListener']('touchstart',function(){a['userScroll']=Date['now']();},!![]),y['addEventListener']('wheel',function(){a['userScroll']=Date['now']();},!![]);}window['openMusicLyricFull']=function(){var y=b('music-lyric-full');if(!y)return;a['open']=!![],y['classList']['add']('on'),k(),x(),a['idx']=a['times']['length']?i(a['times'],a['cur']):-0x1,r();var z=b('mlf-body');if(z){z['style']['scrollBehavior']='auto';if(a['els']['length']&&a['idx']>=0x0)j(z,a['els'][a['idx']]);setTimeout(function(){z['style']['scrollBehavior']='';},0x78);}},window['closeMusicLyricFull']=function(){var y=b('music-lyric-full');if(y)y['classList']['remove']('on');a['open']=![];},window['seekMusicLyric']=function(y){var z=a['lines'][y];if(!z)return;var A=typeof musicPlayerState!=='undefined'&&musicPlayerState?musicPlayerState['audio']:null;if(!A)return;try{A['currentTime']=z['t'];}catch(B){}a['userScroll']=0x0,a['idx']=y,r();if(a['els'][y])j(b('mlf-body'),a['els'][y]);};if(a['ticker'])clearInterval(a['ticker']);a['ticker']=setInterval(w,0xc8);}());
 </script>
 <script>
-(function(){var a='__dm_music_fold_v1',b='music_float_pos_v1';function c(o){return document['getElementById'](o);}function d(){try{var p=JSON['parse'](localStorage['getItem'](a)||'{}');return{'settings':p['settings']?0x1:0x0,'library':p['library']?0x1:0x0};}catch(q){return{'settings':0x0,'library':0x0};}}function e(p){try{localStorage['setItem'](a,JSON['stringify'](p));}catch(q){}}function f(){var o=d(),p=['settings','library'];for(var q=0x0;q<p['length'];q++){var r=p[q],t=!!o[r],u=c('music-fold-'+r),v=c('mfh-'+r);if(u){if(t)u['classList']['add']('open');else u['classList']['remove']('open');}if(v){if(t)v['classList']['add']('open');else v['classList']['remove']('open');}}}window['toggleMusicFold']=function(o){var p=c('music-fold-'+o);if(!p)return;var q=!p['classList']['contains']('open');if(q)p['classList']['add']('open');else p['classList']['remove']('open');var r=c('mfh-'+o);if(r){if(q)r['classList']['add']('open');else r['classList']['remove']('open');}var t=d();t[o]=q?0x1:0x0,e(t);};function g(){return c('music-float-player');}function h(o,p,q){var r=o['offsetWidth']||0x30,s=o['offsetHeight']||0x30,u=Math['max'](0x0,window['innerWidth']-r-0x6),v=Math['max'](0x0,window['innerHeight']-s-0x6),x=Math['max'](0x6,Math['min'](p,u)),y=Math['max'](0x6,Math['min'](q,v));return{'l':x,'t':y};}function i(o){var p=parseFloat(o['style']['left']),q=parseFloat(o['style']['top']),s=o['offsetWidth']||0x30,t=o['offsetHeight']||0x30;if(isFinite(p)&&isFinite(q))return{'l':p,'t':q,'w':s,'h':t};var u=o['getBoundingClientRect']();return{'l':u['left'],'t':u['top'],'w':u['width']||s,'h':u['height']||t};}window['mfSavePos']=function(){var o=g();if(!o)return;var p=i(o);if(!p['w'])return;try{localStorage['setItem'](b,JSON['stringify']({'l':Math['round'](p['l']),'t':Math['round'](p['t'])}));}catch(q){}},window['mfApplyPos']=function(){var q=g();if(!q)return;var r=null;try{r=localStorage['getItem'](b);}catch(u){r=null;}if(r){var s=null;try{s=JSON['parse'](r);}catch(v){s=null;}if(s&&typeof s['l']==='number'&&typeof s['t']==='number'){var t=h(q,s['l'],s['t']);q['style']['right']='auto',q['style']['bottom']='auto',q['style']['left']=t['l']+'px',q['style']['top']=t['t']+'px';}}window['mfUpdateMirror']();},window['mfUpdateMirror']=function(){var o=g();if(!o)return;var p=parseFloat(o['style']['left']);if(!isFinite(p)){o['classList']['remove']('mirror');return;}var q=o['offsetWidth']||0x30;if(p+q/0x2<window['innerWidth']*0.45)o['classList']['add']('mirror');else o['classList']['remove']('mirror');};function j(){var o=g();if(!o)return;o['addEventListener']('transitionend',function(){window['mfUpdateMirror']();});}function k(){var o=c('page-music'),p=c('page-music-listening');return!!(o&&o['classList']['contains']('active')||p&&p['classList']['contains']('active'));}window['mfSyncLayer']=function(){var o=g();if(o){var p=k();p!==o['classList']['contains']('suppressed')&&o['classList']['toggle']('suppressed',p);}if(window['mfFitMini'])window['mfFitMini']();};function l(){var o=['page-music','page-music-listening','music-float-player'];for(var p=0x0;p<o['length'];p++){var q=c(o[p]);if(!q)continue;new MutationObserver(function(){window['mfSyncLayer']();})['observe'](q,{'attributes':!![],'attributeFilter':['class']});}}function m(){f(),window['mfApplyPos'](),j(),l(),window['mfSyncLayer']();}document['readyState']==='loading'?document['addEventListener']('DOMContentLoaded',m):m();var n=null;window['addEventListener']('resize',function(){clearTimeout(n),n=setTimeout(function(){var o=g();if(!o||!o['classList']['contains']('visible'))return;var q=o['getBoundingClientRect']();if(!q['width'])return;var s=h(o,q['left'],q['top']);o['style']['right']='auto',o['style']['bottom']='auto',o['style']['left']=s['l']+'px',o['style']['top']=s['t']+'px',window['mfUpdateMirror']();},0xb4);});}());
+(function(){var a='__dm_music_fold_v1',b='music_float_pos_v1';function c(o){return document['getElementById'](o);}function d(){try{var p=JSON['parse'](localStorage['getItem'](a)||'{}');return{'settings':p['settings']?0x1:0x0,'library':p['library']?0x1:0x0};}catch(q){return{'settings':0x0,'library':0x0};}}function e(p){try{localStorage['setItem'](a,JSON['stringify'](p));}catch(q){}}function f(){var o=d(),p=['settings','library'];for(var q=0x0;q<p['length'];q++){var r=p[q],t=!!o[r],u=c('music-fold-'+r),v=c('mfh-'+r);if(u){if(t)u['classList']['add']('open');else u['classList']['remove']('open');}if(v){if(t)v['classList']['add']('open');else v['classList']['remove']('open');}}}window['toggleMusicFold']=function(o){var p=c('music-fold-'+o);if(!p)return;var q=!p['classList']['contains']('open');if(q)p['classList']['add']('open');else p['classList']['remove']('open');var r=c('mfh-'+o);if(r){if(q)r['classList']['add']('open');else r['classList']['remove']('open');}var t=d();t[o]=q?0x1:0x0,e(t);};function g(){return c('music-float-player');}function h(o,p,q){var r=o['offsetWidth']||0x30,s=o['offsetHeight']||0x30,u=Math['max'](0x0,window['innerWidth']-r-0x6),v=Math['max'](0x0,window['innerHeight']-s-0x6),x=Math['max'](0x6,Math['min'](p,u)),y=Math['max'](0x6,Math['min'](q,v));return{'l':x,'t':y};}function i(o){var p=parseFloat(o['style']['left']),q=parseFloat(o['style']['top']),s=o['offsetWidth']||0x30,t=o['offsetHeight']||0x30;if(isFinite(p)&&isFinite(q))return{'l':p,'t':q,'w':s,'h':t};var u=o['getBoundingClientRect']();return{'l':u['left'],'t':u['top'],'w':u['width']||s,'h':u['height']||t};}window['mfSavePos']=function(){var o=g();if(!o)return;var p=i(o);if(!p['w'])return;try{localStorage['setItem'](b,JSON['stringify']({'l':Math['round'](p['l']),'t':Math['round'](p['t'])}));}catch(q){}},window['mfApplyPos']=function(){var q=g();if(!q)return;var r=null;try{r=localStorage['getItem'](b);}catch(u){r=null;}if(r){var s=null;try{s=JSON['parse'](r);}catch(v){s=null;}if(s&&typeof s['l']==='number'&&typeof s['t']==='number'){var t=h(q,s['l'],s['t']);q['style']['right']='auto',q['style']['bottom']='auto',q['style']['left']=t['l']+'px',q['style']['top']=t['t']+'px';}}window['mfUpdateMirror']();},window['mfUpdateMirror']=function(){var o=g();if(!o)return;var p=parseFloat(o['style']['left']);if(!isFinite(p)){o['classList']['remove']('mirror');return;}var q=o['offsetWidth']||0x30;if(p+q/0x2<window['innerWidth']*0.45)o['classList']['add']('mirror');else o['classList']['remove']('mirror');},window['mfEndMusic']=function(o){if(o){o['stopPropagation']();if(o['preventDefault'])o['preventDefault']();}var p=g();try{var q=window['musicPlayerState'];if(q){if(q['audio']){q['audio']['pause']();try{q['audio']['src']='';}catch(r){}}q['currentTrackData']=null,q['isPlaying']=![];}if(typeof window['stopAIMusicControl']==='function')window['stopAIMusicControl']();}catch(s){}if(typeof window['hideMusicFloat']==='function')window['hideMusicFloat']();else{if(p)p['classList']['remove']('visible','expanded');}p&&setTimeout(function(){if(!p['classList']['contains']('visible')){p['classList']['remove']('expanded');var t=window['musicPlayerState'];if(t)t['expanded']=![];}},0xc8);};function j(){var o=g();if(!o)return;o['addEventListener']('transitionend',function(){window['mfUpdateMirror']();});}function k(){var o=c('page-music'),p=c('page-music-listening');return!!(o&&o['classList']['contains']('active')||p&&p['classList']['contains']('active'));}window['mfSyncLayer']=function(){var o=g();if(o){var p=k();p!==o['classList']['contains']('suppressed')&&o['classList']['toggle']('suppressed',p);}if(window['mfFitMini'])window['mfFitMini']();};function l(){var o=['page-music','page-music-listening','music-float-player'];for(var p=0x0;p<o['length'];p++){var q=c(o[p]);if(!q)continue;new MutationObserver(function(){window['mfSyncLayer']();})['observe'](q,{'attributes':!![],'attributeFilter':['class']});}}function m(){f(),window['mfApplyPos'](),j(),l(),window['mfSyncLayer']();}document['readyState']==='loading'?document['addEventListener']('DOMContentLoaded',m):m();var n=null;window['addEventListener']('resize',function(){clearTimeout(n),n=setTimeout(function(){var o=g();if(!o||!o['classList']['contains']('visible'))return;var q=o['getBoundingClientRect']();if(!q['width'])return;var s=h(o,q['left'],q['top']);o['style']['right']='auto',o['style']['bottom']='auto',o['style']['left']=s['l']+'px',o['style']['top']=s['t']+'px',window['mfUpdateMirror']();},0xb4);});}());
 </script>
 </body>
 </html>
