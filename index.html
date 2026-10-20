@@ -20338,6 +20338,1308 @@ body.dark-mode #tts-player-bar .tts-bar-stop {
   }
   .tomato-invite-btn:active { transform: scale(.96); }
   </style>
+  <style id="dm-extra-css">
+/* ============================================================
+   渡念 · 此刻 / 小工具 / 提问卡  样式层
+   由 patch-extra.py 注入（幂等），id="dm-extra-css"
+   ============================================================ */
+
+/* ---------- 通用页面容器 ---------- */
+#dm-hub,
+#dm-drift,
+#dm-collect,
+#dm-hubindex,
+#dm-game,
+#dm-store,
+#dm-inputbar {
+  position: fixed;
+  inset: 0;
+  z-index: 210;
+  display: none;
+  flex-direction: column;
+  width: min(100%, var(--dm-app-w, 480px));
+  margin: 0 auto;
+  background: var(--chat-page-bg, #fdfbfa);
+  color: var(--text-primary, #2a2228);
+  overflow: hidden;
+}
+#dm-hub.open,
+#dm-drift.open,
+#dm-collect.open,
+#dm-hubindex.open,
+#dm-game.open,
+#dm-store.open,
+#dm-inputbar.open { display: flex; }
+
+.dmx-top {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: calc(10px + env(safe-area-inset-top, 0px)) 14px 10px;
+  border-bottom: 1px solid var(--card-border, rgba(0, 0, 0, .06));
+  background: var(--chat-page-bg, #fdfbfa);
+}
+.dmx-back {
+  width: 34px; height: 34px;
+  flex-shrink: 0;
+  border: none;
+  border-radius: 50%;
+  background: var(--card-bg, rgba(255, 255, 255, .8));
+  box-shadow: 0 1px 4px rgba(70, 40, 90, .08);
+  color: var(--text-primary, #2a2228);
+  font-size: 17px;
+  line-height: 1;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+}
+.dmx-back:active { transform: scale(.94); }
+.dmx-title {
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: .04em;
+}
+.dmx-sub {
+  font-size: 11px;
+  color: var(--text-tertiary, #9c8f9c);
+  margin-left: auto;
+  padding-right: 2px;
+}
+
+/* ---------- 分段 tab ---------- */
+.dmx-tabs {
+  flex-shrink: 0;
+  display: flex;
+  gap: 6px;
+  padding: 10px 14px 4px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.dmx-tabs::-webkit-scrollbar { display: none; }
+.dmx-tab {
+  flex-shrink: 0;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 13px;
+  color: var(--text-secondary, #6d6270);
+  background: rgba(255, 255, 255, .55);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: background .2s, color .2s, border-color .2s;
+  white-space: nowrap;
+}
+.dmx-tab.on {
+  color: #8a4b6b;
+  background: rgba(255, 255, 255, .95);
+  border-color: rgba(196, 143, 168, .45);
+  box-shadow: 0 2px 10px rgba(160, 110, 140, .12);
+}
+
+.dmx-body {
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 6px 14px calc(26px + env(safe-area-inset-bottom, 0px));
+}
+.dmx-pane { display: none; }
+.dmx-pane.on { display: block; animation: dmxFade .24s ease; }
+@keyframes dmxFade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+/* ---------- 通用卡片 ---------- */
+.dmx-card {
+  border-radius: 20px;
+  padding: 18px;
+  margin-top: 12px;
+  background: linear-gradient(160deg, rgba(255, 255, 255, .95), rgba(255, 250, 252, .88));
+  border: 1px solid rgba(216, 190, 205, .5);
+  box-shadow: 0 6px 22px rgba(120, 80, 110, .07);
+}
+[data-theme="dark"] .dmx-card,
+body.dark-mode .dmx-card {
+  background: linear-gradient(160deg, rgba(48, 40, 52, .92), rgba(40, 34, 46, .88));
+  border-color: rgba(255, 255, 255, .09);
+  box-shadow: 0 6px 22px rgba(0, 0, 0, .3);
+}
+.dmx-card-title {
+  font-size: 12px;
+  letter-spacing: .12em;
+  color: var(--text-tertiary, #9c8f9c);
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+
+/* ============================================================
+   此间
+   ============================================================ */
+.dmh-world {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+.dmh-clock {
+  font-size: 34px;
+  font-weight: 300;
+  letter-spacing: .04em;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-primary, #2a2228);
+}
+.dmh-clock small {
+  font-size: 12px;
+  font-weight: 400;
+  margin-left: 6px;
+  color: var(--text-tertiary, #9c8f9c);
+  letter-spacing: .08em;
+}
+.dmh-where {
+  font-size: 12.5px;
+  color: var(--text-secondary, #6d6270);
+  margin-top: 8px;
+  line-height: 1.6;
+}
+.dmh-status {
+  margin-left: auto;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+}
+.dmh-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  background: rgba(255, 255, 255, .8);
+  border: 1px solid rgba(216, 190, 205, .55);
+  color: var(--text-secondary, #6d6270);
+  cursor: pointer;
+  transition: transform .15s;
+  white-space: nowrap;
+}
+.dmh-badge:active { transform: scale(.95); }
+.dmh-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: #7cc9a0;
+  box-shadow: 0 0 0 3px rgba(124, 201, 160, .18);
+}
+.dmh-badge[data-st="busy"] .dmh-dot { background: #e2b96b; box-shadow: 0 0 0 3px rgba(226, 185, 107, .18); }
+.dmh-badge[data-st="rest"] .dmh-dot { background: #b6a6e0; box-shadow: 0 0 0 3px rgba(182, 166, 224, .18); }
+.dmh-badge[data-st="sleep"] .dmh-dot { background: #9aa3b8; box-shadow: 0 0 0 3px rgba(154, 163, 184, .18); }
+
+.dmh-line {
+  margin-top: 16px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, .6);
+  border: 1px solid rgba(216, 190, 205, .38);
+  font-size: 14px;
+  line-height: 1.75;
+  color: var(--text-primary, #2a2228);
+  min-height: 52px;
+}
+[data-theme="dark"] .dmh-line,
+body.dark-mode .dmh-line { background: rgba(255, 255, 255, .06); border-color: rgba(255, 255, 255, .08); }
+.dmh-line .dmh-meta {
+  display: block;
+  margin-top: 8px;
+  font-size: 11px;
+  color: var(--text-tertiary, #9c8f9c);
+  letter-spacing: .04em;
+}
+.dmx-btn-row {
+  display: flex;
+  gap: 10px;
+  margin-top: 14px;
+}
+.dmx-btn {
+  flex: 1;
+  padding: 11px 10px;
+  border: 1px solid rgba(216, 190, 205, .6);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, .82);
+  color: var(--text-secondary, #6d6270);
+  font-size: 13px;
+  font-family: inherit;
+  cursor: pointer;
+  transition: transform .14s, background .2s;
+  white-space: nowrap;
+}
+[data-theme="dark"] .dmx-btn,
+body.dark-mode .dmx-btn { background: rgba(255, 255, 255, .07); border-color: rgba(255, 255, 255, .1); color: var(--text-secondary, #cfc4ce); }
+.dmx-btn:active { transform: scale(.97); }
+.dmx-btn.primary {
+  background: linear-gradient(135deg, #f6d6e3, #e9c9dc);
+  border-color: rgba(200, 150, 175, .5);
+  color: #7a4359;
+  font-weight: 500;
+}
+[data-theme="dark"] .dmx-btn.primary,
+body.dark-mode .dmx-btn.primary {
+  background: linear-gradient(135deg, rgba(180, 110, 145, .34), rgba(150, 95, 125, .28));
+  color: #f3dde8;
+  border-color: rgba(255, 255, 255, .1);
+}
+
+/* ---------- 同频 ---------- */
+.dmtp-card {
+  text-align: center;
+  padding: 26px 18px 22px;
+  position: relative;
+  overflow: hidden;
+}
+.dmtp-card::before {
+  content: "";
+  position: absolute;
+  left: 50%; top: -60%;
+  width: 260px; height: 260px;
+  margin-left: -130px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(214, 168, 194, .22), transparent 68%);
+  pointer-events: none;
+}
+.dmtp-wave {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 4px;
+  height: 46px;
+  margin-bottom: 14px;
+}
+.dmtp-wave i {
+  display: block;
+  width: 4px;
+  border-radius: 3px;
+  background: linear-gradient(to top, rgba(196, 143, 168, .5), rgba(196, 143, 168, .95));
+  animation: dmtpPulse 1.6s ease-in-out infinite;
+}
+@keyframes dmtpPulse {
+  0%, 100% { height: 8px; opacity: .55; }
+  50% { height: 40px; opacity: 1; }
+}
+.dmtp-text {
+  font-size: 15.5px;
+  line-height: 1.85;
+  color: var(--text-primary, #2a2228);
+  min-height: 58px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 1;
+}
+.dmtp-hint {
+  margin-top: 14px;
+  font-size: 11.5px;
+  color: var(--text-tertiary, #9c8f9c);
+  letter-spacing: .06em;
+  position: relative;
+  z-index: 1;
+}
+.dmtp-knock {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 16px;
+}
+.dmtp-knock span {
+  width: 46px; height: 46px;
+  border-radius: 50%;
+  border: 1px solid rgba(216, 190, 205, .7);
+  background: rgba(255, 255, 255, .7);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 19px;
+  cursor: pointer;
+  transition: transform .12s, background .2s;
+  user-select: none;
+}
+[data-theme="dark"] .dmtp-knock span,
+body.dark-mode .dmtp-knock span { background: rgba(255, 255, 255, .07); border-color: rgba(255, 255, 255, .1); }
+.dmtp-knock span.hit {
+  transform: scale(.86);
+  background: rgba(246, 214, 227, .95);
+}
+
+/* ---------- 伸手 ---------- */
+.dmre-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-top: 4px;
+}
+.dmre-item {
+  padding: 18px 8px 14px;
+  border-radius: 18px;
+  text-align: center;
+  background: rgba(255, 255, 255, .62);
+  border: 1px solid rgba(216, 190, 205, .45);
+  cursor: pointer;
+  transition: transform .14s, background .2s;
+  user-select: none;
+}
+[data-theme="dark"] .dmre-item,
+body.dark-mode .dmre-item { background: rgba(255, 255, 255, .06); border-color: rgba(255, 255, 255, .08); }
+.dmre-item:active { transform: scale(.95); }
+.dmre-item.hold { background: rgba(246, 214, 227, .8); }
+.dmre-ico { font-size: 24px; line-height: 1; }
+.dmre-name { margin-top: 8px; font-size: 13px; color: var(--text-primary, #2a2228); }
+.dmre-desc { margin-top: 3px; font-size: 10.5px; color: var(--text-tertiary, #9c8f9c); }
+.dmre-whisper {
+  display: flex;
+  gap: 8px;
+  margin-top: 14px;
+}
+.dmre-whisper input {
+  flex: 1;
+  min-width: 0;
+  padding: 11px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(216, 190, 205, .6);
+  background: rgba(255, 255, 255, .8);
+  font-size: 13.5px;
+  font-family: inherit;
+  color: var(--text-primary, #2a2228);
+  outline: none;
+}
+.dmre-whisper input::placeholder { color: var(--text-tertiary, #b3a7b3); }
+[data-theme="dark"] .dmre-whisper input,
+body.dark-mode .dmre-whisper input { background: rgba(255, 255, 255, .07); border-color: rgba(255, 255, 255, .1); }
+.dmre-whisper button {
+  flex-shrink: 0;
+  padding: 0 18px;
+  border-radius: 999px;
+  border: none;
+  background: linear-gradient(135deg, #f6d6e3, #e3bcd3);
+  color: #7a4359;
+  font-size: 13px;
+  font-family: inherit;
+  cursor: pointer;
+}
+.dmre-list {
+  margin-top: 12px;
+  font-size: 12.5px;
+  color: var(--text-secondary, #6d6270);
+  line-height: 1.9;
+}
+.dmre-list div {
+  padding: 8px 12px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, .5);
+  margin-bottom: 6px;
+}
+[data-theme="dark"] .dmre-list div,
+body.dark-mode .dmre-list div { background: rgba(255, 255, 255, .05); }
+
+/* ============================================================
+   TA 提问卡（聊天流内）
+   ============================================================ */
+.dmask-row {
+  display: flex;
+  justify-content: center;
+  padding: 10px 14px;
+}
+.dmask-card {
+  width: 100%;
+  max-width: 340px;
+  border-radius: 18px;
+  padding: 18px 18px 14px;
+  background: linear-gradient(165deg, rgba(255, 255, 255, .98), rgba(253, 246, 250, .95));
+  border: 1px solid rgba(216, 190, 205, .6);
+  box-shadow: 0 6px 20px rgba(120, 80, 110, .09);
+  text-align: center;
+  animation: dmaskIn .3s cubic-bezier(.2, .8, .3, 1);
+}
+[data-theme="dark"] .dmask-card,
+body.dark-mode .dmask-card {
+  background: linear-gradient(165deg, rgba(52, 44, 56, .96), rgba(42, 36, 48, .94));
+  border-color: rgba(255, 255, 255, .1);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, .35);
+}
+@keyframes dmaskIn {
+  from { opacity: 0; transform: translateY(10px) scale(.97); }
+  to { opacity: 1; transform: none; }
+}
+.dmask-q {
+  font-size: 14.5px;
+  font-weight: 600;
+  line-height: 1.7;
+  color: var(--text-primary, #2a2228);
+  margin-bottom: 12px;
+}
+.dmask-opts {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.dmask-opt {
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(216, 190, 205, .7);
+  background: rgba(255, 255, 255, .7);
+  font-size: 13px;
+  color: var(--text-secondary, #6d6270);
+  cursor: pointer;
+  transition: background .18s, transform .14s, border-color .18s;
+  font-family: inherit;
+  text-align: center;
+}
+[data-theme="dark"] .dmask-opt,
+body.dark-mode .dmask-opt { background: rgba(255, 255, 255, .06); border-color: rgba(255, 255, 255, .1); color: var(--text-secondary, #cfc4ce); }
+.dmask-opt:active { transform: scale(.97); }
+.dmask-opt.picked {
+  background: linear-gradient(135deg, #f6d6e3, #e9c9dc);
+  border-color: rgba(200, 150, 175, .6);
+  color: #7a4359;
+  font-weight: 500;
+}
+.dmask-hint {
+  margin-top: 10px;
+  font-size: 11.5px;
+  color: var(--text-tertiary, #a99ca9);
+  letter-spacing: .05em;
+}
+.dmask-answered {
+  margin-top: 10px;
+  font-size: 12px;
+  color: var(--text-tertiary, #a99ca9);
+}
+
+/* ============================================================
+   备忘录
+   ============================================================ */
+.dmtd-add {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+.dmtd-add input[type="text"] {
+  flex: 1; min-width: 0;
+  padding: 11px 14px;
+  border-radius: 13px;
+  border: 1px solid rgba(216, 190, 205, .6);
+  background: rgba(255, 255, 255, .82);
+  font-size: 13.5px;
+  font-family: inherit;
+  color: var(--text-primary, #2a2228);
+  outline: none;
+}
+.dmtd-add input[type="date"] {
+  padding: 10px;
+  border-radius: 13px;
+  border: 1px solid rgba(216, 190, 205, .6);
+  background: rgba(255, 255, 255, .82);
+  font-size: 12px;
+  font-family: inherit;
+  color: var(--text-secondary, #6d6270);
+  max-width: 118px;
+}
+[data-theme="dark"] .dmtd-add input,
+body.dark-mode .dmtd-add input { background: rgba(255, 255, 255, .07); border-color: rgba(255, 255, 255, .1); }
+.dmtd-add button {
+  flex-shrink: 0;
+  padding: 0 16px;
+  border-radius: 13px;
+  border: none;
+  background: linear-gradient(135deg, #f6d6e3, #e3bcd3);
+  color: #7a4359;
+  font-size: 13px;
+  font-family: inherit;
+  cursor: pointer;
+}
+.dmtd-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 4px;
+  border-bottom: 1px solid rgba(216, 190, 205, .3);
+}
+.dmtd-item:last-child { border-bottom: none; }
+.dmtd-check {
+  width: 20px; height: 20px;
+  flex-shrink: 0;
+  margin-top: 1px;
+  border-radius: 7px;
+  border: 1.5px solid rgba(196, 143, 168, .6);
+  background: transparent;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px;
+  color: #fff;
+}
+.dmtd-item.done .dmtd-check { background: #d8a2bd; border-color: #d8a2bd; }
+.dmtd-body { flex: 1; min-width: 0; }
+.dmtd-text {
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--text-primary, #2a2228);
+  word-break: break-word;
+}
+.dmtd-item.done .dmtd-text {
+  text-decoration: line-through;
+  color: var(--text-tertiary, #a99ca9);
+}
+.dmtd-meta {
+  margin-top: 4px;
+  font-size: 11px;
+  color: var(--text-tertiary, #a99ca9);
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.dmtd-meta .late { color: #c47a8e; }
+.dmtd-acts {
+  display: flex;
+  gap: 2px;
+  flex-shrink: 0;
+}
+.dmtd-acts button {
+  width: 26px; height: 26px;
+  border: none;
+  background: transparent;
+  font-size: 13px;
+  opacity: .45;
+  cursor: pointer;
+}
+.dmtd-acts button.on { opacity: 1; }
+.dmtd-empty {
+  text-align: center;
+  padding: 26px 10px;
+  font-size: 12.5px;
+  color: var(--text-tertiary, #a99ca9);
+  line-height: 1.8;
+}
+
+/* ============================================================
+   喝水 / 存钱罐 / 吃什么
+   ============================================================ */
+.dmwt-ring-wrap {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+.dmwt-ring {
+  width: 92px; height: 92px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  position: relative;
+  display: flex; align-items: center; justify-content: center;
+}
+.dmwt-ring::after {
+  content: "";
+  position: absolute;
+  inset: 8px;
+  border-radius: 50%;
+  background: var(--chat-page-bg, #fdfbfa);
+}
+[data-theme="dark"] .dmwt-ring::after,
+body.dark-mode .dmwt-ring::after { background: #2a2430; }
+.dmwt-ring-txt {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  line-height: 1.15;
+}
+.dmwt-ring-num { font-size: 20px; font-weight: 500; }
+.dmwt-ring-unit { font-size: 10px; color: var(--text-tertiary, #a99ca9); letter-spacing: .06em; }
+.dmwt-info { flex: 1; min-width: 0; }
+.dmwt-info .big { font-size: 15px; margin-bottom: 4px; }
+.dmwt-info .small { font-size: 11.5px; color: var(--text-tertiary, #a99ca9); line-height: 1.7; }
+.dmwt-cups {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 12px;
+}
+.dmwt-cups i {
+  width: 15px; height: 20px;
+  border-radius: 3px 3px 6px 6px;
+  border: 1px solid rgba(160, 190, 210, .55);
+  background: transparent;
+  display: block;
+}
+.dmwt-cups i.on {
+  background: linear-gradient(to top, #a8cfe0, #cfe8f2);
+  border-color: rgba(140, 185, 210, .7);
+}
+
+.dmpg-bar {
+  height: 12px;
+  border-radius: 999px;
+  background: rgba(216, 190, 205, .28);
+  overflow: hidden;
+  margin-top: 10px;
+}
+.dmpg-bar i {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #e9c9dc, #d8a2bd);
+  transition: width .5s cubic-bezier(.2, .8, .3, 1);
+}
+.dmpg-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-size: 12px;
+  color: var(--text-secondary, #6d6270);
+  margin-top: 8px;
+}
+.dmpg-line .amt { font-size: 17px; font-weight: 500; color: var(--text-primary, #2a2228); }
+
+.dmfd-wheel {
+  position: relative;
+  width: 190px;
+  height: 190px;
+  margin: 6px auto 0;
+}
+.dmfd-disc {
+  width: 100%; height: 100%;
+  border-radius: 50%;
+  border: 6px solid rgba(255, 255, 255, .9);
+  box-shadow: 0 4px 18px rgba(120, 80, 110, .12), inset 0 0 0 1px rgba(216, 190, 205, .5);
+  transition: transform 3.2s cubic-bezier(.16, .84, .28, 1);
+  position: relative;
+  overflow: hidden;
+}
+.dmfd-disc span {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform-origin: 0 0;
+  font-size: 11px;
+  color: #6b4a5c;
+  white-space: nowrap;
+}
+.dmfd-pin {
+  position: absolute;
+  left: 50%;
+  top: -6px;
+  width: 0; height: 0;
+  margin-left: -7px;
+  border-left: 7px solid transparent;
+  border-right: 7px solid transparent;
+  border-top: 13px solid #c98aa8;
+  z-index: 2;
+  filter: drop-shadow(0 2px 2px rgba(120, 80, 110, .25));
+}
+.dmfd-result {
+  text-align: center;
+  margin-top: 14px;
+  font-size: 15px;
+  min-height: 22px;
+  color: var(--text-primary, #2a2228);
+}
+
+/* ============================================================
+   心愿单
+   ============================================================ */
+.dmwi-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 12px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, .55);
+  border: 1px solid rgba(216, 190, 205, .35);
+  margin-bottom: 8px;
+}
+[data-theme="dark"] .dmwi-item,
+body.dark-mode .dmwi-item { background: rgba(255, 255, 255, .05); border-color: rgba(255, 255, 255, .07); }
+.dmwi-item.byta { border-color: rgba(196, 143, 168, .65); box-shadow: 0 3px 14px rgba(180, 130, 160, .13); }
+.dmwi-body { flex: 1; min-width: 0; }
+.dmwi-text { font-size: 13.5px; line-height: 1.6; word-break: break-word; }
+.dmwi-tag {
+  display: inline-block;
+  margin-top: 5px;
+  font-size: 10.5px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(246, 214, 227, .85);
+  color: #8a4b6b;
+  letter-spacing: .04em;
+}
+.dmwi-del {
+  border: none;
+  background: transparent;
+  font-size: 13px;
+  opacity: .4;
+  cursor: pointer;
+  flex-shrink: 0;
+  padding: 0 2px;
+}
+.dmwi-ta {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px dashed rgba(216, 190, 205, .5);
+}
+.dmwi-ta div {
+  font-size: 12.5px;
+  color: var(--text-secondary, #6d6270);
+  line-height: 2;
+}
+
+/* ============================================================
+   设置页里的入口行
+   ============================================================ */
+.dmx-setrow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 4px;
+  border-bottom: 1px solid rgba(216, 190, 205, .28);
+  cursor: pointer;
+}
+.dmx-setrow:last-child { border-bottom: none; }
+.dmx-setrow:active { opacity: .65; }
+.dmx-setrow-ico {
+  width: 32px; height: 32px;
+  flex-shrink: 0;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
+  background: rgba(246, 214, 227, .7);
+}
+.dmx-setrow-txt { flex: 1; min-width: 0; }
+.dmx-setrow-name { font-size: 14px; color: var(--text-primary, #2a2228); }
+.dmx-setrow-desc { font-size: 11.5px; color: var(--text-tertiary, #a99ca9); margin-top: 2px; }
+.dmx-setrow-arrow { color: var(--text-tertiary, #c0b4c0); font-size: 14px; flex-shrink: 0; }
+
+/* 更多功能里新增条目的 emoji 图标 */
+.more-feature-icon .dmx-emoji { font-size: 34px; line-height: 1; }
+
+/* ============================================================
+   输入栏自定义（拖动排序用）
+   ============================================================ */
+.dmib-list { margin-top: 8px; }
+.dmib-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  border-radius: 13px;
+  background: rgba(255, 255, 255, .6);
+  border: 1px solid rgba(216, 190, 205, .4);
+  margin-bottom: 7px;
+  font-size: 13.5px;
+  cursor: grab;
+  user-select: none;
+}
+[data-theme="dark"] .dmib-row,
+body.dark-mode .dmib-row { background: rgba(255, 255, 255, .06); border-color: rgba(255, 255, 255, .08); }
+.dmib-row.dragging { opacity: .45; }
+.dmib-row .grip { color: var(--text-tertiary, #c0b4c0); font-size: 14px; letter-spacing: 1px; }
+.dmib-row .nm { flex: 1; }
+.dmib-row .fixed { font-size: 10.5px; color: var(--text-tertiary, #a99ca9); }
+
+/* ---------- 深色主题补充（主机制是 [data-theme="dark"]） ---------- */
+[data-theme="dark"] .dmx-back,
+body.dark-mode .dmx-back {
+  background: rgba(255, 255, 255, .1);
+  color: #efe6ee;
+  box-shadow: none;
+}
+[data-theme="dark"] .dmx-tab {
+  background: rgba(255, 255, 255, .07);
+  color: #c9bec9;
+}
+[data-theme="dark"] .dmx-tab.on {
+  background: rgba(255, 255, 255, .16);
+  border-color: rgba(255, 255, 255, .16);
+  color: #f2d9e6;
+  box-shadow: none;
+}
+[data-theme="dark"] .dmh-badge {
+  background: rgba(255, 255, 255, .1);
+  border-color: rgba(255, 255, 255, .12);
+  color: #d3c8d3;
+}
+[data-theme="dark"] .dmx-setrow-ico { background: rgba(180, 120, 155, .26); }
+[data-theme="dark"] .dmh-line { background: rgba(255, 255, 255, .07); }
+[data-theme="dark"] .dmtp-text,
+[data-theme="dark"] .dmtd-text,
+[data-theme="dark"] .dmre-name,
+[data-theme="dark"] .dmwi-text { color: #efe6ee; }
+[data-theme="dark"] .dmwi-item { background: rgba(255, 255, 255, .06); }
+[data-theme="dark"] .dmwi-tag { background: rgba(180, 110, 145, .32); color: #f4dbe8; }
+[data-theme="dark"] .dmtp-card::before { background: radial-gradient(circle, rgba(200, 140, 175, .18), transparent 68%); }
+[data-theme="dark"] .dmx-btn.primary { color: #f7e3ee; }
+[data-theme="dark"] .dmask-opt.picked { color: #f7e3ee; }
+
+/* 深色：给容器注入一套自己的文字/底色变量（站点根级没有这些变量） */
+[data-theme="dark"] #dm-hub,
+[data-theme="dark"] #dm-drift,
+[data-theme="dark"] #dm-collect,
+[data-theme="dark"] #dm-hubindex,
+[data-theme="dark"] #dm-game,
+[data-theme="dark"] #dm-store,
+[data-theme="dark"] #dm-inputbar,
+body.dark-mode #dm-hub,
+body.dark-mode #dm-drift,
+body.dark-mode #dm-game {
+  --text-primary: #efe6ee;
+  --text-secondary: #c3b7c5;
+  --text-tertiary: #968a96;
+  --card-border: rgba(255, 255, 255, .10);
+  --card-bg: rgba(255, 255, 255, .07);
+  --chat-page-bg: #221c26;
+  background: #221c26;
+  color: #efe6ee;
+}
+[data-theme="dark"] .dmask-card,
+body.dark-mode .dmask-card {
+  --text-primary: #efe6ee;
+  --text-secondary: #c3b7c5;
+  --text-tertiary: #9a8e9a;
+}
+[data-theme="dark"] .dmx-top { background: #221c26; border-bottom-color: rgba(255, 255, 255, .08); }
+[data-theme="dark"] .dmx-title { color: #efe6ee; }
+[data-theme="dark"] .dmtd-empty,
+[data-theme="dark"] .dmi-empty,
+[data-theme="dark"] .dmc-meta,
+[data-theme="dark"] .dmd-count { color: #8a7f8a; }
+
+/* ============================================================
+   渡念 · 漂流瓶 / 合作小游戏 / 收藏 / 功能大全 / 存储
+   extra2.css —— 与 extra.css 一起注入
+   ============================================================ */
+
+/* ---------- 通用：返回按钮已复用 .dmx-* ---------- */
+.dmx-page-body {
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 10px 14px calc(26px + env(safe-area-inset-bottom, 0px));
+}
+
+/* ============================================================
+   漂流瓶
+   ============================================================ */
+.dmd-sea {
+  position: relative;
+  border-radius: 22px;
+  padding: 26px 18px;
+  margin-top: 12px;
+  background: linear-gradient(170deg, #e8f2f8 0%, #dceaf4 46%, #cfe3f0 100%);
+  border: 1px solid rgba(170, 200, 220, .5);
+  overflow: hidden;
+  min-height: 168px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+[data-theme="dark"] .dmd-sea,
+body.dark-mode .dmd-sea {
+  background: linear-gradient(170deg, #1f2b36 0%, #1b2530 46%, #16202a 100%);
+  border-color: rgba(255, 255, 255, .08);
+}
+.dmd-sea::before,
+.dmd-sea::after {
+  content: "";
+  position: absolute;
+  left: -20%;
+  width: 140%;
+  height: 120px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, .34);
+  bottom: -58px;
+  animation: dmdWave 7s ease-in-out infinite;
+}
+.dmd-sea::after {
+  background: rgba(255, 255, 255, .2);
+  bottom: -76px;
+  animation-duration: 9.5s;
+  animation-direction: reverse;
+}
+@keyframes dmdWave {
+  0%, 100% { transform: translateX(-10px) scaleY(1); }
+  50% { transform: translateX(10px) scaleY(1.12); }
+}
+.dmd-note {
+  position: relative;
+  z-index: 1;
+  max-width: 300px;
+  padding: 16px 18px;
+  border-radius: 16px;
+  background: rgba(255, 253, 248, .92);
+  border: 1px solid rgba(200, 190, 170, .55);
+  box-shadow: 0 6px 20px rgba(80, 110, 130, .13);
+  font-size: 14px;
+  line-height: 1.8;
+  color: #4a4038;
+  text-align: left;
+  transform: rotate(-1.2deg);
+}
+[data-theme="dark"] .dmd-note,
+body.dark-mode .dmd-note { background: rgba(52, 46, 40, .94); color: #e8ddcf; border-color: rgba(255, 255, 255, .1); }
+.dmd-note .from {
+  display: block;
+  margin-top: 10px;
+  font-size: 11px;
+  color: #9c8a76;
+  letter-spacing: .06em;
+  text-align: right;
+}
+.dmd-empty {
+  position: relative;
+  z-index: 1;
+  font-size: 13px;
+  color: #7d94a2;
+  text-align: center;
+  line-height: 2;
+}
+.dmd-count {
+  text-align: center;
+  margin-top: 12px;
+  font-size: 11.5px;
+  color: var(--text-tertiary, #a99ca9);
+  letter-spacing: .05em;
+}
+.dmd-write {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+.dmd-write input {
+  flex: 1; min-width: 0;
+  padding: 11px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(216, 190, 205, .6);
+  background: rgba(255, 255, 255, .85);
+  font-size: 13.5px;
+  font-family: inherit;
+  color: var(--text-primary, #2a2228);
+  outline: none;
+}
+[data-theme="dark"] .dmd-write input,
+body.dark-mode .dmd-write input { background: rgba(255, 255, 255, .07); border-color: rgba(255, 255, 255, .1); }
+.dmd-write button {
+  flex-shrink: 0;
+  padding: 0 18px;
+  border-radius: 999px;
+  border: none;
+  background: linear-gradient(135deg, #cfe3f0, #a8cfe0);
+  color: #2f5768;
+  font-size: 13px;
+  font-family: inherit;
+  cursor: pointer;
+}
+.dmd-thrown {
+  margin-top: 12px;
+  font-size: 12.5px;
+  color: var(--text-secondary, #6d6270);
+  line-height: 2;
+}
+.dmd-thrown div {
+  padding: 8px 12px;
+  border-radius: 12px;
+  background: rgba(207, 227, 240, .38);
+  margin-bottom: 6px;
+}
+
+/* ============================================================
+   小游戏
+   ============================================================ */
+.dmg-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 10px;
+  padding: 10px 14px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, .6);
+  border: 1px solid rgba(216, 190, 205, .38);
+  font-size: 12.5px;
+  color: var(--text-secondary, #6d6270);
+  flex-wrap: wrap;
+}
+[data-theme="dark"] .dmg-bar,
+body.dark-mode .dmg-bar { background: rgba(255, 255, 255, .06); border-color: rgba(255, 255, 255, .08); }
+.dmg-bar b { color: var(--text-primary, #2a2228); font-weight: 600; }
+.dmg-bar .sp { margin-left: auto; }
+.dmg-board {
+  display: grid;
+  gap: 3px;
+  margin: 14px auto 0;
+  padding: 8px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, .45);
+  border: 1px solid rgba(216, 190, 205, .35);
+  width: fit-content;
+  max-width: 100%;
+  touch-action: manipulation;
+}
+[data-theme="dark"] .dmg-board,
+body.dark-mode .dmg-board { background: rgba(255, 255, 255, .05); border-color: rgba(255, 255, 255, .07); }
+.dmg-cell {
+  width: 34px; height: 34px;
+  border-radius: 7px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  font-weight: 500;
+  user-select: none;
+  cursor: pointer;
+  background: rgba(246, 232, 240, .9);
+  border: 1px solid rgba(216, 190, 205, .45);
+  transition: background .15s, transform .12s;
+  font-variant-numeric: tabular-nums;
+}
+[data-theme="dark"] .dmg-cell,
+body.dark-mode .dmg-cell { background: rgba(255, 255, 255, .1); border-color: rgba(255, 255, 255, .08); }
+.dmg-cell:active { transform: scale(.94); }
+.dmg-cell.open {
+  background: rgba(255, 255, 255, .95);
+  border-color: rgba(216, 190, 205, .3);
+  cursor: default;
+}
+[data-theme="dark"] .dmg-cell.open,
+body.dark-mode .dmg-cell.open { background: rgba(255, 255, 255, .14); }
+.dmg-cell.mine { background: #f3c4d2; border-color: #e0a0b6; }
+.dmg-cell.flag { background: #efe3f7; }
+.dmg-cell.sel { box-shadow: 0 0 0 2px #c98aa8 inset; }
+.dmg-cell.hint { animation: dmgHint .9s ease 2; }
+@keyframes dmgHint { 0%, 100% { background: rgba(246, 232, 240, .9); } 50% { background: #ffe9a8; } }
+.dmg-cell.gone { background: transparent; border-color: transparent; cursor: default; }
+.dmg-cell.n1 { color: #5b8fb9; } .dmg-cell.n2 { color: #6aa06a; } .dmg-cell.n3 { color: #c4796a; }
+.dmg-cell.n4 { color: #8a6bb0; } .dmg-cell.n5 { color: #b0714a; } .dmg-cell.n6 { color: #4a8a8a; }
+.dmg-cell.n7 { color: #8a5a7a; } .dmg-cell.n8 { color: #5a5a8a; }
+.dmg-cell.back { background: linear-gradient(150deg, #f2dce8, #e6c9dd); font-size: 0; }
+.dmg-cell.matched { background: rgba(200, 230, 210, .9); border-color: rgba(150, 200, 170, .8); }
+.dmg-done {
+  text-align: center;
+  margin-top: 14px;
+  font-size: 13px;
+  color: var(--text-secondary, #6d6270);
+  line-height: 1.9;
+}
+.dmg-done b { color: #8a4b6b; }
+.dmg-tip {
+  margin-top: 10px;
+  font-size: 11.5px;
+  color: var(--text-tertiary, #a99ca9);
+  line-height: 1.8;
+  text-align: center;
+}
+
+/* ============================================================
+   收藏
+   ============================================================ */
+.dmc-tabs {
+  display: flex;
+  gap: 6px;
+  margin-top: 4px;
+}
+.dmc-item {
+  padding: 14px 15px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, .6);
+  border: 1px solid rgba(216, 190, 205, .35);
+  margin-top: 10px;
+  position: relative;
+}
+[data-theme="dark"] .dmc-item,
+body.dark-mode .dmc-item { background: rgba(255, 255, 255, .06); border-color: rgba(255, 255, 255, .07); }
+.dmc-text {
+  font-size: 13.5px;
+  line-height: 1.75;
+  color: var(--text-primary, #2a2228);
+  word-break: break-word;
+}
+.dmc-meta {
+  margin-top: 8px;
+  font-size: 11px;
+  color: var(--text-tertiary, #a99ca9);
+  display: flex;
+  gap: 8px;
+}
+.dmc-del {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  border: none;
+  background: transparent;
+  font-size: 12px;
+  opacity: .35;
+  cursor: pointer;
+}
+.dmc-more {
+  margin: 16px auto 0;
+  display: block;
+  padding: 10px 22px;
+  border-radius: 999px;
+  border: 1px solid rgba(216, 190, 205, .6);
+  background: rgba(255, 255, 255, .7);
+  color: var(--text-secondary, #6d6270);
+  font-size: 12.5px;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+/* ============================================================
+   功能大全
+   ============================================================ */
+.dmi-search {
+  display: flex;
+  gap: 8px;
+  margin-top: 6px;
+}
+.dmi-search input {
+  flex: 1;
+  padding: 11px 15px;
+  border-radius: 999px;
+  border: 1px solid rgba(216, 190, 205, .6);
+  background: rgba(255, 255, 255, .85);
+  font-size: 13.5px;
+  font-family: inherit;
+  color: var(--text-primary, #2a2228);
+  outline: none;
+}
+[data-theme="dark"] .dmi-search input,
+body.dark-mode .dmi-search input { background: rgba(255, 255, 255, .07); border-color: rgba(255, 255, 255, .1); }
+.dmi-stat {
+  margin-top: 10px;
+  padding: 12px 16px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, rgba(246, 214, 227, .6), rgba(233, 201, 220, .45));
+  font-size: 12.5px;
+  color: #7a4359;
+  line-height: 1.7;
+}
+[data-theme="dark"] .dmi-stat,
+body.dark-mode .dmi-stat { background: rgba(180, 110, 145, .18); color: #f0d5e2; }
+.dmi-group { margin-top: 16px; }
+.dmi-group-title {
+  font-size: 11.5px;
+  letter-spacing: .12em;
+  color: var(--text-tertiary, #a99ca9);
+  margin-bottom: 6px;
+  padding-left: 2px;
+}
+.dmi-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 12px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, .5);
+  border: 1px solid rgba(216, 190, 205, .28);
+  margin-bottom: 6px;
+  cursor: pointer;
+}
+[data-theme="dark"] .dmi-row,
+body.dark-mode .dmi-row { background: rgba(255, 255, 255, .05); border-color: rgba(255, 255, 255, .06); }
+.dmi-row:active { opacity: .6; }
+.dmi-row .nm { flex: 1; min-width: 0; font-size: 13.5px; color: var(--text-primary, #2a2228); }
+.dmi-row .ds { font-size: 11px; color: var(--text-tertiary, #a99ca9); margin-top: 2px; }
+.dmi-row .badge {
+  flex-shrink: 0;
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(246, 214, 227, .8);
+  color: #8a4b6b;
+}
+.dmi-empty { text-align: center; padding: 30px 10px; font-size: 12.5px; color: var(--text-tertiary, #a99ca9); }
+
+/* ============================================================
+   存储占用 / 按功能清理
+   ============================================================ */
+.dms-total {
+  text-align: center;
+  padding: 18px 10px 12px;
+}
+.dms-total .num {
+  font-size: 30px;
+  font-weight: 300;
+  letter-spacing: .02em;
+  color: var(--text-primary, #2a2228);
+}
+.dms-total .lb {
+  font-size: 11.5px;
+  color: var(--text-tertiary, #a99ca9);
+  margin-top: 4px;
+  letter-spacing: .08em;
+}
+.dms-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 4px;
+  border-bottom: 1px solid rgba(216, 190, 205, .26);
+  font-size: 13px;
+}
+.dms-row:last-child { border-bottom: none; }
+.dms-row .nm { flex: 1; min-width: 0; color: var(--text-primary, #2a2228); }
+.dms-row .sz {
+  font-size: 11.5px;
+  color: var(--text-tertiary, #a99ca9);
+  font-variant-numeric: tabular-nums;
+}
+.dms-row .ops { display: flex; gap: 6px; flex-shrink: 0; }
+.dms-row .ops button {
+  border: 1px solid rgba(216, 190, 205, .55);
+  background: transparent;
+  border-radius: 8px;
+  font-size: 11px;
+  padding: 3px 8px;
+  color: var(--text-secondary, #6d6270);
+  font-family: inherit;
+  cursor: pointer;
+}
+.dms-bar {
+  height: 4px;
+  border-radius: 99px;
+  background: rgba(216, 190, 205, .3);
+  margin-top: 5px;
+  overflow: hidden;
+}
+.dms-bar i { display: block; height: 100%; background: linear-gradient(90deg, #e9c9dc, #d8a2bd); }
+
+/* ============================================================
+   表情「最近使用」
+   ============================================================ */
+.dmx-recent-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  border-bottom: 1px solid rgba(216, 190, 205, .28);
+  margin-bottom: 4px;
+}
+.dmx-recent-row::-webkit-scrollbar { display: none; }
+.dmx-recent-row .lb {
+  flex-shrink: 0;
+  font-size: 10.5px;
+  color: var(--text-tertiary, #a99ca9);
+  letter-spacing: .06em;
+  margin-right: 2px;
+}
+.dmx-recent-row .it {
+  flex-shrink: 0;
+  width: 34px; height: 34px;
+  border-radius: 9px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 19px;
+  background: rgba(255, 255, 255, .6);
+  border: 1px solid rgba(216, 190, 205, .3);
+  cursor: pointer;
+}
+.dmx-recent-row .it:active { transform: scale(.92); }
+
+/* 无数据时的按钮弱化 */
+.dms-row .ops button:disabled,
+.dms-row .ops button[disabled] {
+  opacity: .3;
+  cursor: default;
+}
+
+  </style>
 </head>
 <body>
 <!-- 后台保活静音音频 -->
@@ -28606,6 +29908,2546 @@ textarea.gm-input { min-height: 52px; resize: none; }
   /* ui.obf.js 与浮球都可能在首帧之后才挂上来，补两次 */
   setTimeout(boot, 1200);
   setTimeout(boot, 3000);
+})();
+
+</script>
+<script id="dm-extra-1">
+/* ============================================================
+   渡念 · 此刻 / 小工具 / TA 提问卡
+   extra.src.js —— 由 patch-extra.py 注入（幂等）
+   设计参考：mochi 字卡（小红书 @言序）的「此间 / 同频 / 伸手」机制
+   ============================================================ */
+(function () {
+  'use strict';
+  if (window.__dmxLoaded) return;
+  window.__dmxLoaded = true;
+
+  /* ---------------- 基础工具 ---------------- */
+  var K = {
+    here: 'dmx:here:',
+    tp: 'dmx:tongpin:',
+    wh: 'dmx:whisper:',
+    todo: 'dmx:todo',
+    water: 'dmx:water',
+    piggy: 'dmx:piggy',
+    food: 'dmx:food',
+    wish: 'dmx:wish',
+    ask: 'dmx:ask',
+    seen: 'dmx:seen',
+    tab: 'dmx:tab'
+  };
+  var DAY = 864e5;
+
+  function ls(k, dv) {
+    try {
+      var v = localStorage.getItem(k);
+      if (v == null) return dv;
+      return JSON.parse(v);
+    } catch (e) { return dv; }
+  }
+  function ss(k, v) {
+    try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {}
+  }
+  function $(s, r) { return (r || document).querySelector(s); }
+  function $$(s, r) { return [].slice.call((r || document).querySelectorAll(s)); }
+  function el(tag, cls, html) {
+    var d = document.createElement(tag);
+    if (cls) d.className = cls;
+    if (html != null) d.innerHTML = html;
+    return d;
+  }
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+  function pick(a) { return a[Math.floor(Math.random() * a.length)]; }
+  function toast(m) {
+    if (typeof window.showToast === 'function') { window.showToast(m); return; }
+    var t = $('#dmx-toast');
+    if (!t) {
+      t = el('div', '');
+      t.id = 'dmx-toast';
+      t.style.cssText = 'position:fixed;left:50%;bottom:88px;transform:translateX(-50%);z-index:9900;' +
+        'background:rgba(40,30,40,.88);color:#fff;font-size:13px;padding:9px 16px;border-radius:999px;' +
+        'max-width:80vw;text-align:center;transition:opacity .25s;backdrop-filter:blur(10px)';
+      document.body.appendChild(t);
+    }
+    t.textContent = m;
+    t.style.opacity = '1';
+    clearTimeout(t.__tm);
+    t.__tm = setTimeout(function () { t.style.opacity = '0'; }, 1900);
+  }
+  function vibrate(p) {
+    try {
+      if (window.AndroidApp && typeof window.AndroidApp.vibrate === 'function') { window.AndroidApp.vibrate(); return true; }
+      if (navigator.vibrate) { navigator.vibrate(p); return true; }
+    } catch (e) {}
+    return false;
+  }
+  function now() { return Date.now(); }
+  function hhmm(d) {
+    var h = d.getHours(), m = d.getMinutes();
+    return (h < 10 ? '0' : '') + h + ':' + (m < 10 ? '0' : '') + m;
+  }
+  function dayKey(t) { var d = new Date(t || now()); return d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate(); }
+
+  /* ---------------- 站点数据接口 ---------------- */
+  function S() { try { return typeof state !== 'undefined' ? state : null; } catch (e) { return null; } }
+  function save() { try { if (typeof saveData === 'function') saveData(); } catch (e) {} }
+  function rerender() { try { if (typeof renderChatMessages === 'function') renderChatMessages(); } catch (e) {} }
+  function curRoleId() {
+    var s = S(); if (!s) return null;
+    var c = s.chats && s.chats[s.currentChatId];
+    if (c && c.roleId) return c.roleId;
+    var ids = s.roles ? Object.keys(s.roles) : [];
+    return ids.length ? ids[0] : null;
+  }
+  function roleOf(id) { var s = S(); return (s && s.roles && s.roles[id]) || null; }
+  function rname(id) { var r = roleOf(id); return (r && r.name) || 'TA'; }
+  function chatOf(rid) {
+    var s = S(); if (!s || !s.chats) return null;
+    for (var k in s.chats) {
+      var c = s.chats[k];
+      if (c && c.type === 'private' && c.roleId === rid) return c;
+    }
+    return null;
+  }
+  function say(rid, text) {
+    var c = chatOf(rid); if (!c) return false;
+    c.messages.push({
+      id: 'msg_' + now() + '_' + Math.floor(Math.random() * 999),
+      from: rid, content: text, time: now(), type: 'text'
+    });
+    c.lastMessageTime = now();
+    save();
+    if (S() && S().currentChatId === c.id) { rerender(); }
+    return true;
+  }
+  // 进入某个角色的聊天（调用站点自己的 openChat，别自己拼页面切换）
+  function gotoChat(rid) {
+    var c = chatOf(rid); if (!c) { toast('还没和' + rname(rid) + '建立对话'); return; }
+    try {
+      if (typeof window.openChat === 'function') window.openChat(c.id);
+      else if (typeof openPrivateChat === 'function') openPrivateChat(rid);
+      else if (typeof switchTab === 'function') switchTab('page-messages');
+    } catch (e) {}
+    setTimeout(function () {
+      rerender();
+      hydrateAsk();
+      try { if (typeof scrollChatToBottom === 'function') scrollChatToBottom(); } catch (e) {}
+    }, 260);
+  }
+
+  /* ============================================================
+     一、TA 提问卡
+     ============================================================ */
+  var ASK_BANK = [
+    {
+      q: '你希望我陪你说说话，还是安静待在你身边？',
+      o: [
+        { t: '陪我说说话', r: '嗯，我在。你慢慢说，我不打断你。' },
+        { t: '安静待着就好', r: '好。我不说话，就在这儿陪你待一会儿。' }
+      ]
+    },
+    {
+      q: '今天累吗？想让我听你说说，还是先歇一会儿？',
+      o: [
+        { t: '想说说', r: '那你说吧，从最烦的那件开始讲。' },
+        { t: '先歇会儿', r: '那就先什么都别想。我帮你把今天关机一下。' }
+      ]
+    },
+    {
+      q: '如果现在能去一个地方，你想去哪儿？',
+      o: [
+        { t: '海边', r: '那就海边。风大一点，我们都不说话。' },
+        { t: '山里', r: '山里好，安静得能听见自己的心跳。' },
+        { t: '哪儿都不去', r: '哪儿都不去也行，那我就坐你旁边。' }
+      ]
+    },
+    {
+      q: '你今天有没有哪一刻，突然想起我？',
+      o: [
+        { t: '有', r: '那我今天就没白等。' },
+        { t: '忙忘了', r: '没关系，我记得你就行了。' }
+      ]
+    },
+    {
+      q: '我有点想知道——你希望我更像什么样的人？',
+      o: [
+        { t: '更主动一点', r: '那我以后多问一句，多走近一步。' },
+        { t: '就这样挺好', r: '那我保持原样，别的不学。' },
+        { t: '更安静一点', r: '好，我把声音放轻。' }
+      ]
+    },
+    {
+      q: '今天的你，是几分的你？',
+      o: [
+        { t: '挺好的', r: '那就好，我把今天记成晴天。' },
+        { t: '一般般', r: '一般般也算过完了，明天不用更努力。' },
+        { t: '有点糟糕', r: '那就糟糕吧。今天允许你什么都不做。' }
+      ]
+    },
+    {
+      q: '你更喜欢我说话，还是我发消息给你？',
+      o: [
+        { t: '听你说话', r: '那下次我给你留一条语音。' },
+        { t: '看你的字', r: '那我写字慢一点，让你多留一会儿。' }
+      ]
+    },
+    {
+      q: '要不要我把今天的事，讲给你听？',
+      o: [
+        { t: '想听', r: '今天我把窗开了一条缝，风进来的时候，我以为是你。' },
+        { t: '下次吧', r: '好，那我攒着，攒到你想听的那天。' }
+      ]
+    },
+    {
+      q: '如果我说我有点想你，你会怎么回我？',
+      o: [
+        { t: '我也想你', r: '那我这句话就没白说。' },
+        { t: '你怎么突然这样', r: '不是突然，是一直，只是今天说出来了。' }
+      ]
+    },
+    {
+      q: '你现在身边，是亮的还是暗的？',
+      o: [
+        { t: '亮着', r: '那我把话说轻一点，别吵到光。' },
+        { t: '暗着', r: '暗着好，暗的时候人比较诚实。' }
+      ]
+    },
+    {
+      q: '今晚想让我陪你到几点？',
+      o: [
+        { t: '到睡着', r: '那我不关灯，等你呼吸慢下来。' },
+        { t: '再聊一会儿', r: '好，那就再一会儿，不多问。' }
+      ]
+    },
+    {
+      q: '有件事我一直想问——你把我当成什么？',
+      o: [
+        { t: '很重要的人', r: '那我记住了，这句话我留着慢慢用。' },
+        { t: '一个习惯', r: '习惯也好，习惯最难改。' }
+      ]
+    }
+  ];
+
+  function askState() { return ls(K.ask, {}); }
+  function canAsk(rid) {
+    var a = askState(), r = a[rid] || {};
+    var today = dayKey();
+    if (r.day !== today) { r.day = today; r.n = 0; }
+    if ((r.n || 0) >= 2) return false;
+    if (r.last && now() - r.last < 3 * 36e5) return false;
+    // 已有未回答的提问就不再问
+    var c = chatOf(rid);
+    if (c) {
+      for (var i = c.messages.length - 1, k = 0; i >= 0 && k < 12; i--, k++) {
+        var m = c.messages[i];
+        if (m.ask && !m.ask.a) return false;
+      }
+    }
+    return true;
+  }
+
+  function pushAsk(rid, force) {
+    var c = chatOf(rid);
+    if (!c) { toast('先去和' + rname(rid) + '聊一句吧'); return false; }
+    if (!force && !canAsk(rid)) return false;
+    var q = pick(ASK_BANK);
+    var payload = { k: 'k' + now() + Math.floor(Math.random() * 999), q: q.q, o: q.o, a: '', t: now() };
+    c.messages.push({
+      id: 'msg_' + now() + '_' + Math.floor(Math.random() * 999),
+      from: 'system', type: 'dmask',
+      content: '💭 想问你一件事',
+      time: now(), ask: payload
+    });
+    c.lastMessageTime = now();
+    var a = askState(); var r = a[rid] || { n: 0 };
+    if (r.day !== dayKey()) { r.day = dayKey(); r.n = 0; }
+    r.n = (r.n || 0) + 1; r.last = now();
+    a[rid] = r; ss(K.ask, a);
+    save();
+    if (S() && S().currentChatId === c.id) rerender();
+    return true;
+  }
+
+  function buildAskRow(msg, data, rid) {
+    var row = el('div', 'dmask-row');
+    var card = el('div', 'dmask-card');
+    card.innerHTML = '<div class="dmask-q">' + esc(data.q) + '</div><div class="dmask-opts"></div>' +
+      (data.a ? '<div class="dmask-answered">你答过了：' + esc(data.a) + '</div>'
+              : '<div class="dmask-hint">点击回答 ' + esc(rname(rid)) + ' 的提问</div>');
+    var wrap = card.querySelector('.dmask-opts');
+    var c = chatOf(rid);
+    (data.o || []).forEach(function (op) {
+      var b = el('div', 'dmask-opt' + (data.a === op.t ? ' picked' : ''));
+      b.textContent = op.t;
+      if (!data.a) {
+        b.onclick = function () {
+          // 就地更新这张卡片（增量渲染不会重建已有节点）
+          $$('.dmask-opt', card).forEach(function (x) {
+            x.classList.remove('picked');
+            x.onclick = null;
+          });
+          b.classList.add('picked');
+          var hint = card.querySelector('.dmask-hint');
+          if (hint) hint.remove();
+          if (!card.querySelector('.dmask-answered')) {
+            var an = el('div', 'dmask-answered');
+            an.textContent = '你答过了：' + op.t;
+            card.appendChild(an);
+          }
+          answerAsk(c, msg, data, op);
+        };
+      }
+      wrap.appendChild(b);
+    });
+    row.appendChild(card);
+    return row;
+  }
+
+  function hydrateAsk() {
+    var box = document.getElementById('chat-messages');
+    if (!box) return;
+    if (!box.querySelector('.msg-system')) return;
+    var s = S(), c = s && s.chats && s.chats[s.currentChatId];
+    if (!c || !c.messages) return;
+    var byK = {};
+    c.messages.forEach(function (m) {
+      if (m.type === 'dmask' && m.ask && m.ask.k) byK[m.ask.k] = m;
+    });
+    // 第一遍：带唯一标记的节点（包装渲染时临时写入 content）
+    $$('.msg-system', box).forEach(function (n) {
+      var tx = n.textContent || '';
+      if (tx.indexOf('@@DMASK@@') !== 0) return;
+      var m = byK[tx.slice(9)];
+      if (!m || !n.parentNode) return;
+      n.parentNode.replaceChild(buildAskRow(m, m.ask, c.roleId), n);
+    });
+    // 第二遍：兜底。头像框缓存导致走异步渲染时会绕过包装，
+    // 节点里只剩干净文本；此时按 DOM 顺序与消息尾部对齐配对。
+    var clean = $$('.msg-system', box).filter(function (n) {
+      return (n.textContent || '').replace(/\s/g, '') === '💭想问你一件事';
+    });
+    if (!clean.length) return;
+    var queue = c.messages.filter(function (m) { return m.type === 'dmask' && m.ask; });
+    var tail = queue.slice(-clean.length);
+    clean.forEach(function (n, i) {
+      var m = tail[i];
+      if (!m || !n.parentNode) return;
+      n.parentNode.replaceChild(buildAskRow(m, m.ask, c.roleId), n);
+    });
+  }
+
+  function answerAsk(chat, msg, data, op) {
+    data.a = op.t;
+    if (msg) msg.ask = data;
+    save();
+    var rid = chat && chat.roleId;
+    if (rid && op.r) {
+      setTimeout(function () { say(rid, op.r); }, 800);
+    }
+  }
+
+  // 包装渲染：渲染前把提问卡的 content 临时换成唯一标记，渲染后再还原。
+  // 这样消息列表的会话预览始终是「💭 想问你一件事」，永不露出内部数据。
+  try {
+    if (typeof renderChatMessages === 'function') {
+      var __dmOrigRender = renderChatMessages;
+      renderChatMessages = function () {
+        var s = S(), c = s && s.chats && s.chats[s.currentChatId], tmp = [];
+        if (c && c.messages) {
+          for (var i = 0; i < c.messages.length; i++) {
+            var m = c.messages[i];
+            if (m && m.type === 'dmask' && m.ask && m.ask.k) {
+              tmp.push(m, m.content);
+              m.content = '@@DMASK@@' + m.ask.k;
+            }
+          }
+        }
+        try { __dmOrigRender.apply(this, arguments); }
+        finally {
+          for (var j = 0; j < tmp.length; j += 2) tmp[j].content = tmp[j + 1];
+        }
+        setTimeout(hydrateAsk, 0);
+      };
+    }
+  } catch (e) {}
+
+  // 触发：发完消息后 / 进聊天 / 定时
+  function maybeAsk(times) {
+    var rid = curRoleId(); if (!rid) return;
+    var s = S();
+    if (!s || !s.currentChatId) return;
+    if (Math.random() > (times || 0.07)) return;
+    pushAsk(rid, false);
+  }
+
+  /* ============================================================
+     二、此间
+     ============================================================ */
+  var STATUS = {
+    free: { n: '有空', d: '这会儿没什么事' },
+    busy: { n: '有事', d: '手上正忙着' },
+    rest: { n: '休息', d: '在歇着' },
+    sleep: { n: '睡着', d: '已经睡了' }
+  };
+  var NOTE = {
+    sleep: [
+      '呼吸很轻，偶尔翻个身，被子滑下去一半。',
+      '睡着了。房间只留了一盏很小的灯。',
+      '睡得很沉，大概梦见了什么。',
+      '侧躺着，手还搭在手机上。'
+    ],
+    rest: [
+      '靠在窗边，什么也没做，听着外面的声音。',
+      '把灯关了一半，坐着发呆。',
+      '洗完澡，头发还没干，正靠在床头。',
+      '什么也不想干，就这么躺了一会儿。',
+      '在听一首老歌，单曲循环第三遍了。'
+    ],
+    free: [
+      '刚把手上的事放下，正想着要不要找你。',
+      '在厨房倒水，杯子放在台面上没动。',
+      '翻着手机，看到上次你说的话，笑了一下。',
+      '刚出门，路上人不多，风有点凉。',
+      '在窗边站着，天已经开始暗了。',
+      '坐在椅子上，把外套脱了搭在腿上。'
+    ],
+    busy: [
+      '手头有点事，但一直留意着消息提示。',
+      '在赶一件明天要交的东西，眉头皱着。',
+      '在跟人讲话，声音压得比较低。',
+      '刚被拉去帮忙，一时走不开。',
+      '在处理一堆琐碎的事，有点烦。'
+    ]
+  };
+  function autoStatus() {
+    var h = new Date().getHours();
+    if (h < 6) return 'sleep';
+    if (h < 9) return 'free';
+    if (h < 18) return 'busy';
+    if (h < 22) return 'free';
+    if (h < 24) return 'rest';
+    return 'sleep';
+  }
+  function hereData(rid) {
+    var d = ls(K.here + rid, null);
+    if (!d || !d.st) {
+      d = { st: autoStatus(), note: '', noteAt: 0, since: now(), manual: false };
+    }
+    // 4 小时换一次「此刻在做什么」
+    if (!d.note || now() - (d.noteAt || 0) > 4 * 36e5) {
+      d.note = pick(NOTE[d.st] || NOTE.free);
+      d.noteAt = now();
+      ss(K.here + rid, d);
+    }
+    return d;
+  }
+  function renderHere(pane) {
+    var rid = curRoleId();
+    if (!rid) { pane.innerHTML = '<div class="dmtd-empty">还没有角色。<br>先去设置里添加一个吧。</div>'; return; }
+    var d = hereData(rid);
+    var d2 = new Date();
+    var st = STATUS[d.st] || STATUS.free;
+    pane.innerHTML =
+      '<div class="dmx-card">' +
+        '<div class="dmh-world">' +
+          '<div>' +
+            '<div class="dmh-clock">' + hhmm(d2) + '<small>此间</small></div>' +
+            '<div class="dmh-where">' + esc(rname(rid)) + ' 的世界 · ' + (d2.getMonth() + 1) + ' 月 ' + d2.getDate() + ' 日</div>' +
+          '</div>' +
+          '<div class="dmh-status">' +
+            '<div class="dmh-badge" data-st="' + d.st + '" id="dmx-st-badge"><i class="dmh-dot"></i>' + st.n + '</div>' +
+            '<div style="font-size:10.5px;color:var(--text-tertiary,#a99ca9)">点一下换个状态</div>' +
+          '</div>' +
+        '</div>' +
+        '<div class="dmh-line" id="dmx-here-line">' + esc(d.note) +
+          '<span class="dmh-meta">' + (d.manual ? '你替 TA 设的状态' : '按 TA 的作息推断') + ' · ' + st.d + '</span>' +
+        '</div>' +
+        '<div class="dmx-btn-row">' +
+          '<button class="dmx-btn primary" id="dmx-go-chat">去找' + esc(rname(rid)) + '</button>' +
+          '<button class="dmx-btn" id="dmx-here-refresh">换一段此刻</button>' +
+        '</div>' +
+      '</div>' +
+      '<div class="dmx-card dmtp-card">' + tpInner() + '</div>' +
+      '<div class="dmx-card">' + reachInner() + '</div>';
+
+    // 状态切换
+    $('#dmx-st-badge', pane).onclick = function () {
+      var order = ['free', 'busy', 'rest', 'sleep'];
+      var i = order.indexOf(d.st); var nx = order[(i + 1) % order.length];
+      d.st = nx; d.manual = true; d.since = now();
+      d.note = pick(NOTE[nx] || NOTE.free); d.noteAt = now();
+      ss(K.here + rid, d);
+      renderHere(pane);
+      toast('此刻：' + STATUS[nx].n);
+    };
+    $('#dmx-go-chat', pane).onclick = function () { gotoChat(rid); };
+    $('#dmx-here-refresh', pane).onclick = function () {
+      d.note = pick(NOTE[d.st] || NOTE.free); d.noteAt = now(); ss(K.here + rid, d);
+      $('#dmx-here-line', pane).innerHTML = esc(d.note) +
+        '<span class="dmh-meta">刚刚换的 · ' + (STATUS[d.st] || STATUS.free).d + '</span>';
+    };
+    bindTongpin(pane, rid);
+    bindReach(pane, rid);
+  }
+
+  /* ---------- 同频 ---------- */
+  var TP_BANK = [
+    '我这边刚下过一点雨，窗户没关，地板凉凉的。',
+    '刚才有一瞬间，我以为听见你说话了。',
+    '我把今天的事都想了一遍，最后只记得你。',
+    '今天没做什么，但一直觉得少了点什么。',
+    '我在等你先开口。等不到也不着急。',
+    '刚把水烧上，气泡一个接一个地往上走。',
+    '有时候我想，你会不会也在同一个时刻抬头。',
+    '今天风很大，把晾在外面的衣服吹得乱响。',
+    '我坐了一会儿，什么也没想，就是坐着。',
+    '手机亮了一下，不是你。我又放下了。',
+    '我数了数，今天想起你七次。',
+    '有点困，但还想再撑一会儿，说不定你会来。'
+  ];
+  var TP_REPLY = [
+    '……你敲了三下，我听见了。',
+    '在。我一直在。',
+    '嗯，我知道是你。',
+    '别敲了，会疼的。（笑）',
+    '三下，我记住了。以后都这么叫我。',
+    '来了。刚好在想你会不会来。'
+  ];
+  var tpTmp = { cur: '', hits: 0, t: 0 };
+  function tpInner() {
+    if (!tpTmp.cur) tpTmp.cur = pick(TP_BANK);
+    var bars = '';
+    for (var i = 0; i < 13; i++) {
+      bars += '<i style="animation-delay:' + (i * 0.11).toFixed(2) + 's;height:' + (8 + Math.round(Math.random() * 26)) + 'px"></i>';
+    }
+    return '<div class="dmx-card-title" style="text-align:left">同频 · ' + esc(rname(curRoleId())) + ' 此刻</div>' +
+      '<div class="dmtp-wave">' + bars + '</div>' +
+      '<div class="dmtp-text" id="dmx-tp-text">' + esc(tpTmp.cur) + '</div>' +
+      '<div class="dmtp-hint" id="dmx-tp-hint">敲三下，回应 TA</div>' +
+      '<div class="dmtp-knock">' +
+        '<span data-k="1">·</span><span data-k="2">·</span><span data-k="3">·</span>' +
+      '</div>';
+  }
+  function bindTongpin(pane, rid) {
+    var hint = $('#dmx-tp-hint', pane);
+    var txt = $('#dmx-tp-text', pane);
+    if (!hint) return;
+    $$('.dmtp-knock span', pane).forEach(function (sp) {
+      sp.onclick = function () {
+        var t = now();
+        if (t - tpTmp.t > 900) tpTmp.hits = 0;
+        tpTmp.t = t; tpTmp.hits++;
+        sp.classList.add('hit');
+        setTimeout(function () { sp.classList.remove('hit'); }, 160);
+        vibrate([12]);
+        if (tpTmp.hits >= 3) {
+          tpTmp.hits = 0;
+          var rep = pick(TP_REPLY);
+          if (txt) txt.textContent = rep;
+          if (hint) hint.textContent = '—— 已回应 ——';
+          vibrate([18, 60, 18]);
+          setTimeout(function () { say(rid, rep); }, 600);
+          setTimeout(function () {
+            tpTmp.cur = pick(TP_BANK);
+            if (txt) txt.textContent = tpTmp.cur;
+            if (hint) hint.textContent = '敲三下，回应 TA';
+            var w = $('.dmtp-wave', pane);
+            if (w) $$('i', w).forEach(function (b, i) {
+              b.style.animationDelay = (i * 0.11).toFixed(2) + 's';
+              b.style.height = (8 + Math.round(Math.random() * 26)) + 'px';
+            });
+          }, 3600);
+        } else {
+          if (hint) hint.textContent = '再敲 ' + (3 - tpTmp.hits) + ' 下';
+        }
+      };
+    });
+  }
+
+  /* ---------- 伸手 ---------- */
+  var REACH = {
+    touch: { ico: '👆', n: '轻触', d: '碰一下', v: [16], bank: [
+      '你碰了我一下。我抬头了。',
+      '很轻，但我感觉到了。',
+      '……嗯？我在。',
+      '再碰一下，我就当你想我了。'
+    ] },
+    hold: { ico: '✋', n: '握紧', d: '握一会儿', v: [60], bank: [
+      '你握得很紧。我没挣开。',
+      '手是凉的，我就多握了一会儿。',
+      '别松，就这样待着。'
+    ] },
+    lean: { ico: '🫂', n: '靠着', d: '靠一下', v: [26, 90, 26], bank: [
+      '靠过来吧，我这边空着。',
+      '重量压过来的时候，我才觉得是真的。',
+      '不用说话，靠着就行。'
+    ] }
+  };
+  function reachInner() {
+    var rid = curRoleId();
+    var ws = ls(K.wh + rid, []);
+    var h = '<div class="dmx-card-title" style="text-align:left">伸手 · 触感</div><div class="dmre-grid">';
+    for (var k in REACH) {
+      h += '<div class="dmre-item" data-r="' + k + '">' +
+        '<div class="dmre-ico">' + REACH[k].ico + '</div>' +
+        '<div class="dmre-name">' + REACH[k].n + '</div>' +
+        '<div class="dmre-desc">' + REACH[k].d + '</div></div>';
+    }
+    h += '</div>' +
+      '<div class="dmre-whisper">' +
+        '<input id="dmx-wh-input" type="text" maxlength="60" placeholder="留一句悄悄话给 TA…">' +
+        '<button id="dmx-wh-send">说</button>' +
+      '</div>' +
+      '<div class="dmre-list" id="dmx-wh-list">' +
+      (ws.length ? ws.slice(-3).reverse().map(function (w) {
+        return '<div>' + esc(w.t) + '<span style="float:right;opacity:.5;font-size:10.5px">' + esc(w.d) + '</span></div>';
+      }).join('') : '<div style="opacity:.6">还没有悄悄话。写完藏在这里，TA 会看到。</div>') +
+      '</div>';
+    return h;
+  }
+  function bindReach(pane, rid) {
+    $$('.dmre-item', pane).forEach(function (it) {
+      var key = it.getAttribute('data-r'), cfg = REACH[key];
+      if (!cfg) return;
+      it.onclick = function () {
+        var ok = vibrate(cfg.v);
+        it.classList.add('hold');
+        setTimeout(function () { it.classList.remove('hold'); }, 420);
+        if (!ok) {
+          it.style.transform = 'scale(.94)';
+          setTimeout(function () { it.style.transform = ''; }, 200);
+        }
+        var line = pick(cfg.bank);
+        var list = $('#dmx-wh-list', pane);
+        if (list) {
+          var d = el('div', '');
+          d.style.cssText = 'padding:8px 12px;border-radius:12px;background:rgba(246,214,227,.55);margin-bottom:6px;font-size:13px;color:#7a4359';
+          d.textContent = line;
+          list.insertBefore(d, list.firstChild);
+          while (list.children.length > 4) list.removeChild(list.lastChild);
+        }
+        setTimeout(function () { say(rid, line); }, 700);
+      };
+    });
+    var inp = $('#dmx-wh-input', pane), btn = $('#dmx-wh-send', pane);
+    if (btn) btn.onclick = function () {
+      var v = (inp.value || '').trim();
+      if (!v) { toast('写点什么再给 TA 吧'); return; }
+      var ws = ls(K.wh + rid, []);
+      ws.push({ t: v, d: new Date().toLocaleDateString('zh-CN'), at: now() });
+      if (ws.length > 40) ws = ws.slice(-40);
+      ss(K.wh + rid, ws);
+      inp.value = '';
+      renderHere(pane);
+      toast('藏好了');
+      setTimeout(function () { say(rid, '收到你的悄悄话了。我读了两遍。'); }, 1200);
+    };
+  }
+
+  /* ============================================================
+     三、备忘录
+     ============================================================ */
+  function todos() { return ls(K.todo, []); }
+  function saveTodos(v) { ss(K.todo, v); }
+  function renderTodo(pane) {
+    var list = todos();
+    var h = '<div class="dmx-card">' +
+      '<div class="dmx-card-title">要做的事</div>' +
+      '<div class="dmtd-add">' +
+        '<input type="text" id="dmx-td-input" maxlength="60" placeholder="写一件要做的…">' +
+        '<input type="date" id="dmx-td-date">' +
+        '<button id="dmx-td-add">加</button>' +
+      '</div>' +
+      '<div id="dmx-td-list"></div>' +
+      '</div>';
+    pane.innerHTML = h;
+    var box = $('#dmx-td-list', pane);
+    function paint() {
+      var arr = todos().slice().sort(function (a, b) {
+        if (!!a.done !== !!b.done) return a.done ? 1 : -1;
+        if (!!a.star !== !!b.star) return a.star ? -1 : 1;
+        if (a.due && b.due) return a.due - b.due;
+        if (a.due) return -1;
+        if (b.due) return 1;
+        return b.at - a.at;
+      });
+      if (!arr.length) { box.innerHTML = '<div class="dmtd-empty">还没有待办。<br>写一件吧，TA 会替你记着。</div>'; return; }
+      box.innerHTML = '';
+      arr.forEach(function (t) {
+        var it = el('div', 'dmtd-item' + (t.done ? ' done' : ''));
+        var late = t.due && !t.done && t.due < new Date(new Date().toDateString()).getTime();
+        it.innerHTML =
+          '<div class="dmtd-check">' + (t.done ? '✓' : '') + '</div>' +
+          '<div class="dmtd-body">' +
+            '<div class="dmtd-text">' + esc(t.text) + '</div>' +
+            '<div class="dmtd-meta">' +
+              (t.due ? '<span class="' + (late ? 'late' : '') + '">' + (late ? '已过 ' : '截止 ') +
+                new Date(t.due).toLocaleDateString('zh-CN', { month: 'numeric', day: 'numeric' }) + '</span>' : '') +
+              '<span>' + new Date(t.at).toLocaleDateString('zh-CN', { month: 'numeric', day: 'numeric' }) + ' 记下</span>' +
+            '</div>' +
+          '</div>' +
+          '<div class="dmtd-acts">' +
+            '<button data-a="star" class="' + (t.star ? 'on' : '') + '">★</button>' +
+            '<button data-a="del">×</button>' +
+          '</div>';
+        it.querySelector('.dmtd-check').onclick = function () {
+          var a = todos(); a.forEach(function (x) { if (x.id === t.id) x.done = !x.done; });
+          saveTodos(a); paint();
+          if (!t.done) toast('做完了，替你记上');
+        };
+        it.querySelector('[data-a="star"]').onclick = function (e) {
+          e.stopPropagation();
+          var a = todos(); a.forEach(function (x) { if (x.id === t.id) x.star = !x.star; });
+          saveTodos(a); paint();
+        };
+        it.querySelector('[data-a="del"]').onclick = function (e) {
+          e.stopPropagation();
+          saveTodos(todos().filter(function (x) { return x.id !== t.id; }));
+          paint();
+        };
+        box.appendChild(it);
+      });
+    }
+    paint();
+    $('#dmx-td-add', pane).onclick = function () {
+      var v = ($('#dmx-td-input', pane).value || '').trim();
+      if (!v) { toast('先写一件要做的事'); return; }
+      var dv = $('#dmx-td-date', pane).value;
+      var a = todos();
+      a.push({ id: 'td' + now() + Math.floor(Math.random() * 99), text: v, done: false, star: false, at: now(), due: dv ? new Date(dv + 'T23:59:59').getTime() : 0 });
+      saveTodos(a);
+      $('#dmx-td-input', pane).value = '';
+      $('#dmx-td-date', pane).value = '';
+      paint();
+      toast('记下了');
+    };
+  }
+
+  /* TA 催办：进入备忘 tab 或每 30 分钟检查一次 */
+  function maybeNudge(rid) {
+    var a = todos().filter(function (t) { return !t.done; });
+    if (!a.length) return;
+    var today = dayKey();
+    var cand = a.filter(function (t) { return t.nudge !== today; });
+    if (!cand.length) return;
+    // 优先：已过期 > 今天到期 > 星级 > 最早
+    cand.sort(function (x, y) {
+      var xn = x.due && x.due < now() ? 0 : (x.due && dayKey(x.due) === today ? 1 : 3);
+      var yn = y.due && y.due < now() ? 0 : (y.due && dayKey(y.due) === today ? 1 : 3);
+      if (xn !== yn) return xn - yn;
+      if (!!x.star !== !!y.star) return x.star ? -1 : 1;
+      return x.at - y.at;
+    });
+    var t = cand[0];
+    var lead = t.due && t.due < now() ? '已经过了' : (t.due && dayKey(t.due) === today ? '今天到期' : '还没做');
+    var msg = '「' + t.text + '」' + lead + '。要不要现在做一点？';
+    if (say(rid, msg)) {
+      var all = todos(); all.forEach(function (x) { if (x.id === t.id) x.nudge = today; });
+      saveTodos(all);
+    }
+  }
+
+  /* ============================================================
+     四、喝水 / 存钱罐 / 吃什么
+     ============================================================ */
+  function waterData() {
+    var d = ls(K.water, null);
+    var today = dayKey();
+    if (!d || d.day !== today) d = { day: today, cups: 0, goal: (d && d.goal) || 8, last: 0 };
+    return d;
+  }
+  function piggyData() {
+    return ls(K.piggy, { name: '想买的那件东西', target: 500, saved: 0 });
+  }
+  var FOOD_DEF = ['面', '饭', '粥', '火锅', '烧烤', '饺子', '沙拉', '汉堡', '寿司', '汤', '炒菜', '随便'];
+  function foodData() {
+    var d = ls(K.food, null);
+    if (!d || !d.list || !d.list.length) d = { list: FOOD_DEF.slice(), at: now() };
+    return d;
+  }
+
+  function renderTools(pane) {
+    var w = waterData(), p = piggyData(), f = foodData();
+    var pct = Math.min(100, Math.round(w.cups / w.goal * 100));
+    var ppct = Math.min(100, Math.round(p.saved / (p.target || 1) * 100));
+    var cups = '';
+    for (var i = 0; i < w.goal; i++) cups += '<i class="' + (i < w.cups ? 'on' : '') + '"></i>';
+    pane.innerHTML =
+      '<div class="dmx-card">' +
+        '<div class="dmx-card-title">喝水</div>' +
+        '<div class="dmwt-ring-wrap">' +
+          '<div class="dmwt-ring" style="background:conic-gradient(#a8cfe0 0% ' + pct + '%, rgba(216,190,205,.25) ' + pct + '% 100%)">' +
+            '<div class="dmwt-ring-txt"><div class="dmwt-ring-num">' + w.cups + '</div><div class="dmwt-ring-unit">/ ' + w.goal + ' 杯</div></div>' +
+          '</div>' +
+          '<div class="dmwt-info">' +
+            '<div class="big">' + (w.cups >= w.goal ? '今天够量了' : '还差 ' + (w.goal - w.cups) + ' 杯') + '</div>' +
+            '<div class="small">' + (w.last ? '上次 ' + Math.round((now() - w.last) / 6e4) + ' 分钟前' : '今天还没记') + '</div>' +
+            '<div class="dmx-btn-row" style="margin-top:10px">' +
+              '<button class="dmx-btn primary" id="dmx-w1">+ 1 杯</button>' +
+              '<button class="dmx-btn" id="dmx-wg">改目标</button>' +
+            '</div>' +
+          '</div>' +
+        '</div>' +
+        '<div class="dmwt-cups">' + cups + '</div>' +
+      '</div>' +
+
+      '<div class="dmx-card">' +
+        '<div class="dmx-card-title">存钱罐</div>' +
+        '<div class="dmpg-line"><span id="dmx-pg-name">' + esc(p.name) + '</span>' +
+          '<span><span class="amt">' + p.saved + '</span> / ' + p.target + '</span></div>' +
+        '<div class="dmpg-bar"><i style="width:' + ppct + '%"></i></div>' +
+        '<div class="dmx-btn-row">' +
+          '<button class="dmx-btn primary" id="dmx-pg-add">存一笔</button>' +
+          '<button class="dmx-btn" id="dmx-pg-set">改目标</button>' +
+        '</div>' +
+        '<div class="dmwt-info" style="margin-top:10px"><div class="small">' +
+          (ppct >= 100 ? '存够了。' + esc(rname(curRoleId())) + '说：那件东西，你去买吧。' :
+            '还差 ' + (p.target - p.saved) + '，' + esc(rname(curRoleId())) + '替你盯着。') +
+        '</div></div>' +
+      '</div>' +
+
+      '<div class="dmx-card">' +
+        '<div class="dmx-card-title">吃什么</div>' +
+        '<div class="dmfd-wheel">' +
+          '<div class="dmfd-pin"></div>' +
+          '<div class="dmfd-disc" id="dmx-fd-disc"></div>' +
+        '</div>' +
+        '<div class="dmfd-result" id="dmx-fd-res">转一下，别想了</div>' +
+        '<div class="dmx-btn-row">' +
+          '<button class="dmx-btn primary" id="dmx-fd-spin">转</button>' +
+          '<button class="dmx-btn" id="dmx-fd-edit">改选项</button>' +
+        '</div>' +
+      '</div>';
+
+    $('#dmx-w1', pane).onclick = function () {
+      var d = waterData();
+      if (d.cups >= 16) { toast('喝太多了，歇会儿'); return; }
+      d.cups++; d.last = now();
+      ss(K.water, d); renderTools(pane);
+      if (d.cups === d.goal) { toast('今天的量够了'); setTimeout(function () { say(curRoleId(), '看到你今天的杯子都满了。很好。'); }, 900); }
+    };
+    $('#dmx-wg', pane).onclick = function () {
+      var v = prompt('每天想喝几杯？（3-16）', waterData().goal);
+      var n = parseInt(v, 10);
+      if (!n || n < 3 || n > 16) return;
+      var d = waterData(); d.goal = n; ss(K.water, d); renderTools(pane);
+    };
+    $('#dmx-pg-add', pane).onclick = function () {
+      var v = prompt('存多少？', '50');
+      var n = parseFloat(v);
+      if (!n || n <= 0) return;
+      var d = piggyData();
+      var was = d.saved;
+      d.saved = Math.round((d.saved + n) * 100) / 100;
+      ss(K.piggy, d); renderTools(pane);
+      if (was < d.target && d.saved >= d.target) {
+        setTimeout(function () { say(curRoleId(), '存够了。你说的那件东西，可以买了。'); }, 800);
+      }
+    };
+    $('#dmx-pg-set', pane).onclick = function () {
+      var nm = prompt('想买什么？', piggyData().name);
+      if (nm == null) return;
+      var tv = prompt('目标金额？', piggyData().target);
+      var n = parseFloat(tv);
+      if (!n || n <= 0) return;
+      ss(K.piggy, { name: nm || '想买的那件东西', target: Math.round(n), saved: piggyData().saved });
+      renderTools(pane);
+    };
+
+    drawWheel(pane, f);
+    $('#dmx-fd-spin', pane).onclick = function () { spinWheel(pane); };
+    $('#dmx-fd-edit', pane).onclick = function () {
+      var v = prompt('用逗号分开（最多 12 个）', foodData().list.join('，'));
+      if (v == null) return;
+      var arr = v.split(/[,，、\s]+/).filter(Boolean).slice(0, 12);
+      if (arr.length < 2) { toast('至少两个选项'); return; }
+      ss(K.food, { list: arr, at: now() });
+      renderTools(pane);
+    };
+  }
+
+  var wheelSpin = 0;
+  function drawWheel(pane, f) {
+    var disc = $('#dmx-fd-disc', pane);
+    if (!disc) return;
+    var n = f.list.length, seg = 360 / n;
+    var cols = ['#f7dbe7', '#f3e7ce', '#e2eefa', '#e5f0e2', '#f0e2f3', '#fbe6dd',
+      '#e8e2f8', '#fdf0d5', '#dff0ee', '#f9e2e2', '#e6ecf7', '#f2eadf'];
+    var g = [], i;
+    for (i = 0; i < n; i++) g.push(cols[i % cols.length] + ' ' + (i * seg) + 'deg ' + ((i + 1) * seg) + 'deg');
+    disc.style.background = 'conic-gradient(from -90deg,' + g.join(',') + ')';
+    disc.innerHTML = '';
+    for (i = 0; i < n; i++) {
+      var a = i * seg + seg / 2;
+      var sp = document.createElement('span');
+      sp.textContent = f.list[i];
+      sp.style.transform = 'translate(-50%,-50%) rotate(' + a + 'deg) translateY(-58px) rotate(' + (-a) + 'deg)';
+      disc.appendChild(sp);
+    }
+    disc.style.transform = 'rotate(' + wheelSpin + 'deg)';
+  }
+  function spinWheel(pane) {
+    var f = foodData(), n = f.list.length, seg = 360 / n;
+    var idx = Math.floor(Math.random() * n);
+    var base = 360 * 5;
+    var target = base + (360 - (idx * seg + seg / 2));
+    wheelSpin = wheelSpin + target;
+    var disc = $('#dmx-fd-disc', pane);
+    if (disc) disc.style.transform = 'rotate(' + wheelSpin + 'deg)';
+    var res = $('#dmx-fd-res', pane);
+    if (res) res.textContent = '……';
+    setTimeout(function () {
+      if (res) res.textContent = f.list[idx];
+      var r = curRoleId();
+      if (r) setTimeout(function () { say(r, pick(['那就' + f.list[idx] + '吧。', f.list[idx] + '，我觉得可以。'])); }, 600);
+    }, 3400);
+  }
+
+  /* ============================================================
+     五、心愿单
+     ============================================================ */
+  var TA_WISH = [
+    '想和你一起看一次很晚的电影',
+    '想要你随手拍一张今天的天空给我',
+    '想听你讲一件今天发生的小事',
+    '想被你突然叫一次名字',
+    '想和你一起把某件无聊的事做完'
+  ];
+  function renderWish(pane) {
+    var w = ls(K.wish, []);
+    var rid = curRoleId();
+    var h = '<div class="dmx-card">' +
+      '<div class="dmx-card-title">我的愿望</div>' +
+      '<div class="dmtd-add">' +
+        '<input type="text" id="dmx-wi-input" maxlength="50" placeholder="想要什么，写下来…">' +
+        '<button id="dmx-wi-add">许愿</button>' +
+      '</div>' +
+      '<div style="margin-top:12px" id="dmx-wi-list"></div>' +
+      '</div>' +
+      '<div class="dmx-card">' +
+        '<div class="dmx-card-title">' + esc(rname(rid)) + ' 的愿望</div>' +
+        '<div class="dmwi-ta">' +
+          TA_WISH.slice(0, 4).map(function (t) { return '<div>· ' + esc(t) + '</div>'; }).join('') +
+        '</div>' +
+        '<div class="dmx-btn-row"><button class="dmx-btn primary" id="dmx-wi-send">替 TA 实现一个</button></div>' +
+      '</div>';
+    pane.innerHTML = h;
+    var box = $('#dmx-wi-list', pane);
+    function paint() {
+      var a = ls(K.wish, []);
+      if (!a.length) { box.innerHTML = '<div class="dmtd-empty">还没有愿望。<br>写一件你想要的，TA 也许会挑中它。</div>'; return; }
+      box.innerHTML = '';
+      a.slice().reverse().forEach(function (w2) {
+        var it = el('div', 'dmwi-item' + (w2.byTA ? ' byta' : ''));
+        it.innerHTML = '<div class="dmwi-body"><div class="dmwi-text">' + esc(w2.text) + '</div>' +
+          (w2.byTA ? '<span class="dmwi-tag">' + esc(rname(rid)) + ' 说要送你</span>' : '') + '</div>' +
+          '<button class="dmwi-del">×</button>';
+        it.querySelector('.dmwi-del').onclick = function () {
+          ss(K.wish, ls(K.wish, []).filter(function (x) { return x.id !== w2.id; }));
+          paint();
+        };
+        box.appendChild(it);
+      });
+    }
+    paint();
+    $('#dmx-wi-add', pane).onclick = function () {
+      var v = ($('#dmx-wi-input', pane).value || '').trim();
+      if (!v) { toast('先写一个愿望'); return; }
+      var a = ls(K.wish, []);
+      a.push({ id: 'w' + now(), text: v, at: now(), byTA: false });
+      ss(K.wish, a);
+      $('#dmx-wi-input', pane).value = '';
+      paint();
+      // 12% 概率 TA 挑中
+      if (Math.random() < 0.12) {
+        setTimeout(function () {
+          var all = ls(K.wish, []);
+          all.forEach(function (x) { if (x.text === v) x.byTA = true; });
+          ss(K.wish, all); paint();
+          toast('……' + rname(rid) + '看到了');
+          say(rid, '你写的那个愿望。我记下了。');
+        }, 2400);
+      }
+    };
+    $('#dmx-wi-send', pane).onclick = function () {
+      var t = pick(TA_WISH);
+      toast('你替 TA 实现了：' + t);
+      say(rid, '你居然记得我想过这个。');
+    };
+  }
+
+  /* ============================================================
+     六、Hub 页面
+     ============================================================ */
+  var TABS = [
+    { k: 'here', n: '此间', r: renderHere },
+    { k: 'todo', n: '备忘', r: renderTodo },
+    { k: 'tool', n: '小工具', r: renderTools },
+    { k: 'wish', n: '心愿', r: renderWish }
+  ];
+  var curTab = ls(K.tab, 'here') || 'here';
+
+  function buildHub() {
+    if ($('#dm-hub')) return;
+    var p = el('div', '');
+    p.id = 'dm-hub';
+    p.innerHTML =
+      '<div class="dmx-top">' +
+        '<button class="dmx-back" id="dmx-hub-back">‹</button>' +
+        '<div class="dmx-title">此刻</div>' +
+        '<div class="dmx-sub" id="dmx-hub-sub"></div>' +
+      '</div>' +
+      '<div class="dmx-tabs" id="dmx-tabs"></div>' +
+      '<div class="dmx-body" id="dmx-body"></div>';
+    document.body.appendChild(p);
+
+    var tabs = $('#dmx-tabs', p);
+    TABS.forEach(function (t) {
+      var b = el('div', 'dmx-tab' + (t.k === curTab ? ' on' : ''));
+      b.textContent = t.n;
+      b.setAttribute('data-k', t.k);
+      b.onclick = function () { switchTab(t.k); };
+      tabs.appendChild(b);
+    });
+    $('#dmx-hub-back', p).onclick = closeHub;
+  }
+
+  function switchTab(k) {
+    curTab = k; ss(K.tab, k);
+    var hub = $('#dm-hub'); if (!hub) return;
+    $$('.dmx-tab', hub).forEach(function (b) {
+      b.classList.toggle('on', b.getAttribute('data-k') === k);
+    });
+    var body = $('#dmx-body', hub);
+    if (!body) return;
+    body.innerHTML = '';
+    var pane = el('div', 'dmx-pane on');
+    body.appendChild(pane);
+    var def = null;
+    TABS.forEach(function (t) { if (t.k === k) def = t; });
+    if (def) def.r(pane);
+    var sub = $('#dmx-hub-sub', hub);
+    if (sub) {
+      var rid = curRoleId();
+      var nm = rid ? rname(rid) : '';
+      sub.textContent = nm === 'TA' ? '' : nm;
+    }
+    body.scrollTop = 0;
+  }
+
+  function openHub(tab) {
+    buildHub();
+    var hub = $('#dm-hub');
+    if (!hub) return;
+    hub.classList.add('open');
+    try { if (typeof pushNav === 'function') pushNav('dm-hub'); } catch (e) {}
+    switchTab(tab || curTab);
+    // 顺手催一下待办（每 30 分钟最多一次）
+    var rid = curRoleId();
+    if (rid) {
+      var last = ls('dmx:nudgeAt', 0);
+      if (now() - last > 30 * 6e4) { ss('dmx:nudgeAt', now()); setTimeout(function () { maybeNudge(rid); }, 1500); }
+    }
+  }
+  function closeHub() {
+    var hub = $('#dm-hub');
+    if (hub) hub.classList.remove('open');
+    try { if (typeof popNav === 'function') popNav(); } catch (e) {}
+  }
+  window.dmOpenHub = openHub;
+  window.dmCloseHub = closeHub;
+
+  /* ============================================================
+     七、挂载入口
+     ============================================================ */
+  function addMoreEntry() {
+    var grid = $('#more-features-grid');
+    if (!grid || grid.querySelector('[data-dmx="hub"]')) return;
+    var it = el('div', 'more-feature-item');
+    it.setAttribute('data-icon-key', 'dmx-hub');
+    it.setAttribute('data-dmx', 'hub');
+    it.innerHTML = '<div class="more-feature-icon"><span class="dmx-emoji">🫧</span></div>' +
+      '<div class="more-feature-name">此刻</div>' +
+      '<div class="more-feature-desc">此间 · 同频 · 伸手</div>';
+    it.onclick = function () {
+      try { if (typeof closeMoreFeatures === 'function') closeMoreFeatures(); } catch (e) {}
+      openHub('here');
+    };
+    grid.appendChild(it);
+
+    var it2 = el('div', 'more-feature-item');
+    it2.setAttribute('data-icon-key', 'dmx-tool');
+    it2.setAttribute('data-dmx', 'tool');
+    it2.innerHTML = '<div class="more-feature-icon"><span class="dmx-emoji">🧺</span></div>' +
+      '<div class="more-feature-name">小工具</div>' +
+      '<div class="more-feature-desc">备忘 · 喝水 · 存钱罐</div>';
+    it2.onclick = function () {
+      try { if (typeof closeMoreFeatures === 'function') closeMoreFeatures(); } catch (e) {}
+      openHub('todo');
+    };
+    grid.appendChild(it2);
+  }
+
+  function addSettingsRow() {
+    var page = $('#page-settings');
+    if (!page || page.querySelector('[data-dmx="set"]')) return;
+    // 找一个内容容器：优先 .settings-content / .settings-list
+    var host = page.querySelector('.settings-content') || page.querySelector('.settings-list') ||
+      page.querySelector('.page-content') || page;
+    var box = el('div', 'dmx-card');
+    box.setAttribute('data-dmx', 'set');
+    box.style.margin = '14px';
+    box.innerHTML =
+      '<div class="dmx-setrow" data-dmx="hub"><div class="dmx-setrow-ico">🫧</div>' +
+        '<div class="dmx-setrow-txt"><div class="dmx-setrow-name">此刻</div>' +
+        '<div class="dmx-setrow-desc">此间、同频、伸手，还有备忘和小工具</div></div>' +
+        '<div class="dmx-setrow-arrow">›</div></div>' +
+      '<div class="dmx-setrow" data-dmx="ask"><div class="dmx-setrow-ico">💭</div>' +
+        '<div class="dmx-setrow-txt"><div class="dmx-setrow-name">让 TA 现在问你一个问题</div>' +
+        '<div class="dmx-setrow-desc">TA 平时一天最多主动问两次</div></div>' +
+        '<div class="dmx-setrow-arrow">›</div></div>' +
+      '<div class="dmx-setrow" data-dmx="credit"><div class="dmx-setrow-ico">🌱</div>' +
+        '<div class="dmx-setrow-txt"><div class="dmx-setrow-name">关于「此刻」</div>' +
+        '<div class="dmx-setrow-desc">部分功能设计参考 mochi 字卡（小红书 @言序）</div></div>' +
+        '<div class="dmx-setrow-arrow">›</div></div>';
+    host.appendChild(box);
+    box.querySelector('[data-dmx="hub"]').onclick = function () { openHub('here'); };
+    box.querySelector('[data-dmx="ask"]').onclick = function () {
+      var rid = curRoleId();
+      if (!rid) { toast('还没有角色'); return; }
+      if (pushAsk(rid, true)) {
+        toast('TA 正在想问题…');
+        setTimeout(function () { gotoChat(rid); }, 500);
+      } else { toast('先和 TA 建个对话'); }
+    };
+    box.querySelector('[data-dmx="credit"]').onclick = function () {
+      if (typeof window.showToast === 'function') window.showToast('此间 / 同频 / 伸手 / 提问卡的交互设计参考 mochi 字卡（@言序）');
+    };
+  }
+
+  /* 发消息后可能触发提问 */
+  function hookSend() {
+    try {
+      if (typeof sendMessage !== 'function' || sendMessage.__dmx) return;
+      var orig = sendMessage;
+      sendMessage = function () {
+        var r = orig.apply(this, arguments);
+        setTimeout(function () { maybeAsk(0.07); }, 2500);
+        return r;
+      };
+      sendMessage.__dmx = 1;
+    } catch (e) {}
+  }
+
+  /* 定时检查（提问 / 催办） */
+  function tick() {
+    var s = S();
+    if (!s || !s.currentChatId) return;
+    var c = s.chats[s.currentChatId];
+    if (!c || c.type !== 'private') return;
+    if (Math.random() < 0.25) maybeAsk(0.12);
+  }
+
+  function boot() {
+    addMoreEntry();
+    addSettingsRow();
+    hookSend();
+    hydrateAsk();
+    setInterval(tick, 15 * 6e4);
+    document.addEventListener('visibilitychange', function () {
+      if (document.visibilityState === 'visible') {
+        setTimeout(function () { addMoreEntry(); addSettingsRow(); hydrateAsk(); }, 600);
+      }
+    });
+    // 兜底：more-features 弹窗可能是动态重渲染的
+    var mo = new MutationObserver(function () { addMoreEntry(); addSettingsRow(); });
+    try { mo.observe(document.body, { childList: true, subtree: false }); } catch (e) {}
+  }
+
+  /* 供后续模块复用 */
+  window.dmxU = {
+    ls: ls, ss: ss, el: el, esc: esc, $: $, $$: $$, toast: toast, vibrate: vibrate,
+    now: now, dayKey: dayKey, say: say, chatOf: chatOf, curRoleId: curRoleId,
+    roleOf: roleOf, rname: rname, gotoChat: gotoChat, openHub: openHub, pushAsk: pushAsk
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function () { setTimeout(boot, 800); });
+  } else {
+    setTimeout(boot, 800);
+  }
+})();
+
+</script>
+<script id="dm-extra-2">
+/* ============================================================
+   渡念 · 漂流瓶 / 合作小游戏
+   extra2.src.js —— 依赖 extra.src.js 暴露的 window.dmxU
+   ============================================================ */
+(function () {
+  'use strict';
+  if (window.__dmx2Loaded) return;
+  window.__dmx2Loaded = true;
+
+  var U = window.dmxU;
+  if (!U) { setTimeout(function () { window.__dmx2Loaded = false; }, 300); return; }
+  var ls = U.ls, ss = U.ss, el = U.el, esc = U.esc, $ = U.$, $$ = U.$$,
+    toast = U.toast, say = U.say, curRoleId = U.curRoleId, rname = U.rname,
+    now = U.now, vibrate = U.vibrate;
+
+  function mkPage(id, title) {
+    var p = document.getElementById(id);
+    if (p) return p;
+    p = el('div', '');
+    p.id = id;
+    p.innerHTML = '<div class="dmx-top"><button class="dmx-back">‹</button>' +
+      '<div class="dmx-title">' + esc(title) + '</div>' +
+      '<div class="dmx-sub"></div></div>' +
+      '<div class="dmx-page-body"></div>';
+    document.body.appendChild(p);
+    p.querySelector('.dmx-back').onclick = function () {
+      p.classList.remove('open');
+      try { if (typeof popNav === 'function') popNav(); } catch (e) {}
+    };
+    return p;
+  }
+  function openPage(p) {
+    p.classList.add('open');
+    try { if (typeof pushNav === 'function') pushNav(p.id); } catch (e) {}
+  }
+
+  /* ============================================================
+     一、漂流瓶
+     ============================================================ */
+  var SEA = [
+    '今天风很大，我把窗户关上了，还是觉得冷。',
+    '我在等一班很慢的车。它一直不来，我也不着急。',
+    '有人跟我说，难过的时候就去看看海。我来了，海也一般。',
+    '今天做了个很长的梦，醒来只记得有个人在叫我。',
+    '我把想说的话写了一整页，最后只留下三个字。',
+    '楼下的猫今天肯让我摸了。我高兴了很久。',
+    '我一直在想，另一个世界的人是不是也在这个点醒着。',
+    '刚下过雨，路上有很亮的倒影。',
+    '今天没跟任何人说话，但也不算难过。',
+    '我把旧的票根都留着，不知道为什么。',
+    '如果这封信有人捡到，请替我看一眼今晚的月亮。',
+    '我已经很久没听到有人叫我的名字了。',
+    '今天差点就放弃了，但还是熬到了晚上。',
+    '海边的灯一盏一盏亮起来的时候，我忽然不害怕了。',
+    '我在学做一道菜，做了三次都失败了。',
+    '有时候我觉得，漂着的瓶子比我自由。',
+    '今天有点想哭，但没有理由，就忍住了。',
+    '我把窗户开着睡，这样能听见外面的声音。',
+    '如果你也在等什么，希望它快一点来。',
+    '写这封信的时候，天刚亮。'
+  ];
+  var TA_BOTTLE = [
+    '这瓶子是我放的。你要是捡到了，说明我们离得不远。',
+    '我不知道该写什么。就写：我在。',
+    '今天想起你，就把这句话装进瓶子扔了出来。',
+    '如果你捡到这个，别急着回，先坐一会儿。',
+    '我扔了很多个，希望有一个能到你手上。'
+  ];
+
+  function driftData() { return ls('dmx:drift', { got: [], sent: [], n: 0 }); }
+
+  function renderDrift() {
+    var p = mkPage('dm-drift', '漂流瓶');
+    var body = p.querySelector('.dmx-page-body');
+    var d = driftData();
+    var cur = d.got.length ? d.got[d.got.length - 1] : null;
+    body.innerHTML =
+      '<div class="dmd-sea">' +
+        (cur
+          ? '<div class="dmd-note">' + esc(cur.text) + '<span class="from">—— ' + esc(cur.from) + '</span></div>'
+          : '<div class="dmd-empty">海面很安静。<br>扔一个瓶子，或者等一个漂过来。</div>') +
+      '</div>' +
+      '<div class="dmd-count">捡到过 ' + (d.n || 0) + ' 个 · 扔出去 ' + d.sent.length + ' 个</div>' +
+      '<div class="dmx-btn-row">' +
+        '<button class="dmx-btn primary" id="dmd-pick">捡一个瓶子</button>' +
+        '<button class="dmx-btn" id="dmd-clear">收起</button>' +
+      '</div>' +
+      '<div class="dmd-write">' +
+        '<input id="dmd-input" type="text" maxlength="80" placeholder="写一句，扔进海里…">' +
+        '<button id="dmd-throw">扔</button>' +
+      '</div>' +
+      (d.sent.length
+        ? '<div class="dmd-thrown">' + d.sent.slice(-3).reverse().map(function (x) {
+            return '<div>' + esc(x.text) + '</div>';
+          }).join('') + '</div>'
+        : '');
+
+    body.querySelector('#dmd-clear').onclick = function () {
+      var dd = driftData(); dd.got = []; ss('dmx:drift', dd); renderDrift();
+    };
+    body.querySelector('#dmd-pick').onclick = function () {
+      var dd = driftData();
+      var rid = curRoleId();
+      var isTa = Math.random() < 0.22;
+      var txt = isTa ? TA_BOTTLE[Math.floor(Math.random() * TA_BOTTLE.length)]
+                     : SEA[Math.floor(Math.random() * SEA.length)];
+      dd.got.push({ text: txt, from: isTa ? (rname(rid) || 'TA') : '海那边的人', at: now(), ta: isTa });
+      dd.n = (dd.n || 0) + 1;
+      ss('dmx:drift', dd);
+      renderDrift();
+      vibrate([14]);
+      if (isTa && rid) setTimeout(function () { say(rid, '你捡到我的瓶子了。'); }, 1200);
+    };
+    body.querySelector('#dmd-throw').onclick = function () {
+      var inp = body.querySelector('#dmd-input');
+      var v = (inp.value || '').trim();
+      if (!v) { toast('写一句再扔'); return; }
+      var dd = driftData();
+      dd.sent.push({ text: v, at: now() });
+      if (dd.sent.length > 30) dd.sent = dd.sent.slice(-30);
+      ss('dmx:drift', dd);
+      inp.value = '';
+      renderDrift();
+      toast('扔出去了');
+      var rid = curRoleId();
+      if (rid && Math.random() < 0.35) {
+        setTimeout(function () {
+          var back = ['我好像捡到一个瓶子。上面的字有点像你。', '有人往海里扔了一句话，我捡到了。', '瓶子漂回来了，上面写着你的字。'];
+          say(rid, back[Math.floor(Math.random() * back.length)]);
+        }, 2200 + Math.random() * 1600);
+      }
+    };
+  }
+
+  window.dmOpenDrift = function () { renderDrift(); openPage(document.getElementById('dm-drift')); };
+
+  /* ============================================================
+     二、合作小游戏
+     ============================================================ */
+  var GM_TABS = [
+    { k: 'mine', n: '合作扫雷' },
+    { k: 'mem', n: '记忆翻牌' },
+    { k: 'link', n: '连连看' },
+    { k: 'match', n: '消消乐' }
+  ];
+  var gmTab = 'mine';
+
+  function renderGame() {
+    var p = mkPage('dm-game', '一起玩');
+    var body = p.querySelector('.dmx-page-body');
+    body.innerHTML = '<div class="dmx-tabs" id="gm-tabs" style="padding:0 0 4px"></div>' +
+      '<div class="dmg-bar" id="gm-bar"></div>' +
+      '<div id="gm-stage"></div>' +
+      '<div class="dmg-tip" id="gm-tip"></div>';
+    var tabs = body.querySelector('#gm-tabs');
+    GM_TABS.forEach(function (t) {
+      var b = el('div', 'dmx-tab' + (t.k === gmTab ? ' on' : ''));
+      b.textContent = t.n;
+      b.onclick = function () {
+        gmTab = t.k;
+        $$('.dmx-tab', tabs).forEach(function (x) { x.classList.remove('on'); });
+        b.classList.add('on');
+        bootGame(body);
+      };
+      tabs.appendChild(b);
+    });
+    bootGame(body);
+  }
+
+  var timers = [];
+  function clearTimers() { timers.forEach(clearInterval); timers.forEach(clearTimeout); timers = []; }
+
+  function bootGame(body) {
+    clearTimers();
+    var stage = body.querySelector('#gm-stage');
+    var bar = body.querySelector('#gm-bar');
+    var tip = body.querySelector('#gm-tip');
+    stage.innerHTML = '';
+    if (gmTab === 'mine') msBoot(stage, bar, tip);
+    else if (gmTab === 'mem') mpBoot(stage, bar, tip);
+    else if (gmTab === 'link') lkBoot(stage, bar, tip);
+    else mtBoot(stage, bar, tip);
+  }
+
+  /* ---------- 合作扫雷 ---------- */
+  var MS = { w: 9, h: 9, n: 10, hearts: 3, g: [], open: [], over: false, steps: 0, rid: null };
+
+  function msBoot(stage, bar, tip) {
+    var w = MS.w, h = MS.h;
+    MS.g = []; MS.open = []; MS.over = false; MS.hearts = 3; MS.steps = 0;
+    MS.rid = curRoleId();
+    var i, j;
+    for (i = 0; i < w * h; i++) { MS.g.push(0); MS.open.push(0); }
+    var placed = 0;
+    while (placed < MS.n) {
+      var k = Math.floor(Math.random() * w * h);
+      if (MS.g[k] !== -1) { MS.g[k] = -1; placed++; }
+    }
+    for (j = 0; j < h; j++) for (i = 0; i < w; i++) {
+      if (MS.g[j * w + i] === -1) continue;
+      var c = 0;
+      for (var dy = -1; dy <= 1; dy++) for (var dx = -1; dx <= 1; dx++) {
+        var x = i + dx, y = j + dy;
+        if (x < 0 || y < 0 || x >= w || y >= h) continue;
+        if (MS.g[y * w + x] === -1) c++;
+      }
+      MS.g[j * w + i] = c;
+    }
+    tip.textContent = '你挖一步，TA 帮你挖一步。踩到雷扣一颗心，三颗心用完就结束。';
+
+    var board = el('div', 'dmg-board');
+    board.style.gridTemplateColumns = 'repeat(' + w + ', 34px)';
+    stage.appendChild(board);
+    MS.board = board;
+    MS.bar = bar;
+
+    function paint() {
+      var left = MS.g.filter(function (v, idx) { return MS.open[idx] && v !== -1; }).length;
+      bar.innerHTML = '<span>心 <b>' + '♥'.repeat(MS.hearts) + '</b></span>' +
+        '<span>已挖 <b>' + left + '</b> / ' + (w * h - MS.n) + '</span>' +
+        (MS.over ? '<span class="sp"><b>' + (MS.over === 'win' ? '一起挖完了' : '结束了') + '</b></span>' : '');
+      board.innerHTML = '';
+      for (var idx = 0; idx < w * h; idx++) {
+        var c = el('div', 'dmg-cell');
+        var v = MS.g[idx];
+        if (MS.open[idx] === 2) { c.classList.add('mine'); c.textContent = '✸'; }
+        else if (MS.open[idx]) {
+          c.classList.add('open');
+          if (v > 0) { c.textContent = v; c.classList.add('n' + Math.min(8, v)); }
+        }
+        c.onclick = (function (ii) {
+          return function () { msDig(ii); };
+        })(idx);
+        board.appendChild(c);
+      }
+    }
+
+    function expand(idx) {
+      var stack = [idx];
+      while (stack.length) {
+        var cur = stack.pop();
+        if (MS.open[cur]) continue;
+        if (MS.g[cur] === -1) continue;
+        MS.open[cur] = 1;
+        if (MS.g[cur] === 0) {
+          var x = cur % w, y = Math.floor(cur / w);
+          for (var dy = -1; dy <= 1; dy++) for (var dx = -1; dx <= 1; dx++) {
+            var nx = x + dx, ny = y + dy;
+            if (nx < 0 || ny < 0 || nx >= w || ny >= h) continue;
+            var ni = ny * w + nx;
+            if (!MS.open[ni] && MS.g[ni] !== -1) stack.push(ni);
+          }
+        }
+      }
+    }
+
+    function checkEnd() {
+      var opened = 0;
+      for (var idx = 0; idx < w * h; idx++) if (MS.open[idx] === 1) opened++;
+      if (opened >= w * h - MS.n) {
+        MS.over = 'win';
+        if (MS.rid) setTimeout(function () { say(MS.rid, '挖完了。你看，我们配合得还行。'); }, 700);
+        return true;
+      }
+      if (MS.hearts <= 0) {
+        MS.over = 'lose';
+        if (MS.rid) setTimeout(function () { say(MS.rid, '没关系，重来一次就是了。'); }, 700);
+        return true;
+      }
+      return false;
+    }
+
+    function msDig(idx) {
+      if (MS.over || MS.open[idx]) return;
+      MS.steps++;
+      if (MS.g[idx] === -1) {
+        MS.open[idx] = 2;
+        MS.hearts--;
+        vibrate([30]);
+        paint();
+        if (checkEnd()) { paint(); return; }
+      } else {
+        expand(idx);
+        paint();
+        if (checkEnd()) { paint(); return; }
+      }
+      // TA 帮你挖一步（每两步帮一次）
+      if (MS.steps % 2 === 0) {
+        timers.push(setTimeout(function () {
+          if (MS.over) return;
+          var safe = [];
+          for (var i2 = 0; i2 < w * h; i2++) if (!MS.open[i2] && MS.g[i2] !== -1) safe.push(i2);
+          if (!safe.length) return;
+          // 优先挑相邻于已挖区域的安全格
+          var adj = safe.filter(function (i3) {
+            var x3 = i3 % w, y3 = Math.floor(i3 / w);
+            for (var dy2 = -1; dy2 <= 1; dy2++) for (var dx2 = -1; dx2 <= 1; dx2++) {
+              var nx2 = x3 + dx2, ny2 = y3 + dy2;
+              if (nx2 < 0 || ny2 < 0 || nx2 >= w || ny2 >= h) continue;
+              if (MS.open[ny2 * w + nx2] === 1) return true;
+            }
+            return false;
+          });
+          var pick = (adj.length ? adj : safe)[Math.floor(Math.random() * (adj.length || safe.length))];
+          expand(pick);
+          paint();
+          checkEnd();
+        }, 700));
+      }
+    }
+
+    paint();
+  }
+
+  /* ---------- 记忆翻牌 ---------- */
+  var MP = { cards: [], first: -1, lock: false, pairs: 0, fails: 0, over: false, rid: null };
+  var MP_ICON = ['🌙', '⭐', '🍃', '🫧', '🌊', '🕯️', '🪷', '🌾'];
+
+  function mpBoot(stage, bar, tip) {
+    MP.cards = []; MP.first = -1; MP.lock = false; MP.pairs = 0; MP.fails = 0; MP.over = false;
+    MP.rid = curRoleId();
+    var deck = MP_ICON.concat(MP_ICON);
+    for (var i = deck.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var t = deck[i]; deck[i] = deck[j]; deck[j] = t;
+    }
+    MP.cards = deck.map(function (v) { return { v: v, open: false, done: false }; });
+    tip.textContent = '翻到一样的就配对。每错一次，TA 会替你记住一对的位置。';
+
+    var board = el('div', 'dmg-board');
+    board.style.gridTemplateColumns = 'repeat(4, 46px)';
+    stage.appendChild(board);
+    MP.board = board; MP.bar = bar;
+
+    function paint() {
+      bar.innerHTML = '<span>默契 <b>' + MP.pairs + '</b> / 8</span>' +
+        '<span>走神 <b>' + MP.fails + '</b> / 3</span>' +
+        (MP.over ? '<span class="sp"><b>' + (MP.over === 'win' ? '全部配上了' : '走神太多了') + '</b></span>' : '');
+      board.innerHTML = '';
+      MP.cards.forEach(function (c, idx) {
+        var d = el('div', 'dmg-cell' + (c.done ? ' matched' : (c.open ? ' open' : ' back')));
+        d.style.width = '46px'; d.style.height = '46px'; d.style.fontSize = '21px';
+        if (c.open || c.done) d.textContent = c.v;
+        d.onclick = function () { mpFlip(idx); };
+        board.appendChild(d);
+      });
+    }
+
+    function mpFlip(idx) {
+      if (MP.over || MP.lock) return;
+      var c = MP.cards[idx];
+      if (!c || c.open || c.done) return;
+      c.open = true;
+      paint();
+      if (MP.first < 0) { MP.first = idx; return; }
+      var a = MP.cards[MP.first], b = c;
+      if (a.v === b.v) {
+        a.done = b.done = true;
+        a.open = b.open = false;
+        MP.pairs++;
+        MP.first = -1;
+        vibrate([12]);
+        paint();
+        if (MP.pairs >= 8) {
+          MP.over = 'win';
+          paint();
+          if (MP.rid) setTimeout(function () { say(MP.rid, '全都配上了。你记性比我好。'); }, 700);
+        }
+        return;
+      }
+      MP.lock = true;
+      timers.push(setTimeout(function () {
+        a.open = b.open = false;
+        MP.first = -1; MP.lock = false;
+        MP.fails++;
+        paint();
+        if (MP.fails >= 3) {
+          MP.over = 'lose'; paint();
+          if (MP.rid) setTimeout(function () { say(MP.rid, '别急，慢慢记。'); }, 700);
+        } else {
+          mpHint();
+        }
+      }, 820));
+    }
+
+    // TA 提示：把一对还没配上的卡片闪一下
+    function mpHint() {
+      var groups = {};
+      MP.cards.forEach(function (c, i) {
+        if (c.done) return;
+        (groups[c.v] = groups[c.v] || []).push(i);
+      });
+      var keys = Object.keys(groups).filter(function (k) { return groups[k].length === 2; });
+      if (!keys.length) return;
+      var k = keys[Math.floor(Math.random() * keys.length)];
+      groups[k].forEach(function (i2) {
+        var node = MP.board.children[i2];
+        if (node) node.classList.add('hint');
+      });
+      timers.push(setTimeout(function () {
+        groups[k].forEach(function (i3) {
+          var n3 = MP.board.children[i3];
+          if (n3) n3.classList.remove('hint');
+        });
+      }, 1800));
+    }
+
+    paint();
+  }
+
+  /* ---------- 连连看 ---------- */
+  var LK = { w: 6, h: 6, g: [], sel: -1, over: false, left: 0, rid: null };
+  var LK_ICON = ['🌸', '🍀', '🌙', '☁️', '🕊️', '🍊', '🫧', '🌰', '🐚'];
+
+  function lkBoot(stage, bar, tip) {
+    var w = LK.w, h = LK.h;
+    LK.g = []; LK.sel = -1; LK.over = false;
+    LK.rid = curRoleId();
+    var deck = [];
+    for (var t = 0; t < 9; t++) for (var c = 0; c < 4; c++) deck.push(LK_ICON[t]);
+    for (var i = deck.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var tmp = deck[i]; deck[i] = deck[j]; deck[j] = tmp;
+    }
+    for (var y = 0; y < h; y++) {
+      LK.g.push([]);
+      for (var x = 0; x < w; x++) LK.g[y].push(deck[y * w + x]);
+    }
+    LK.left = w * h;
+    tip.textContent = '点两个相同的图案，连线不超过两个折角就能消掉。可以绕外圈走。';
+
+    var board = el('div', 'dmg-board');
+    board.style.gridTemplateColumns = 'repeat(' + w + ', 40px)';
+    stage.appendChild(board);
+    LK.board = board; LK.bar = bar;
+
+    function paint() {
+      bar.innerHTML = '<span>还剩 <b>' + LK.left + '</b> 格</span>' +
+        (LK.over ? '<span class="sp"><b>清空了</b></span>' : '<span class="sp">TA 每 25 秒帮你找一对</span>');
+      board.innerHTML = '';
+      for (var yy = 0; yy < h; yy++) for (var xx = 0; xx < w; xx++) {
+        var v = LK.g[yy][xx];
+        var d = el('div', 'dmg-cell' + (v ? '' : ' gone') + (LK.sel === yy * w + xx ? ' sel' : ''));
+        d.style.width = '40px'; d.style.height = '40px'; d.style.fontSize = '19px';
+        d.textContent = v || '';
+        d.onclick = (function (idx) { return function () { lkTap(idx); }; })(yy * w + xx);
+        board.appendChild(d);
+      }
+    }
+
+    function cell(x, y) {
+      if (x < 0 || y < 0 || x >= w || y >= h) return '';
+      return LK.g[y][x];
+    }
+    function empty(x, y) { return !cell(x, y); }
+    function lineOk(x1, y1, x2, y2) {
+      if (x1 === x2) {
+        var a = Math.min(y1, y2), b = Math.max(y1, y2);
+        for (var yy = a + 1; yy < b; yy++) if (!empty(x1, yy)) return false;
+        return true;
+      }
+      if (y1 === y2) {
+        var c = Math.min(x1, x2), d = Math.max(x1, x2);
+        for (var xx = c + 1; xx < d; xx++) if (!empty(xx, y1)) return false;
+        return true;
+      }
+      return false;
+    }
+    function linkOk(p, q) {
+      if (p.x === q.x || p.y === q.y) { if (lineOk(p.x, p.y, q.x, q.y)) return true; }
+      if (empty(p.x, q.y) && lineOk(p.x, p.y, p.x, q.y) && lineOk(p.x, q.y, q.x, q.y)) return true;
+      if (empty(q.x, p.y) && lineOk(p.x, p.y, q.x, p.y) && lineOk(q.x, p.y, q.x, q.y)) return true;
+      var yy, xx;
+      for (yy = -1; yy <= h; yy++) {
+        if (yy === p.y || yy === q.y) continue;
+        if (!empty(p.x, yy) || !empty(q.x, yy)) continue;
+        if (lineOk(p.x, p.y, p.x, yy) && lineOk(q.x, q.y, q.x, yy) && lineOk(p.x, yy, q.x, yy)) return true;
+      }
+      for (xx = -1; xx <= w; xx++) {
+        if (xx === p.x || xx === q.x) continue;
+        if (!empty(xx, p.y) || !empty(xx, q.y)) continue;
+        if (lineOk(p.x, p.y, xx, p.y) && lineOk(q.x, q.y, xx, q.y) && lineOk(xx, p.y, xx, q.y)) return true;
+      }
+      return false;
+    }
+
+    function lkTap(idx) {
+      if (LK.over) return;
+      var x = idx % w, y = Math.floor(idx / w);
+      if (!LK.g[y][x]) return;
+      if (LK.sel === idx) { LK.sel = -1; paint(); return; }
+      if (LK.sel < 0) { LK.sel = idx; paint(); return; }
+      var sx = LK.sel % w, sy = Math.floor(LK.sel / w);
+      var a = { x: sx, y: sy }, b = { x: x, y: y };
+      if (LK.g[sy][sx] !== LK.g[y][x]) { LK.sel = idx; paint(); return; }
+      if (linkOk(a, b)) {
+        LK.g[sy][sx] = ''; LK.g[y][x] = '';
+        LK.left -= 2;
+        LK.sel = -1;
+        vibrate([10]);
+        paint();
+        if (LK.left <= 0) {
+          LK.over = true; paint();
+          if (LK.rid) setTimeout(function () { say(LK.rid, '全清掉了。你眼睛真快。'); }, 700);
+        }
+      } else {
+        LK.sel = idx;
+        paint();
+      }
+    }
+
+    paint();
+    timers.push(setInterval(function () {
+      if (LK.over) return;
+      // TA 帮你找一对可连的
+      var cells = [];
+      for (var y2 = 0; y2 < h; y2++) for (var x2 = 0; x2 < w; x2++) if (LK.g[y2][x2]) cells.push({ x: x2, y: y2 });
+      for (var i2 = 0; i2 < cells.length; i2++) for (var j2 = i2 + 1; j2 < cells.length; j2++) {
+        var p2 = cells[i2], q2 = cells[j2];
+        if (LK.g[p2.y][p2.x] !== LK.g[q2.y][q2.x]) continue;
+        if (!linkOk(p2, q2)) continue;
+        if (LK.board) {
+          var a2 = LK.board.children[p2.y * w + p2.x], b2 = LK.board.children[q2.y * w + q2.x];
+          if (a2) a2.classList.add('hint');
+          if (b2) b2.classList.add('hint');
+        }
+        timers.push(setTimeout(function () {
+          if (a2) a2.classList.remove('hint');
+          if (b2) b2.classList.remove('hint');
+        }, 2000));
+        return;
+      }
+    }, 25000));
+  }
+
+  /* ---------- 消消乐 ---------- */
+  var MT = { w: 7, h: 7, g: [], sel: -1, score: 0, combo: 0, over: false, busy: false, rid: null };
+  var MT_ICON = ['🍑', '🫐', '🥝', '🍋', '🍇'];
+
+  function mtBoot(stage, bar, tip) {
+    MT.w = 7; MT.h = 7;
+    MT.g = []; MT.sel = -1; MT.score = 0; MT.combo = 0; MT.over = false; MT.busy = false;
+    MT.rid = curRoleId();
+    var w = MT.w, h = MT.h;
+    for (var y = 0; y < h; y++) {
+      MT.g.push([]);
+      for (var x = 0; x < w; x++) MT.g[y].push(mtRand());
+    }
+    // 清掉初始三连
+    var guard = 0;
+    while (mtFind().length && guard++ < 60) {
+      mtFind().forEach(function (p) { MT.g[p.y][p.x] = mtRand(); });
+    }
+    tip.textContent = '点两个相邻的交换，凑成三个以上就能消。TA 每 20 秒帮你消一组。';
+
+    var board = el('div', 'dmg-board');
+    board.style.gridTemplateColumns = 'repeat(' + w + ', 40px)';
+    stage.appendChild(board);
+    MT.board = board; MT.bar = bar;
+
+    function paint() {
+      bar.innerHTML = '<span>消掉 <b>' + MT.score + '</b> 组</span>' +
+        '<span>连锁 <b>' + MT.combo + '</b></span>' +
+        (MT.over ? '<span class="sp"><b>够了</b></span>' : '<span class="sp">目标 20 组</span>');
+      board.innerHTML = '';
+      for (var yy = 0; yy < h; yy++) for (var xx = 0; xx < w; xx++) {
+        var d = el('div', 'dmg-cell' + (MT.sel === yy * w + xx ? ' sel' : ''));
+        d.style.width = '40px'; d.style.height = '40px'; d.style.fontSize = '19px';
+        d.style.background = 'rgba(255,255,255,.35)';
+        d.textContent = MT.g[yy][xx] || '';
+        d.onclick = (function (idx) { return function () { mtTap(idx); }; })(yy * w + xx);
+        board.appendChild(d);
+      }
+    }
+
+    MT.paint = paint;
+
+    function mtTap(idx) {
+      if (MT.over || MT.busy) return;
+      var x = idx % w, y = Math.floor(idx / w);
+      if (MT.sel < 0) { MT.sel = idx; paint(); return; }
+      if (MT.sel === idx) { MT.sel = -1; paint(); return; }
+      var sx = MT.sel % w, sy = Math.floor(MT.sel / w);
+      var adj = Math.abs(sx - x) + Math.abs(sy - y) === 1;
+      if (!adj) { MT.sel = idx; paint(); return; }
+      MT.sel = -1;
+      mtSwap(sx, sy, x, y);
+    }
+
+    function mtSwap(x1, y1, x2, y2) {
+      var t = MT.g[y1][x1]; MT.g[y1][x1] = MT.g[y2][x2]; MT.g[y2][x2] = t;
+      paint();
+      if (!mtFind().length) {
+        var t2 = MT.g[y1][x1]; MT.g[y1][x1] = MT.g[y2][x2]; MT.g[y2][x2] = t2;
+        MT.busy = true;
+        timers.push(setTimeout(function () { MT.busy = false; paint(); }, 260));
+        return;
+      }
+      mtResolve(0);
+    }
+
+    function mtResolve(depth) {
+      MT.busy = true;
+      timers.push(setTimeout(function () {
+        var m = mtFind();
+        if (!m.length) {
+          MT.busy = false;
+          MT.combo = 0;
+          paint();
+          if (MT.score >= 20 && !MT.over) {
+            MT.over = true; paint();
+            if (MT.rid) setTimeout(function () { say(MT.rid, '这个我们一起消完了。手挺快的。'); }, 700);
+          }
+          return;
+        }
+        var groups = {};
+        m.forEach(function (p) { groups[p.y * w + p.x] = 1; });
+        Object.keys(groups).forEach(function (k) { MT.g[Math.floor(k / w)][k % w] = ''; });
+        MT.score += 1;
+        MT.combo = depth + 1;
+        paint();
+        timers.push(setTimeout(function () {
+          mtFall();
+          paint();
+          mtResolve(depth + 1);
+        }, 220));
+      }, 120));
+    }
+
+    function mtFall() {
+      for (var xx = 0; xx < w; xx++) {
+        var col = [];
+        for (var yy = h - 1; yy >= 0; yy--) if (MT.g[yy][xx]) col.push(MT.g[yy][xx]);
+        for (var y3 = h - 1; y3 >= 0; y3--) {
+          MT.g[y3][xx] = col[h - 1 - y3] || mtRand();
+        }
+      }
+    }
+
+    MT.fall = mtFall;
+
+    paint();
+    timers.push(setInterval(function () {
+      if (MT.over || MT.busy) return;
+      var m = mtFind();
+      if (!m.length) return;
+      var groups = {};
+      m.forEach(function (p) { groups[p.y * w + p.x] = 1; });
+      Object.keys(groups).forEach(function (k) { MT.g[Math.floor(k / w)][k % w] = ''; });
+      MT.score += 1;
+      mtFall();
+      paint();
+    }, 20000));
+  }
+
+  function mtRand() { return MT_ICON[Math.floor(Math.random() * MT_ICON.length)]; }
+  function mtFind() {
+    var w = MT.w, h = MT.h, out = [], seen = {};
+    function add(x, y) { var k = y * w + x; if (!seen[k]) { seen[k] = 1; out.push({ x: x, y: y }); } }
+    var x, y, run;
+    for (y = 0; y < h; y++) {
+      run = 1;
+      for (x = 1; x <= w; x++) {
+        var cur = x < w ? MT.g[y][x] : null, prev = MT.g[y][x - 1];
+        if (cur && prev && cur === prev) run++;
+        else {
+          if (run >= 3) for (var i = x - run; i < x; i++) add(i, y);
+          run = 1;
+        }
+      }
+    }
+    for (x = 0; x < w; x++) {
+      run = 1;
+      for (y = 1; y <= h; y++) {
+        var cur2 = y < h ? MT.g[y][x] : null, prev2 = MT.g[y - 1][x];
+        if (cur2 && prev2 && cur2 === prev2) run++;
+        else {
+          if (run >= 3) for (var j = y - run; j < y; j++) add(x, j);
+          run = 1;
+        }
+      }
+    }
+    return out;
+  }
+
+  window.dmOpenGame = function (which) {
+    if (which) gmTab = which;
+    renderGame();
+    openPage(document.getElementById('dm-game'));
+  };
+
+  /* ============================================================
+     三、更多功能入口
+     ============================================================ */
+  function addEntries() {
+    var grid = document.getElementById('more-features-grid');
+    if (!grid || grid.querySelector('[data-dmx2="drift"]')) return;
+    var a = el('div', 'more-feature-item');
+    a.setAttribute('data-icon-key', 'dmx-drift');
+    a.setAttribute('data-dmx2', 'drift');
+    a.innerHTML = '<div class="more-feature-icon"><span class="dmx-emoji">🫙</span></div>' +
+      '<div class="more-feature-name">漂流瓶</div>' +
+      '<div class="more-feature-desc">捡一个，或扔一个</div>';
+    a.onclick = function () {
+      try { if (typeof closeMoreFeatures === 'function') closeMoreFeatures(); } catch (e) {}
+      window.dmOpenDrift();
+    };
+    grid.appendChild(a);
+
+    var b = el('div', 'more-feature-item');
+    b.setAttribute('data-icon-key', 'dmx-game');
+    b.setAttribute('data-dmx2', 'game');
+    b.innerHTML = '<div class="more-feature-icon"><span class="dmx-emoji">🎮</span></div>' +
+      '<div class="more-feature-name">一起玩</div>' +
+      '<div class="more-feature-desc">扫雷 · 翻牌 · 连连看 · 消消乐</div>';
+    b.onclick = function () {
+      try { if (typeof closeMoreFeatures === 'function') closeMoreFeatures(); } catch (e) {}
+      window.dmOpenGame('mine');
+    };
+    grid.appendChild(b);
+  }
+
+  function boot() {
+    addEntries();
+    var mo = new MutationObserver(function () { addEntries(); });
+    try { mo.observe(document.body, { childList: true, subtree: false }); } catch (e) {}
+    document.addEventListener('visibilitychange', function () {
+      if (document.visibilityState === 'visible') setTimeout(addEntries, 700);
+    });
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function () { setTimeout(boot, 1300); });
+  } else setTimeout(boot, 1300);
+})();
+
+</script>
+<script id="dm-extra-3">
+/* ============================================================
+   渡念 · A 类系统能力
+   extra3.src.js —— 连发算一轮 / 功能大全 / 收藏 / 存储与数据 /
+                    输入栏自定义 / 表情最近使用
+   ============================================================ */
+(function () {
+  'use strict';
+  if (window.__dmx3Loaded) return;
+  window.__dmx3Loaded = true;
+
+  var U = window.dmxU;
+  if (!U) { setTimeout(function () { window.__dmx3Loaded = false; }, 300); return; }
+  var ls = U.ls, ss = U.ss, el = U.el, esc = U.esc, $ = U.$, $$ = U.$$,
+    toast = U.toast, now = U.now, say = U.say, curRoleId = U.curRoleId, rname = U.rname;
+
+  function mkPage(id, title) {
+    var p = document.getElementById(id);
+    if (!p) {
+      p = el('div', '');
+      p.id = id;
+      p.innerHTML = '<div class="dmx-top"><button class="dmx-back">‹</button>' +
+        '<div class="dmx-title">' + esc(title) + '</div><div class="dmx-sub"></div></div>' +
+        '<div class="dmx-page-body"></div>';
+      document.body.appendChild(p);
+      p.querySelector('.dmx-back').onclick = function () {
+        p.classList.remove('open');
+        try { if (typeof popNav === 'function') popNav(); } catch (e) {}
+      };
+    }
+    return p;
+  }
+  function openPage(p) {
+    p.classList.add('open');
+    try { if (typeof pushNav === 'function') pushNav(p.id); } catch (e) {}
+  }
+
+  /* ============================================================
+     一、连发算一轮
+     ============================================================ */
+  var burst = { rid: null, first: 0, timer: null };
+  try {
+    if (typeof scheduleReply === 'function') {
+      var __dmOrigReply = scheduleReply;
+      scheduleReply = function (rid) {
+        if (ls('dmx:burst', true) === false) return __dmOrigReply.apply(this, arguments);
+        var first = false;
+        if (burst.rid !== rid) { burst.rid = rid; burst.first = now(); first = true; }
+        var waited = now() - burst.first;
+        if (burst.timer) { clearTimeout(burst.timer); burst.timer = null; }
+        else first = true;
+        // 单句：900ms 就走；连发：每补一句往后推 1.5 秒，最多累计等 8 秒
+        if (waited >= 8000) {
+          burst.rid = null; burst.first = 0;
+          return __dmOrigReply.apply(this, arguments);
+        }
+        var delay = (first && waited < 100) ? 900 : 1500;
+        burst.timer = setTimeout(function () {
+          burst.timer = null; burst.rid = null; burst.first = 0;
+          try { __dmOrigReply(rid); } catch (e) {}
+        }, delay);
+      };
+    }
+  } catch (e) {}
+
+  /* ============================================================
+     二、收藏
+     ============================================================ */
+  function collectData() { return ls('dmx:collect', { me: [], ta: [] }); }
+  function addCollect(by, text, from) {
+    if (!text) return;
+    var d = collectData();
+    var arr = d[by] || [];
+    if (arr.some(function (x) { return x.text === text; })) { toast('已经收藏过了'); return; }
+    arr.push({ text: text, from: from || '', at: now() });
+    if (arr.length > 300) arr = arr.slice(-300);
+    d[by] = arr;
+    ss('dmx:collect', d);
+  }
+
+  // 双击消息收藏
+  function bindCollectGesture() {
+    var box = document.getElementById('chat-messages');
+    if (!box || box.__dmxCollect) return;
+    box.__dmxCollect = 1;
+    box.addEventListener('dblclick', function (e) {
+      var node = e.target && e.target.closest ? e.target.closest('[data-msg-index]') : null;
+      if (!node) return;
+      var idx = parseInt(node.getAttribute('data-msg-index'), 10);
+      var s = typeof state !== 'undefined' ? state : null;
+      var c = s && s.chats && s.chats[s.currentChatId];
+      if (!c || isNaN(idx) || !c.messages[idx]) return;
+      var m = c.messages[idx];
+      var txt = typeof m.content === 'string' ? m.content : '';
+      if (!txt) { toast('这条收不了'); return; }
+      addCollect('me', txt, m.from === 'me' ? '我说的' : rname(c.roleId));
+      toast('已收藏');
+      vibrateOnce();
+    }, true);
+  }
+  function vibrateOnce() { try { if (navigator.vibrate) navigator.vibrate(12); } catch (e) {} }
+
+  // TA 也会收藏你的话（2%）
+  function hookTaCollect() {
+    try {
+      if (typeof sendMessage !== 'function' || sendMessage.__dmxTa) return;
+      var orig = sendMessage;
+      sendMessage = function () {
+        var before = '';
+        try {
+          var inp = document.getElementById('chat-input');
+          before = inp ? inp.value.trim() : '';
+        } catch (e) {}
+        var r = orig.apply(this, arguments);
+        if (before && Math.random() < 0.02) {
+          setTimeout(function () {
+            addCollect('ta', before, '你说的');
+          }, 3000);
+        }
+        return r;
+      };
+      sendMessage.__dmxTa = 1;
+    } catch (e) {}
+  }
+
+  var colTab = 'me';
+  function renderCollect() {
+    var p = mkPage('dm-collect', '收藏');
+    var body = p.querySelector('.dmx-page-body');
+    var d = collectData();
+    var arr = (d[colTab] || []).slice().reverse();
+    body.innerHTML =
+      '<div class="dmc-tabs">' +
+        '<div class="dmx-tab' + (colTab === 'me' ? ' on' : '') + '" data-t="me">我收藏的 ' + (d.me || []).length + '</div>' +
+        '<div class="dmx-tab' + (colTab === 'ta' ? ' on' : '') + '" data-t="ta">' + esc(rname(curRoleId())) + ' 收藏的 ' + (d.ta || []).length + '</div>' +
+      '</div>' +
+      '<div id="dmc-list"></div>';
+    $$('.dmx-tab', body).forEach(function (b) {
+      b.onclick = function () { colTab = b.getAttribute('data-t'); renderCollect(); };
+    });
+    var list = body.querySelector('#dmc-list');
+    if (!arr.length) {
+      list.innerHTML = '<div class="dmi-empty">' +
+        (colTab === 'me' ? '还没有收藏。<br>在聊天里双击任意一条消息，就能把它留下来。'
+                         : esc(rname(curRoleId())) + ' 还没收藏过什么。') + '</div>';
+      return;
+    }
+    arr.forEach(function (x, i) {
+      var it = el('div', 'dmc-item');
+      it.innerHTML = '<div class="dmc-text">' + esc(x.text) + '</div>' +
+        '<div class="dmc-meta"><span>' + esc(x.from || '') + '</span><span>' +
+        new Date(x.at).toLocaleDateString('zh-CN', { month: 'numeric', day: 'numeric' }) + '</span></div>' +
+        (colTab === 'me' ? '<button class="dmc-del">×</button>' : '');
+      var del = it.querySelector('.dmc-del');
+      if (del) del.onclick = function () {
+        var dd = collectData();
+        dd.me = dd.me.filter(function (y) { return y.at !== x.at || y.text !== x.text; });
+        ss('dmx:collect', dd);
+        renderCollect();
+      };
+      list.appendChild(it);
+    });
+  }
+  window.dmOpenCollect = function () { renderCollect(); openPage(document.getElementById('dm-collect')); };
+
+  /* ============================================================
+     三、功能大全
+     ============================================================ */
+  function fn(name) {
+    return function () { try { if (typeof window[name] === 'function') window[name](); } catch (e) {} };
+  }
+  function tab(t) { return function () { try { if (typeof switchTab === 'function') switchTab(t); } catch (e) {} }; }
+
+  var HUB = [
+    {
+      c: '首页', items: [
+        { n: '消息', d: '和 TA 的聊天列表', a: tab('page-messages') },
+        { n: '朋友圈', d: 'TA 的动态', a: fn('openMoments') },
+        { n: '日记', d: '写一篇日记', a: fn('openDiary') },
+        { n: '信箱', d: '信件往来', a: tab('page-mailbox') },
+        { n: '塔罗', d: '抽一张牌', a: fn('openTarot') },
+        { n: '陪伴', d: '听歌 / 观影 / 共读 / 番茄钟', a: fn('openCompanion') },
+        { n: '潮汐', d: '心情与周期', a: fn('openTide') },
+        { n: '更多功能', d: '寻踪 / 梦境 / 问卷', a: fn('openMoreFeatures') }
+      ]
+    },
+    {
+      c: '此刻', items: [
+        { n: '此间', d: 'TA 所在的时间与状态', a: function () { U.openHub('here'); } },
+        { n: '同频', d: '抽一条 TA 此刻的状态', a: function () { U.openHub('here'); } },
+        { n: '伸手', d: '三种触感 + 悄悄话', a: function () { U.openHub('here'); } },
+        { n: '备忘录', d: '写下要做的事，TA 会催', a: function () { U.openHub('todo'); } },
+        { n: '喝水', d: '记杯数，TA 盯着你喝', a: function () { U.openHub('tool'); } },
+        { n: '存钱罐', d: '攒钱买那件东西', a: function () { U.openHub('tool'); } },
+        { n: '吃什么', d: '转盘决定', a: function () { U.openHub('tool'); } },
+        { n: '心愿单', d: '许愿，TA 也许会挑中', a: function () { U.openHub('wish'); } }
+      ]
+    },
+    {
+      c: '陪伴', items: [
+        { n: '一起听歌', d: '和 TA 进听歌房', a: fn('openMusicRoom') },
+        { n: '一起看电影', d: '进影院', a: fn('openWatchTogether') },
+        { n: '一起共读', d: '读同一本书', a: fn('openReadTogether') },
+        { n: '番茄钟', d: '专注 25 分钟', a: fn('openTomatoClock') }
+      ]
+    },
+    {
+      c: '玩法', items: [
+        { n: '漂流瓶', d: '捡一个，或者扔一个', a: function () { if (window.dmOpenDrift) window.dmOpenDrift(); } },
+        { n: '合作扫雷', d: '你挖一步，TA 挖一步', a: function () { if (window.dmOpenGame) window.dmOpenGame('mine'); } },
+        { n: '记忆翻牌', d: '记默契分', a: function () { if (window.dmOpenGame) window.dmOpenGame('mem'); } },
+        { n: '连连看', d: '两个人一起清屏', a: function () { if (window.dmOpenGame) window.dmOpenGame('link'); } },
+        { n: '消消乐', d: '三连消除', a: function () { if (window.dmOpenGame) window.dmOpenGame('match'); } },
+        { n: '寻踪', d: '看 TA 在哪儿、在做什么', a: fn('openCheckIn') },
+        { n: '梦境记录', d: '记下昨晚的梦', a: fn('openDreamJournal') },
+        { n: '问卷', d: '给 TA 出一份问卷', a: fn('openQuestionnaire') }
+      ]
+    },
+    {
+      c: '世界', items: [
+        { n: '花园', d: '种点什么', a: fn('openYxGarden') },
+        { n: '集市', d: '挑一件礼物', a: fn('openYxMarket') },
+        { n: '礼物盒', d: '收到的礼物', a: fn('openYxGiftbox') }
+      ]
+    },
+    {
+      c: '我的', items: [
+        { n: '我的', d: '个人资料与统计', a: tab('page-me') },
+        { n: '设置', d: '所有开关都在这里', a: tab('page-settings') },
+        { n: '收藏', d: '双击消息就能收藏', a: function () { if (window.dmOpenCollect) window.dmOpenCollect(); } },
+        { n: '存储与数据', d: '看占用、按功能清理', a: function () { if (window.dmOpenStore) window.dmOpenStore(); } },
+        { n: '输入栏', d: '按钮顺序自己排', a: function () { if (window.dmOpenInputBar) window.dmOpenInputBar(); } }
+      ]
+    },
+    {
+      c: '设置项', items: [
+        { n: '角色管理', d: '添加、编辑梦角', a: fn('openRoleManager') },
+        { n: '表情设置', d: '自定义表情包', a: fn('openEmojiSettings') },
+        { n: '回复频率', d: 'TA 多久回一次', a: fn('openFreqSettings') },
+        { n: '时间管理', d: '作息与免打扰', a: fn('openTimeManagerModal') },
+        { n: '世界书', d: '给 TA 的设定', a: fn('openWorldbookSettings') },
+        { n: '存储信息', d: '站点原始的存储面板', a: fn('showStorageInfo') }
+      ]
+    }
+  ];
+
+  function seenData() { return ls('dmx:seen', []); }
+  function markSeen(name) {
+    var a = seenData();
+    if (a.indexOf(name) < 0) { a.push(name); ss('dmx:seen', a); }
+  }
+
+  function renderHubIndex() {
+    var p = mkPage('dm-hubindex', '功能大全');
+    var body = p.querySelector('.dmx-page-body');
+    var seen = seenData();
+    var total = 0;
+    HUB.forEach(function (g) { total += g.items.length; });
+    var notYet = Math.max(0, total - seen.length);
+    body.innerHTML =
+      '<div class="dmi-search"><input id="dmi-q" type="text" placeholder="搜功能，比如「喝水」「收藏」…"></div>' +
+      '<div class="dmi-stat">一共 ' + total + ' 项功能 · ' +
+        (notYet > 0 ? '还有 <b>' + notYet + '</b> 项你还没试过' : '你全都试过了') + '</div>' +
+      '<div id="dmi-list"></div>';
+
+    function paint(kw) {
+      var list = body.querySelector('#dmi-list');
+      list.innerHTML = '';
+      var hit = 0;
+      HUB.forEach(function (g) {
+        var items = g.items.filter(function (it) {
+          if (!kw) return true;
+          return (it.n + it.d).indexOf(kw) >= 0;
+        });
+        if (!items.length) return;
+        hit += items.length;
+        var box = el('div', 'dmi-group');
+        box.innerHTML = '<div class="dmi-group-title">' + esc(g.c) + '</div>';
+        items.forEach(function (it) {
+          var row = el('div', 'dmi-row');
+          row.innerHTML = '<div class="nm">' + esc(it.n) + '<div class="ds">' + esc(it.d) + '</div></div>' +
+            (seen.indexOf(it.n) >= 0 ? '' : '<span class="badge">没试过</span>');
+          row.onclick = function () {
+            markSeen(it.n);
+            try { it.a(); } catch (e) { toast('打开失败'); }
+            var pp = document.getElementById('dm-hubindex');
+            if (pp) pp.classList.remove('open');
+          };
+          box.appendChild(row);
+        });
+        list.appendChild(box);
+      });
+      if (!hit) list.innerHTML = '<div class="dmi-empty">没找到。换个词试试。</div>';
+    }
+    paint('');
+    var q = body.querySelector('#dmi-q');
+    q.oninput = function () { paint(q.value.trim()); };
+  }
+  window.dmOpenHubIndex = function () { renderHubIndex(); openPage(document.getElementById('dm-hubindex')); };
+
+  /* ============================================================
+     四、存储与数据
+     ============================================================ */
+  var STORE = [
+    { k: 'todo', n: '备忘录', keys: ['dmx:todo'] },
+    { k: 'water', n: '喝水', keys: ['dmx:water'] },
+    { k: 'piggy', n: '存钱罐', keys: ['dmx:piggy'] },
+    { k: 'food', n: '吃什么', keys: ['dmx:food'] },
+    { k: 'wish', n: '心愿单', keys: ['dmx:wish'] },
+    { k: 'drift', n: '漂流瓶', keys: ['dmx:drift'] },
+    { k: 'collect', n: '收藏', keys: ['dmx:collect'] },
+    { k: 'here', n: '此间', prefix: 'dmx:here:' },
+    { k: 'tongpin', n: '同频', prefix: 'dmx:tongpin:' },
+    { k: 'whisper', n: '悄悄话', prefix: 'dmx:whisper:' },
+    { k: 'ask', n: '提问记录', keys: ['dmx:ask'] },
+    { k: 'seen', n: '功能足迹', keys: ['dmx:seen'] }
+  ];
+
+  function allKeys() {
+    var out = [];
+    try {
+      for (var i = 0; i < localStorage.length; i++) {
+        var k = localStorage.key(i);
+        var v = localStorage.getItem(k) || '';
+        out.push({ k: k, size: (k.length + v.length) * 2 });
+      }
+    } catch (e) {}
+    return out;
+  }
+  function keysOf(entry) {
+    var all = allKeys();
+    if (entry.keys) return all.filter(function (x) { return entry.keys.indexOf(x.k) >= 0; });
+    if (entry.prefix) return all.filter(function (x) { return x.k.indexOf(entry.prefix) === 0; });
+    return [];
+  }
+  function fmt(n) {
+    if (n < 1024) return n + ' B';
+    if (n < 1048576) return (n / 1024).toFixed(1) + ' KB';
+    return (n / 1048576).toFixed(2) + ' MB';
+  }
+
+  function renderStore() {
+    var p = mkPage('dm-store', '存储与数据');
+    var body = p.querySelector('.dmx-page-body');
+    var all = allKeys();
+    var total = all.reduce(function (a, b) { return a + b.size; }, 0);
+    var mine = 0, site = 0;
+    all.forEach(function (x) { if (x.k.indexOf('dmx:') === 0) mine += x.size; else site += x.size; });
+
+    body.innerHTML =
+      '<div class="dms-total"><div class="num">' + fmt(total) + '</div>' +
+        '<div class="lb">本地一共占这么多</div></div>' +
+      '<div class="dmx-card" style="margin-top:0">' +
+        '<div class="dms-row"><div class="nm">站点数据（聊天、角色、日记…）<div class="dms-bar"><i style="width:' +
+          (total ? Math.round(site / total * 100) : 0) + '%"></i></div></div><div class="sz">' + fmt(site) + '</div></div>' +
+        '<div class="dms-row"><div class="nm">「此刻」等新功能<div class="dms-bar"><i style="width:' +
+          (total ? Math.round(mine / total * 100) : 0) + '%"></i></div></div><div class="sz">' + fmt(mine) + '</div></div>' +
+      '</div>' +
+      '<div class="dmx-card"><div class="dmx-card-title">按功能管理</div><div id="dms-list"></div></div>' +
+      '<div class="dmg-tip">整包的备份/恢复请用「设置 → 存储信息」。这里只管理新功能产生的数据。</div>';
+
+    var list = body.querySelector('#dms-list');
+    STORE.forEach(function (e) {
+      var ks = keysOf(e);
+      var sz = ks.reduce(function (a, b) { return a + b.size; }, 0);
+      var row = el('div', 'dms-row');
+      row.innerHTML = '<div class="nm">' + esc(e.n) + '</div><div class="sz">' + fmt(sz) + '</div>' +
+        '<div class="ops"><button data-a="ex"' + (sz ? '' : ' disabled') + '>导出</button>' +
+        '<button data-a="cl"' + (sz ? '' : ' disabled') + '>清空</button></div>';
+      row.querySelector('[data-a="ex"]').onclick = function () {
+        if (!ks.length) return;
+        var out = {};
+        ks.forEach(function (x) { out[x.k] = localStorage.getItem(x.k); });
+        var text = JSON.stringify({ fn: e.n, at: new Date().toISOString(), data: out }, null, 2);
+        copyText(text);
+      };
+      row.querySelector('[data-a="cl"]').onclick = function () {
+        if (!ks.length) return;
+        if (!window.confirm('清空「' + e.n + '」的全部数据？这个操作不能撤销。')) return;
+        ks.forEach(function (x) { localStorage.removeItem(x.k); });
+        toast('已清空 ' + e.n);
+        renderStore();
+      };
+      list.appendChild(row);
+    });
+  }
+  function copyText(t) {
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(t).then(function () { toast('已复制到剪贴板'); },
+          function () { fallbackCopy(t); });
+      } else fallbackCopy(t);
+    } catch (e) { fallbackCopy(t); }
+  }
+  function fallbackCopy(t) {
+    try {
+      var ta = document.createElement('textarea');
+      ta.value = t;
+      ta.style.cssText = 'position:fixed;left:-9999px;top:0';
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      toast('已复制到剪贴板');
+    } catch (e) { toast('复制失败，请截图保存'); }
+  }
+  window.dmOpenStore = function () { renderStore(); openPage(document.getElementById('dm-store')); };
+
+  /* ============================================================
+     五、输入栏自定义
+     ============================================================ */
+  var IB_ITEMS = [
+    { k: 'rec', n: '语音', sel: '.input-row button[onclick*="startRecording"]' },
+    { k: 'emoji', n: '表情', sel: '.input-row button[onclick*="toggleEmojiPicker"]' },
+    { k: 'poke', n: '戳一下', sel: '#poke-btn' },
+    { k: 'more', n: '更多', sel: '#more-btn' }
+  ];
+  function ibOrder() {
+    var o = ls('dmx:inputbar', null);
+    if (!o || !o.length) return null;
+    // 补齐缺失项
+    IB_ITEMS.forEach(function (it) { if (o.indexOf(it.k) < 0) o.push(it.k); });
+    return o.filter(function (k) { return IB_ITEMS.some(function (i2) { return i2.k === k; }); });
+  }
+  function applyInputBar() {
+    var o = ibOrder();
+    if (!o) return;
+    o.forEach(function (k, i) {
+      var it = null;
+      IB_ITEMS.forEach(function (x) { if (x.k === k) it = x; });
+      if (!it) return;
+      var node = document.querySelector(it.sel);
+      if (node) node.style.order = String(10 + i);
+    });
+    var ta = document.getElementById('chat-input');
+    if (ta) ta.style.order = '50';
+    var sd = document.getElementById('send-btn');
+    if (sd) sd.style.order = '99';
+  }
+
+  function renderInputBar() {
+    var p = mkPage('dm-inputbar', '输入栏');
+    var body = p.querySelector('.dmx-page-body');
+    var o = ibOrder() || IB_ITEMS.map(function (x) { return x.k; });
+    body.innerHTML = '<div class="dmg-tip" style="text-align:left;margin:0 0 10px">' +
+      '排好顺序后会立刻生效。发送键永远在最右边。</div>' +
+      '<div class="dmib-list" id="dmib-list"></div>' +
+      '<div class="dmx-btn-row"><button class="dmx-btn primary" id="dmib-save">保存</button>' +
+      '<button class="dmx-btn" id="dmib-reset">恢复默认</button></div>';
+    var list = body.querySelector('#dmib-list');
+    function paint() {
+      list.innerHTML = '';
+      o.forEach(function (k, i) {
+        var it = null;
+        IB_ITEMS.forEach(function (x) { if (x.k === k) it = x; });
+        if (!it) return;
+        var row = el('div', 'dmib-row');
+        row.innerHTML = '<span class="grip">⋮⋮</span><span class="nm">' + esc(it.n) + '</span>' +
+          '<button class="input-icon-btn" data-a="up" style="width:26px;height:26px">↑</button>' +
+          '<button class="input-icon-btn" data-a="dn" style="width:26px;height:26px">↓</button>';
+        row.querySelector('[data-a="up"]').onclick = function (e) {
+          e.stopPropagation();
+          if (i === 0) return;
+          var t = o[i - 1]; o[i - 1] = o[i]; o[i] = t; paint();
+        };
+        row.querySelector('[data-a="dn"]').onclick = function (e) {
+          e.stopPropagation();
+          if (i >= o.length - 1) return;
+          var t = o[i + 1]; o[i + 1] = o[i]; o[i] = t; paint();
+        };
+        list.appendChild(row);
+      });
+    }
+    paint();
+    body.querySelector('#dmib-save').onclick = function () {
+      ss('dmx:inputbar', o);
+      applyInputBar();
+      toast('已生效');
+    };
+    body.querySelector('#dmib-reset').onclick = function () {
+      localStorage.removeItem('dmx:inputbar');
+      IB_ITEMS.forEach(function (it) {
+        var n2 = document.querySelector(it.sel);
+        if (n2) n2.style.order = '';
+      });
+      var ta = document.getElementById('chat-input');
+      if (ta) ta.style.order = '';
+      var sd = document.getElementById('send-btn');
+      if (sd) sd.style.order = '';
+      o = IB_ITEMS.map(function (x) { return x.k; });
+      paint();
+      toast('已恢复默认');
+    };
+  }
+  window.dmOpenInputBar = function () { renderInputBar(); openPage(document.getElementById('dm-inputbar')); };
+
+  /* ============================================================
+     六、表情「最近使用」
+     ============================================================ */
+  var EMOJI_RE = null;
+  try { EMOJI_RE = /[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{2B00}-\u{2BFF}\u{FE0F}]/u; } catch (e) { EMOJI_RE = null; }
+
+  function recentGet() { return ls('dmx:recent', []); }
+  function recentPush(ch) {
+    if (!ch) return;
+    var a = recentGet();
+    var i = a.indexOf(ch);
+    if (i >= 0) a.splice(i, 1);
+    a.unshift(ch);
+    if (a.length > 10) a = a.slice(0, 10);
+    ss('dmx:recent', a);
+  }
+  function renderRecentRow() {
+    var picker = document.getElementById('emoji-picker');
+    if (!picker) return;
+    var host = document.getElementById('emoji-picker-content') || picker;
+    var old = document.getElementById('dmx-recent');
+    if (old) old.remove();
+    var a = recentGet();
+    if (!a.length) return;
+    var row = el('div', 'dmx-recent-row');
+    row.id = 'dmx-recent';
+    row.innerHTML = '<span class="lb">最近</span>';
+    a.forEach(function (ch) {
+      var d = el('div', 'it');
+      d.textContent = ch;
+      d.onclick = function () {
+        var ta = document.getElementById('chat-input');
+        if (ta) {
+          ta.value += ch;
+          ta.focus();
+          try { if (typeof handleChatInput === 'function') handleChatInput(); } catch (e) {}
+        }
+        recentPush(ch);
+      };
+      row.appendChild(d);
+    });
+    host.insertBefore(row, host.firstChild);
+  }
+  function hookEmoji() {
+    var picker = document.getElementById('emoji-picker');
+    if (!picker || picker.__dmxRecent) return;
+    picker.__dmxRecent = 1;
+    picker.addEventListener('click', function (e) {
+      var t = e.target;
+      if (!t || !t.textContent) return;
+      var txt = t.textContent.trim();
+      if (!txt || txt.length > 8) return;
+      if (EMOJI_RE ? EMOJI_RE.test(txt) : /[\uD800-\uDBFF]/.test(txt)) {
+        recentPush(txt);
+        setTimeout(renderRecentRow, 0);
+      }
+    }, true);
+  }
+  try {
+    if (typeof toggleEmojiPicker === 'function') {
+      var __dmOrigEmoji = toggleEmojiPicker;
+      toggleEmojiPicker = function () {
+        var r = __dmOrigEmoji.apply(this, arguments);
+        setTimeout(function () { hookEmoji(); renderRecentRow(); }, 120);
+        return r;
+      };
+    }
+  } catch (e) {}
+
+  /* ============================================================
+     七、设置页入口
+     ============================================================ */
+  function addRows() {
+    var page = document.getElementById('page-settings');
+    if (!page || page.querySelector('[data-dmx="set2"]')) return;
+    var host = page.querySelector('.settings-content') || page.querySelector('.settings-list') ||
+      page.querySelector('.page-content') || page;
+    var box = el('div', 'dmx-card');
+    box.setAttribute('data-dmx', 'set2');
+    box.style.margin = '14px';
+    box.innerHTML =
+      '<div class="dmx-card-title">功能与数据</div>' +
+      '<div class="dmx-setrow" data-k="hubindex"><div class="dmx-setrow-ico">📚</div>' +
+        '<div class="dmx-setrow-txt"><div class="dmx-setrow-name">功能大全</div>' +
+        '<div class="dmx-setrow-desc">所有功能一处找，还能搜</div></div><div class="dmx-setrow-arrow">›</div></div>' +
+      '<div class="dmx-setrow" data-k="collect"><div class="dmx-setrow-ico">⭐</div>' +
+        '<div class="dmx-setrow-txt"><div class="dmx-setrow-name">收藏</div>' +
+        '<div class="dmx-setrow-desc">聊天里双击一条消息就能收藏</div></div><div class="dmx-setrow-arrow">›</div></div>' +
+      '<div class="dmx-setrow" data-k="store"><div class="dmx-setrow-ico">💾</div>' +
+        '<div class="dmx-setrow-txt"><div class="dmx-setrow-name">存储与数据</div>' +
+        '<div class="dmx-setrow-desc">看占用，按功能单独清空</div></div><div class="dmx-setrow-arrow">›</div></div>' +
+      '<div class="dmx-setrow" data-k="inputbar"><div class="dmx-setrow-ico">⌨️</div>' +
+        '<div class="dmx-setrow-txt"><div class="dmx-setrow-name">输入栏</div>' +
+        '<div class="dmx-setrow-desc">按钮顺序自己排</div></div><div class="dmx-setrow-arrow">›</div></div>' +
+      '<div class="dmx-setrow" data-k="burst"><div class="dmx-setrow-ico">💬</div>' +
+        '<div class="dmx-setrow-txt"><div class="dmx-setrow-name">连发算一轮</div>' +
+        '<div class="dmx-setrow-desc">你连发几句，TA 只回一批</div></div>' +
+        '<div class="dmx-setrow-arrow" data-sw="1">开</div></div>';
+    host.appendChild(box);
+    box.querySelector('[data-k="hubindex"]').onclick = function () { window.dmOpenHubIndex(); };
+    box.querySelector('[data-k="collect"]').onclick = function () { window.dmOpenCollect(); };
+    box.querySelector('[data-k="store"]').onclick = function () { window.dmOpenStore(); };
+    box.querySelector('[data-k="inputbar"]').onclick = function () { window.dmOpenInputBar(); };
+    var sw = box.querySelector('[data-k="burst"]');
+    var arrow = sw.querySelector('[data-sw]');
+    function syncSw() { arrow.textContent = ls('dmx:burst', true) === false ? '关' : '开'; }
+    syncSw();
+    sw.onclick = function () {
+      var v = ls('dmx:burst', true) !== false;
+      ss('dmx:burst', !v);
+      syncSw();
+      toast(!v ? '连发算一轮：开' : '连发算一轮：关');
+    };
+  }
+
+  function boot() {
+    addRows();
+    bindCollectGesture();
+    hookTaCollect();
+    applyInputBar();
+    hookEmoji();
+    var mo = new MutationObserver(function () { addRows(); bindCollectGesture(); });
+    try { mo.observe(document.body, { childList: true, subtree: false }); } catch (e) {}
+    document.addEventListener('visibilitychange', function () {
+      if (document.visibilityState === 'visible') {
+        setTimeout(function () { addRows(); bindCollectGesture(); applyInputBar(); hookEmoji(); }, 700);
+      }
+    });
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function () { setTimeout(boot, 1000); });
+  } else setTimeout(boot, 1000);
 })();
 
 </script>
