@@ -28209,6 +28209,10 @@ textarea.gm-input { min-height: 52px; resize: none; }
 <!-- 多端自适应（电脑 / 平板 / 手机各尺寸） -->
 
 <!-- 多端自适应（电脑 / 平板 / 手机各尺寸） -->
+
+<!-- 多端自适应（电脑 / 平板 / 手机各尺寸） -->
+
+<!-- 多端自适应（电脑 / 平板 / 手机各尺寸） -->
 <style id="dm-adapt-css">
 /* ============================================================
    渡念 · 多端自适应层
@@ -28242,13 +28246,16 @@ textarea.gm-input { min-height: 52px; resize: none; }
   height: 100vh;
   height: 100dvh;
 }
-#app {
-  min-height: 100vh;
-  min-height: 100dvh;
-}
+/* 注意：#app 只包着 page-home / page-messages / page-mailbox / page-settings，
+   page-me、page-moments、page-tide 等是 body 的平级兄弟节点。
+   给 #app 加 min-height 会把它们整体推到视口下方（实测 page-me top=746 全白），
+   所以这里绝对不能再撑 #app 的高度。 */
 
 /* ---------- 2. 比手机宽的屏：全屏页 / 底部面板收窄居中 ---------- */
 @media (min-width: 481px) {
+  /* 注意 #page-me 是 body 的平级兄弟节点（不在 #app 里），必须单独列出来，
+     否则它在桌面端会是通栏，和其他页面的应用道对不齐 */
+  #page-me,
   .chat-page,
   .tomato-page,
   .music-page,
