@@ -21640,6 +21640,1012 @@ body.dark-mode .dmi-row { background: rgba(255, 255, 255, .05); border-color: rg
 }
 
   </style>
+  <style id="dm-desk-css">
+/* ============================================================
+   渡念 · 桌面（Desk）+ 美化
+   desk.css —— 由 patch-desk.py 注入（幂等）
+   格局参考：mochi 字卡（小红书 @言序）的「多页桌面 / 图标网格 /
+   小部件 / 装修模式 / 美化方案」，机制借鉴，代码与素材全新自写
+   ============================================================ */
+
+#page-home.dm-desk-on {
+  position: relative;
+}
+
+#page-home.dm-desk-on .home-header,
+#page-home.dm-desk-on > .home-page {
+  display: none !important;
+}
+
+/* ---------------- 桌面容器 ---------------- */
+#dm-desk {
+  position: absolute;
+  inset: 0;
+  display: none;
+  flex-direction: column;
+  overflow: hidden;
+  font-size: calc(16px * var(--dk-font, 1));
+  color: var(--dk-ink, #2b2230);
+
+  --dk-radius: 22px;
+  --dk-font: 1;
+  --dk-card: 1;
+  --dk-icon: 56px;
+  --dk-accent: #8b5cf6;
+  --dk-rgb: 255, 255, 255;
+  --dk-a: .52;
+  --dk-ink: #2b2230;
+  --dk-ink2: rgba(43, 34, 48, .62);
+  --dk-ink3: rgba(43, 34, 48, .42);
+  --dk-line: rgba(255, 255, 255, .5);
+  --dk-shadow: 0 8px 26px rgba(48, 24, 72, .12);
+  --dk-wall-scale: 1;
+  --dk-wall-blur: 0px;
+  --dk-dim: .12;
+  background: #efe9f2;
+}
+#page-home.dm-desk-on #dm-desk { display: flex; }
+
+/* 文字色跟随「壁纸明暗」，不跟随系统主题：
+   深色壁纸 / 深色主题 / 深色图片 → 加 dk-wall-dark，换浅字 + 深玻璃 */
+#dm-desk.dk-wall-dark {
+  --dk-rgb: 34, 27, 39;
+  --dk-a: .54;
+  --dk-ink: #f6eff6;
+  --dk-ink2: rgba(246, 239, 246, .74);
+  --dk-ink3: rgba(246, 239, 246, .5);
+  --dk-line: rgba(255, 255, 255, .15);
+  --dk-shadow: 0 8px 26px rgba(0, 0, 0, .3);
+  background: #191320;
+}
+[data-theme="dark"] #dm-desk,
+body.dark-mode #dm-desk {
+  background: #191320;
+}
+
+/* ---------------- 壁纸层 ---------------- */
+#dk-wall {
+  position: absolute;
+  inset: -2%;
+  z-index: 0;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  transform: scale(var(--dk-wall-scale, 1));
+  filter: blur(var(--dk-wall-blur, 0));
+  transition: filter .2s ease;
+}
+#dk-wall.dk-wall-img {
+  background-image: var(--dk-wall-img);
+}
+/* 壁纸预设：全部用 CSS 渐变，不依赖任何外部图片 */
+#dk-wall[data-w="mist"],
+.dkb-wall[data-w="mist"] { background-image: linear-gradient(155deg, #f7f3fb 0%, #ece3f6 42%, #ddd2ef 74%, #cfc6ea 100%); }
+#dk-wall[data-w="moon"],
+.dkb-wall[data-w="moon"] { background-image: radial-gradient(120% 90% at 22% 12%, #fffdf9 0%, #f6f0e8 46%, #e9dfd4 100%); }
+#dk-wall[data-w="dusk"],
+.dkb-wall[data-w="dusk"] { background-image: linear-gradient(160deg, #4a3767 0%, #6b4c86 34%, #b8829e 68%, #e6b9a8 100%); }
+#dk-wall[data-w="deep"],
+.dkb-wall[data-w="deep"] { background-image: radial-gradient(130% 100% at 78% 8%, #2a2140 0%, #1b1630 52%, #12101f 100%); }
+#dk-wall[data-w="sakura"],
+.dkb-wall[data-w="sakura"] { background-image: linear-gradient(150deg, #fff5f6 0%, #ffe1e9 40%, #f8cfd9 72%, #eebdca 100%); }
+#dk-wall[data-w="sea"],
+.dkb-wall[data-w="sea"] { background-image: linear-gradient(160deg, #eef8fb 0%, #d8eef4 38%, #b9dce6 70%, #9fcadb 100%); }
+#dk-wall[data-w="olddream"],
+.dkb-wall[data-w="olddream"] { background-image: linear-gradient(155deg, #f6efe6 0%, #e8d8c3 44%, #cdb49a 78%, #b89a7e 100%); }
+#dk-wall[data-w="aurora"],
+.dkb-wall[data-w="aurora"] { background-image: radial-gradient(90% 70% at 20% 20%, #c9f0e4 0%, transparent 55%), radial-gradient(90% 80% at 82% 42%, #d8c6f5 0%, transparent 58%), linear-gradient(170deg, #1d2340 0%, #2c2a55 100%); }
+#dk-wall[data-w="bamboo"],
+.dkb-wall[data-w="bamboo"] { background-image: linear-gradient(150deg, #f2f6f1 0%, #dde8dc 44%, #c2d3c4 76%, #a6bca9 100%); }
+#dk-wall[data-w="dawn"],
+.dkb-wall[data-w="dawn"] { background-image: linear-gradient(165deg, #fdf3ea 0%, #f8dfd0 34%, #eec6c0 66%, #d5bacd 100%); }
+#dk-wall[data-w="star"],
+.dkb-wall[data-w="star"] { background-image: radial-gradient(80% 60% at 30% 22%, rgba(255, 255, 255, .22) 0%, transparent 60%), radial-gradient(70% 50% at 78% 70%, rgba(170, 140, 255, .34) 0%, transparent 62%), linear-gradient(160deg, #1a1733 0%, #241d44 52%, #16142a 100%); }
+#dk-wall[data-w="paper"],
+.dkb-wall[data-w="paper"] { background-image: linear-gradient(150deg, #fbf9f5 0%, #f3efe5 50%, #e6ded0 100%); }
+
+#dk-dim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background-color: transparent;
+  background-image:
+    linear-gradient(180deg, rgba(28, 16, 40, calc(var(--dk-dim, .12) * .55)) 0%, transparent 26%),
+    linear-gradient(0deg, rgba(28, 16, 40, calc(var(--dk-dim, .12) * 1.5)) 0%, transparent 34%);
+}
+/* 深底：先整体压暗（背景色），再叠上下渐变，浅壁纸在夜间也会沉下来 */
+#dk-dim.dk-dim-dark {
+  background-color: rgba(12, 6, 18, calc(var(--dk-dim, .12) * 1.32));
+  background-image:
+    linear-gradient(180deg, rgba(0, 0, 0, calc(var(--dk-dim, .12) * .7)) 0%, transparent 30%),
+    linear-gradient(0deg, rgba(0, 0, 0, calc(var(--dk-dim, .12) * 1.55)) 0%, transparent 38%);
+}
+
+/* ---------------- 横向翻页 ---------------- */
+#dk-scroll {
+  position: relative;
+  z-index: 2;
+  flex: 1;
+  display: flex;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+}
+#dk-scroll::-webkit-scrollbar { display: none; }
+
+/* 翻页轨道：必须自己 flex + 显式宽度，否则 flex-basis:100% 会和内容宽度互相
+   推导（实测被撑到 674px），页面既不平铺也不横滑 */
+#dk-pages {
+  display: flex;
+  align-items: stretch;
+  width: 100%;
+  min-width: 100%;
+  max-width: 100%;
+  height: 100%;
+}
+
+.dk-page {
+  flex: 0 0 100%;
+  width: 100%;
+  min-width: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  padding: 16px 16px calc(96px + env(safe-area-inset-bottom));
+  box-sizing: border-box;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+.dk-page::-webkit-scrollbar { display: none; }
+
+/* 时钟 */
+.dk-clock {
+  padding: 6px 4px 18px;
+}
+.dk-clock-main {
+  font-size: 2.5em;
+  font-weight: 260;
+  letter-spacing: -.02em;
+  line-height: 1;
+  color: var(--dk-ink);
+  text-shadow: 0 2px 18px rgba(255, 255, 255, .34);
+  font-variant-numeric: tabular-nums;
+}
+.dk-clock-sub {
+  margin-top: 7px;
+  font-size: .78em;
+  color: var(--dk-ink2);
+  letter-spacing: .02em;
+}
+#dm-desk.dk-wall-dark .dk-clock-main { text-shadow: 0 2px 22px rgba(0, 0, 0, .5); }
+
+/* ---------------- 网格 ---------------- */
+.dk-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: calc(12px * var(--dk-card));
+  align-content: start;
+}
+.dk-widgets { margin-top: calc(15px * var(--dk-card)); }
+/* 没时钟的页面（第 2 页起）把图标让开右上角工具按钮 */
+.dk-page > .dk-icons:first-child { margin-top: 44px; }
+.dk-s1 { grid-column: span 1; }
+.dk-s2 { grid-column: span 2; }
+.dk-s4 { grid-column: span 4; }
+
+/* 手机最窄时收成 3 列，避免 2 列卡片内容挤爆 */
+@media (max-width: 340px) {
+  .dk-grid { grid-template-columns: repeat(3, 1fr); }
+  .dk-s4 { grid-column: span 3; }
+  .dk-s2 { grid-column: span 2; }
+}
+
+/* ---------------- 图标 ---------------- */
+.dk-icon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+  padding: 2px 0;
+  border-radius: 18px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform .16s cubic-bezier(.34, 1.56, .64, 1);
+}
+.dk-icon:active { transform: scale(.9); }
+.dk-ico {
+  position: relative;
+  width: var(--dk-icon);
+  height: var(--dk-icon);
+  border-radius: calc(var(--dk-icon) * var(--dk-ir, .3));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(var(--dk-icon) * .46);
+  line-height: 1;
+  background: rgba(var(--dk-rgb), .74);
+  border: 1px solid var(--dk-line);
+  box-shadow: 0 4px 14px rgba(40, 20, 60, .1);
+  backdrop-filter: blur(14px) saturate(150%);
+  -webkit-backdrop-filter: blur(14px) saturate(150%);
+  overflow: hidden;
+}
+#dm-desk.dk-wall-dark .dk-ico { background: rgba(255, 255, 255, .14); }
+.dk-ico img { width: 100%; height: 100%; object-fit: cover; }
+.dk-ico.dk-ico-accent {
+  background: var(--dk-accent);
+}
+.dk-label {
+  font-size: .68em;
+  color: var(--dk-ink2);
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: center;
+  letter-spacing: .01em;
+  text-shadow: 0 1px 6px rgba(255, 255, 255, .3);
+}
+#dm-desk.dk-wall-dark .dk-label { text-shadow: 0 1px 8px rgba(0, 0, 0, .55); }
+.dk-nolabel .dk-label { display: none; }
+.dk-badge {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  min-width: 15px;
+  height: 15px;
+  padding: 0 4px;
+  border-radius: 8px;
+  background: #ef5f7a;
+  color: #fff;
+  font-size: 9px;
+  line-height: 15px;
+  text-align: center;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, .2);
+}
+
+/* ---------------- 小部件 ---------------- */
+.dk-w {
+  position: relative;
+  border-radius: var(--dk-radius);
+  padding: calc(13px * var(--dk-card));
+  background: rgba(var(--dk-rgb), var(--dk-a));
+  border: 1px solid var(--dk-line);
+  box-shadow: var(--dk-shadow);
+  backdrop-filter: blur(20px) saturate(150%);
+  -webkit-backdrop-filter: blur(20px) saturate(150%);
+  overflow: hidden;
+  box-sizing: border-box;
+  cursor: pointer;
+  transition: transform .16s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.dk-w:active { transform: scale(.975); }
+.dk-w-t {
+  font-size: .66em;
+  color: var(--dk-ink3);
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  margin-bottom: 7px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.dk-w-b {
+  font-size: .82em;
+  color: var(--dk-ink);
+  line-height: 1.5;
+}
+.dk-w-big {
+  font-size: 1.9em;
+  font-weight: 300;
+  line-height: 1.05;
+  color: var(--dk-ink);
+  font-variant-numeric: tabular-nums;
+}
+.dk-w-big small {
+  font-size: .4em;
+  margin-left: 3px;
+  color: var(--dk-ink2);
+  font-weight: 400;
+}
+.dk-w-sub {
+  margin-top: 6px;
+  font-size: .68em;
+  color: var(--dk-ink3);
+  line-height: 1.45;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+.dk-w-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+/* 进度条 / 环 */
+.dk-bar {
+  margin-top: 9px;
+  height: 5px;
+  border-radius: 3px;
+  background: rgba(120, 90, 140, .16);
+  overflow: hidden;
+}
+.dk-bar > i {
+  display: block;
+  height: 100%;
+  border-radius: 3px;
+  background: var(--dk-accent);
+  transition: width .4s ease;
+}
+#dm-desk.dk-wall-dark .dk-bar { background: rgba(255, 255, 255, .12); }
+
+.dk-ring {
+  width: calc(44px * var(--dk-card));
+  height: calc(44px * var(--dk-card));
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: .66em;
+  color: var(--dk-ink);
+  flex: 0 0 auto;
+}
+
+/* 心跳信号（复用首页观感） */
+.dk-heart {
+  display: flex;
+  align-items: flex-end;
+  gap: 2.5px;
+  height: 15px;
+}
+.dk-heart i {
+  width: 3px;
+  border-radius: 2px;
+  background: var(--dk-accent);
+  opacity: .8;
+  animation: dkBeat 1.5s ease-in-out infinite;
+}
+.dk-heart i:nth-child(1) { height: 40%; animation-delay: 0s; }
+.dk-heart i:nth-child(2) { height: 66%; animation-delay: .12s; }
+.dk-heart i:nth-child(3) { height: 100%; animation-delay: .24s; }
+.dk-heart i:nth-child(4) { height: 60%; animation-delay: .36s; }
+.dk-heart i:nth-child(5) { height: 34%; animation-delay: .48s; }
+@keyframes dkBeat {
+  0%, 100% { transform: scaleY(.6); opacity: .5; }
+  50% { transform: scaleY(1); opacity: .95; }
+}
+
+/* 状态点 */
+.dk-st {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: .7em;
+  color: var(--dk-ink2);
+  padding: 3px 9px 3px 7px;
+  border-radius: 20px;
+  background: rgba(var(--dk-rgb), .42);
+  border: 1px solid var(--dk-line);
+}
+.dk-st i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #7cc79a;
+  box-shadow: 0 0 0 3px rgba(124, 199, 154, .2);
+}
+.dk-st[data-st="busy"] i { background: #e8b25c; box-shadow: 0 0 0 3px rgba(232, 178, 92, .2); }
+.dk-st[data-st="rest"] i { background: #8fa8e0; box-shadow: 0 0 0 3px rgba(143, 168, 224, .2); }
+.dk-st[data-st="sleep"] i { background: #a89bc4; box-shadow: 0 0 0 3px rgba(168, 155, 196, .2); }
+
+/* 每日一句 */
+.dk-quote {
+  font-size: .86em;
+  line-height: 1.68;
+  color: var(--dk-ink);
+  font-weight: 300;
+  letter-spacing: .01em;
+}
+
+/* 待办 */
+.dk-todo { display: flex; flex-direction: column; gap: 7px; }
+.dk-todo-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: .78em;
+  color: var(--dk-ink);
+}
+.dk-todo-row .box {
+  width: 14px;
+  height: 14px;
+  border-radius: 5px;
+  border: 1.5px solid var(--dk-ink3);
+  flex: 0 0 auto;
+}
+.dk-todo-row.done .box {
+  background: var(--dk-accent);
+  border-color: var(--dk-accent);
+}
+.dk-todo-row.done span { text-decoration: line-through; opacity: .45; }
+.dk-todo-row span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.dk-todo-row .due {
+  margin-left: auto;
+  font-size: .86em;
+  color: var(--dk-ink3);
+  flex: 0 0 auto;
+}
+.dk-todo-row .due.soon { color: #d9765f; }
+
+/* 倒计时 */
+.dk-cd {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+.dk-cd b {
+  font-size: 1.7em;
+  font-weight: 300;
+  color: var(--dk-ink);
+  font-variant-numeric: tabular-nums;
+}
+
+/* 图片卡 */
+.dk-w.dk-w-img {
+  padding: 0;
+  min-height: calc(112px * var(--dk-card));
+  background-size: cover;
+  background-position: center;
+}
+.dk-img-cap {
+  border-radius: 0 0 var(--dk-radius) var(--dk-radius);
+}
+.dk-w-img .dk-img-cap {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 22px 12px 10px;
+  font-size: .7em;
+  color: #fff;
+  background: linear-gradient(0deg, rgba(0, 0, 0, .44), transparent);
+}
+
+/* 空白提示 */
+.dk-empty {
+  padding: 26px 18px;
+  text-align: center;
+  color: var(--dk-ink3);
+  font-size: .78em;
+  line-height: 1.8;
+  border-radius: var(--dk-radius);
+  border: 1.5px dashed var(--dk-line);
+}
+
+/* ---------------- 圆点 ---------------- */
+.dk-dots {
+  position: absolute;
+  z-index: 4;
+  left: 0;
+  right: 0;
+  bottom: calc(70px + env(safe-area-inset-bottom));
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  pointer-events: none;
+}
+.dk-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 3px;
+  background: rgba(var(--dk-rgb), .5);
+  box-shadow: 0 0 0 1px rgba(90, 60, 110, .16);
+  transition: width .22s ease, background .22s ease;
+  pointer-events: auto;
+  cursor: pointer;
+}
+.dk-dot.on {
+  width: 18px;
+  background: var(--dk-accent);
+  box-shadow: none;
+}
+#dm-desk.dk-wall-dark .dk-dot { background: rgba(255, 255, 255, .46); }
+
+/* ---------------- 桌面右上按钮 ---------------- */
+.dk-tools {
+  position: absolute;
+  z-index: 5;
+  top: calc(10px + env(safe-area-inset-top));
+  right: 12px;
+  display: flex;
+  gap: 7px;
+}
+.dk-tbtn {
+  width: 32px;
+  height: 32px;
+  border-radius: 12px;
+  border: 1px solid var(--dk-line);
+  background: rgba(var(--dk-rgb), .58);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  color: var(--dk-ink2);
+  font-size: 14px;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  padding: 0;
+  transition: transform .16s ease;
+}
+.dk-tbtn:active { transform: scale(.9); }
+.dk-tbtn.on { background: var(--dk-accent); color: #fff; border-color: transparent; }
+
+/* ---------------- 装修模式 ---------------- */
+#dm-desk.dk-decor .dk-w,
+#dm-desk.dk-decor .dk-icon {
+  animation: dkWobble 1.9s ease-in-out infinite;
+}
+#dm-desk.dk-decor .dk-w:nth-child(2n),
+#dm-desk.dk-decor .dk-icon:nth-child(2n) { animation-delay: -.6s; }
+#dm-desk.dk-decor .dk-w:nth-child(3n),
+#dm-desk.dk-decor .dk-icon:nth-child(3n) { animation-delay: -1.1s; }
+@keyframes dkWobble {
+  0%, 100% { transform: rotate(-.42deg); }
+  50% { transform: rotate(.42deg); }
+}
+#dm-desk.dk-decor .dk-w { overflow: visible; }
+#dm-desk.dk-decor .dk-w::after,
+#dm-desk.dk-decor .dk-icon::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  border: 1.5px dashed rgba(160, 110, 190, .5);
+  pointer-events: none;
+}
+#dm-desk.dk-decor .dk-icon::before { border-radius: 20px; z-index: 3; }
+
+.dk-del {
+  position: absolute;
+  z-index: 6;
+  top: -6px;
+  left: -6px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 0;
+  background: rgba(60, 40, 70, .82);
+  color: #fff;
+  font-size: 12px;
+  line-height: 1;
+  display: none;
+  place-items: center;
+  cursor: pointer;
+  padding: 0;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, .24);
+}
+#dm-desk.dk-decor .dk-del { display: grid; }
+.dk-del::before { content: '−'; }
+
+.dk-drag {
+  opacity: .5;
+  transform: scale(.94) !important;
+  animation: none !important;
+}
+.dk-drop {
+  outline: 2px solid var(--dk-accent);
+  outline-offset: 2px;
+}
+
+/* 装修态提示条 */
+.dk-decor-tip {
+  position: absolute;
+  z-index: 5;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: calc(78px + env(safe-area-inset-bottom));
+  padding: 7px 15px;
+  border-radius: 20px;
+  background: rgba(28, 18, 34, .72);
+  color: #fff;
+  font-size: 11.5px;
+  letter-spacing: .02em;
+  display: none;
+  backdrop-filter: blur(10px);
+  white-space: nowrap;
+}
+#dm-desk.dk-decor .dk-decor-tip { display: block; }
+#dm-desk.dk-decor .dk-dots { opacity: .25; }
+
+/* ---------------- 美化抽屉 ---------------- */
+#dk-beauty {
+  position: fixed;
+  inset: 0;
+  z-index: 9600;
+  display: none;
+  justify-content: flex-end;
+}
+#dk-beauty.open { display: flex; }
+#dk-bv-mask {
+  position: absolute;
+  inset: 0;
+  background: rgba(26, 16, 34, .34);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+}
+#dk-bv-panel {
+  position: relative;
+  border-left: 1px solid rgba(120, 90, 140, .12);
+  width: min(100%, calc(var(--dm-app-w, 480px) * .92));
+  height: 100%;
+  margin-left: auto;
+  background: #fbf8fc;
+  color: #2b2230;
+  display: flex;
+  flex-direction: column;
+  box-shadow: -14px 0 50px rgba(30, 14, 50, .22);
+  animation: dkBvIn .26s cubic-bezier(.2, .9, .3, 1);
+  overflow: hidden;
+}
+@keyframes dkBvIn {
+  from { transform: translateX(18px); opacity: .4; }
+  to { transform: none; opacity: 1; }
+}
+[data-theme="dark"] #dk-bv-panel { background: #221c26; color: #f2eaf3; }
+[data-theme="dark"] #dk-bv-mask { background: rgba(0, 0, 0, .5); }
+
+.dkb-top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: calc(14px + env(safe-area-inset-top)) 16px 12px;
+  border-bottom: 1px solid rgba(90, 60, 110, .1);
+  flex: 0 0 auto;
+}
+[data-theme="dark"] .dkb-top { border-bottom-color: rgba(255, 255, 255, .08); }
+.dkb-back {
+  width: 30px;
+  height: 30px;
+  border-radius: 10px;
+  border: 0;
+  background: rgba(120, 90, 140, .1);
+  color: inherit;
+  font-size: 17px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0;
+  flex: 0 0 auto;
+}
+.dkb-title {
+  font-size: 15.5px;
+  font-weight: 600;
+  letter-spacing: .02em;
+}
+.dkb-title small {
+  display: block;
+  font-size: 10.5px;
+  font-weight: 400;
+  opacity: .5;
+  margin-top: 2px;
+  letter-spacing: 0;
+}
+.dkb-nav {
+  display: flex;
+  gap: 6px;
+  padding: 10px 16px 2px;
+  flex-wrap: wrap;
+  flex: 0 0 auto;
+}
+.dkb-nav i {
+  font-style: normal;
+  font-size: 11.5px;
+  padding: 5px 11px;
+  border-radius: 20px;
+  background: rgba(120, 90, 140, .08);
+  color: inherit;
+  opacity: .72;
+  cursor: pointer;
+}
+.dkb-nav i.on { background: rgba(139, 92, 246, .14); color: #7c4fe0; opacity: 1; }
+[data-theme="dark"] .dkb-nav i { background: rgba(255, 255, 255, .08); }
+[data-theme="dark"] .dkb-nav i.on { background: rgba(139, 92, 246, .3); color: #d9c6ff; }
+
+.dkb-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 14px 16px calc(24px + env(safe-area-inset-bottom));
+  -webkit-overflow-scrolling: touch;
+}
+
+.dkb-sec { margin-bottom: 22px; }
+.dkb-h {
+  font-size: 11px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  opacity: .45;
+  margin: 0 2px 10px;
+}
+
+/* 壁纸宫格 */
+.dkb-walls {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+.dkb-wall {
+  position: relative;
+  aspect-ratio: 9 / 14;
+  border-radius: 13px;
+  background-size: cover;
+  background-position: center;
+  cursor: pointer;
+  border: 2px solid transparent;
+  overflow: hidden;
+  transition: transform .16s ease;
+}
+.dkb-wall:active { transform: scale(.96); }
+.dkb-wall.on { border-color: #8b5cf6; }
+.dkb-wall span {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 14px 6px 5px;
+  font-size: 9.5px;
+  color: #fff;
+  text-align: center;
+  background: linear-gradient(0deg, rgba(0, 0, 0, .58), rgba(0, 0, 0, .2) 62%, transparent);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, .45);
+}
+.dkb-wall.add {
+  display: grid;
+  place-items: center;
+  background: rgba(120, 90, 140, .07);
+  border: 1.5px dashed rgba(120, 90, 140, .28);
+  color: rgba(90, 60, 110, .6);
+  font-size: 20px;
+}
+[data-theme="dark"] .dkb-wall.add { color: rgba(255, 255, 255, .5); background: rgba(255, 255, 255, .05); border-color: rgba(255, 255, 255, .16); }
+
+/* 滑杆 */
+.dkb-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 9px 2px;
+}
+.dkb-row .nm {
+  width: 66px;
+  font-size: 12.5px;
+  flex: 0 0 auto;
+  opacity: .78;
+}
+.dkb-row input[type="range"] {
+  flex: 1;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 4px;
+  border-radius: 3px;
+  background: rgba(120, 90, 140, .2);
+  outline: 0;
+}
+.dkb-row input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #8b5cf6;
+  box-shadow: 0 1px 5px rgba(80, 40, 140, .3);
+  cursor: pointer;
+}
+.dkb-row .v {
+  width: 42px;
+  text-align: right;
+  font-size: 11.5px;
+  opacity: .55;
+  font-variant-numeric: tabular-nums;
+  flex: 0 0 auto;
+}
+
+/* 主题色 */
+.dkb-colors {
+  display: flex;
+  gap: 9px;
+  flex-wrap: wrap;
+}
+.dkb-color {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid transparent;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, .12);
+  transition: transform .16s ease;
+}
+.dkb-color:active { transform: scale(.9); }
+.dkb-color.on { border-color: #fff; outline: 2px solid currentColor; outline-offset: 1px; }
+
+/* 开关行 */
+.dkb-sw {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 11px 2px;
+  font-size: 13px;
+}
+.dkb-sw .desc {
+  font-size: 10.5px;
+  opacity: .45;
+  margin-top: 3px;
+  line-height: 1.4;
+}
+.dkb-toggle {
+  width: 40px;
+  height: 23px;
+  border-radius: 14px;
+  background: rgba(120, 90, 140, .22);
+  position: relative;
+  flex: 0 0 auto;
+  cursor: pointer;
+  transition: background .2s ease;
+}
+.dkb-toggle::after {
+  content: '';
+  position: absolute;
+  top: 2.5px;
+  left: 2.5px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, .18);
+  transition: transform .2s cubic-bezier(.3, 1.4, .5, 1);
+}
+.dkb-toggle.on { background: #8b5cf6; }
+.dkb-toggle.on::after { transform: translateX(17px); }
+
+/* 按钮行 */
+.dkb-btns {
+  display: flex;
+  gap: 9px;
+  flex-wrap: wrap;
+}
+.dkb-btn {
+  flex: 1;
+  min-width: 88px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(120, 90, 140, .18);
+  background: rgba(255, 255, 255, .7);
+  color: #4a3d52;
+  font-size: 12.5px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: transform .14s ease;
+}
+.dkb-btn:active { transform: scale(.97); }
+.dkb-btn.primary {
+  background: #8b5cf6;
+  border-color: transparent;
+  color: #fff;
+}
+[data-theme="dark"] .dkb-btn { background: rgba(255, 255, 255, .08); color: #eee4ee; border-color: rgba(255, 255, 255, .12); }
+[data-theme="dark"] .dkb-btn.primary { background: #8b5cf6; color: #fff; }
+
+/* 方案列表 */
+.dkb-schemes { display: flex; flex-direction: column; gap: 8px; }
+.dkb-scheme {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, .62);
+  border: 1px solid rgba(120, 90, 140, .12);
+}
+[data-theme="dark"] .dkb-scheme { background: rgba(255, 255, 255, .06); border-color: rgba(255, 255, 255, .1); }
+.dkb-scheme .nm {
+  flex: 1;
+  font-size: 13px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.dkb-scheme .meta {
+  font-size: 10px;
+  opacity: .42;
+  margin-top: 2px;
+}
+.dkb-scheme button {
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font-size: 12px;
+  padding: 5px 7px;
+  cursor: pointer;
+  opacity: .62;
+  font-family: inherit;
+}
+.dkb-scheme button:hover { opacity: 1; }
+.dkb-note {
+  font-size: 10.5px;
+  line-height: 1.7;
+  opacity: .42;
+  margin-top: 10px;
+}
+
+/* 部件商店 */
+.dkb-store {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 9px;
+}
+.dkb-app {
+  padding: 11px 6px;
+  border-radius: 13px;
+  background: rgba(255, 255, 255, .62);
+  border: 1px solid rgba(120, 90, 140, .12);
+  text-align: center;
+  cursor: pointer;
+  transition: transform .14s ease;
+}
+[data-theme="dark"] .dkb-app { background: rgba(255, 255, 255, .06); border-color: rgba(255, 255, 255, .1); }
+.dkb-app:active { transform: scale(.95); }
+.dkb-app .e { font-size: 20px; line-height: 1; margin-bottom: 6px; }
+.dkb-app .n { font-size: 10.5px; opacity: .72; }
+.dkb-app.off { opacity: .34; }
+.dkb-app.off::after {
+  content: '已加';
+  display: block;
+  font-size: 9px;
+  margin-top: 3px;
+  opacity: .7;
+}
+
+/* 长按提示气泡 */
+.dk-hint {
+  position: absolute;
+  z-index: 7;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 52%;
+  padding: 10px 16px;
+  border-radius: 16px;
+  background: rgba(28, 18, 34, .78);
+  color: #fff;
+  font-size: 12px;
+  line-height: 1.6;
+  text-align: center;
+  backdrop-filter: blur(12px);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity .22s ease;
+  max-width: 78%;
+}
+.dk-hint.show { opacity: 1; }
+
+/* ---------------- 桌面不可用时 ---------------- */
+.dk-off {
+  padding: 40px 24px;
+  text-align: center;
+  color: var(--dk-ink3);
+  font-size: .82em;
+  line-height: 1.9;
+}
+
+  </style>
 </head>
 <body>
 <!-- 后台保活静音音频 -->
@@ -32448,6 +33454,1658 @@ textarea.gm-input { min-height: 52px; resize: none; }
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', function () { setTimeout(boot, 1000); });
   } else setTimeout(boot, 1000);
+})();
+
+</script>
+<script id="dm-desk-js">
+/* ============================================================
+   渡念 · 桌面（Desk）+ 美化
+   desk.src.js —— 由 patch-desk.py 注入（幂等）
+   格局参考：mochi 字卡（小红书 @言序）「多页桌面 / 图标网格 /
+   小部件 / 装修模式 / 美化方案」的机制，代码与素材全部自写
+   ============================================================ */
+(function () {
+  'use strict';
+  if (window.__dkLoaded) return;
+  window.__dkLoaded = true;
+
+  /* ============================================================
+     0. 基础工具（不依赖其他模块，dmxU 在则复用）
+     ============================================================ */
+  var A = window.dmxU || {};
+  function $(s, r) { return (r || document).querySelector(s); }
+  function $$(s, r) { return [].slice.call((r || document).querySelectorAll(s)); }
+  function el(t, c, h) {
+    var d = document.createElement(t);
+    if (c) d.className = c;
+    if (h != null) d.innerHTML = h;
+    return d;
+  }
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+  function ls(k, dv) {
+    if (A.ls) return A.ls(k, dv);
+    try { var v = localStorage.getItem(k); return v == null ? dv : JSON.parse(v); }
+    catch (e) { return dv; }
+  }
+  function ss(k, v) {
+    if (A.ss) return A.ss(k, v);
+    try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {}
+  }
+  function toast(m) {
+    if (A.toast) { A.toast(m); return; }
+    if (typeof window.showToast === 'function') { window.showToast(m); return; }
+  }
+  function now() { return Date.now(); }
+  function pad(n) { return (n < 10 ? '0' : '') + n; }
+  function hhmm(d) { return pad(d.getHours()) + ':' + pad(d.getMinutes()); }
+  function clamp(v, a, b) { return v < a ? a : (v > b ? b : v); }
+  function dayStart(t) { var d = new Date(t); d.setHours(0, 0, 0, 0); return d.getTime(); }
+  function dayKey() { var d = new Date(); return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()); }
+  function vib(ms) {
+    if (A.vibrate) return A.vibrate(ms);
+    try { navigator.vibrate && navigator.vibrate(ms || 8); } catch (e) {}
+  }
+  function txt(sel) {
+    var e = $(sel);
+    return e ? (e.textContent || '').trim() : '';
+  }
+  /* 当前角色 */
+  function rid() {
+    if (A.curRoleId) { try { return A.curRoleId(); } catch (e) {} }
+    try {
+      var s = (typeof state !== 'undefined' && state) || null;
+      if (s) {
+        if (s.currentRoleId) return s.currentRoleId;
+        var c = s.chats && s.currentChatId && s.chats[s.currentChatId];
+        if (c && c.roleId) return c.roleId;
+      }
+    } catch (e) {}
+    return '';
+  }
+  function rname(id) {
+    if (A.rname) { try { return A.rname(id); } catch (e) {} }
+    try {
+      var s = (typeof state !== 'undefined' && state) || null;
+      var rs = (s && s.roles) || [];
+      for (var i = 0; i < rs.length; i++) if (rs[i].id === id) return rs[i].name || 'TA';
+    } catch (e) {}
+    return 'TA';
+  }
+
+  /* ============================================================
+     1. 常量：壁纸 / 图标 / 部件
+     ============================================================ */
+  var K = '__dm_desk_v1';
+  var KHINT = '__dm_desk_hint_v1';
+  var KBANNER = '__dm_desk_banner_v1';
+
+  var WALLS = [
+    { k: 'mist', n: '雾紫', a: '#8b5cf6' },
+    { k: 'moon', n: '月白', a: '#b08968' },
+    { k: 'dusk', n: '暮色', a: '#a8639a' },
+    { k: 'deep', n: '深汀', a: '#7d6bd6' },
+    { k: 'sakura', n: '樱雾', a: '#e08aa4' },
+    { k: 'sea', n: '海盐', a: '#4f9bb5' },
+    { k: 'olddream', n: '旧梦', a: '#b3825c' },
+    { k: 'aurora', n: '极光', a: '#5fb9a8' },
+    { k: 'bamboo', n: '墨竹', a: '#6f9070' },
+    { k: 'dawn', n: '晨雾', a: '#d9856f' },
+    { k: 'star', n: '星河', a: '#8f7bdd' },
+    { k: 'paper', n: '素纸', a: '#9c8b74' }
+  ];
+  var DARKWALL = { deep: 1, star: 1, dusk: 1, aurora: 1 };
+
+  function G(fn) { return function () { try { fn(); } catch (e) { toast('这个入口暂时打不开'); } }; }
+
+  var ICONS = [
+    { k: 'messages', e: '💬', n: '消息', go: G(function () { switchTab('page-messages'); }) },
+    { k: 'moments', e: '🌟', n: '动态', go: G(function () { openMoments(); }) },
+    { k: 'diary', e: '📔', n: '日记', go: G(function () { openDiary(); }) },
+    { k: 'mailbox', e: '📮', n: '信箱', go: G(function () { switchTab('page-mailbox'); }) },
+    { k: 'tarot', e: '🔮', n: '塔罗', go: G(function () { openTarot(); }) },
+    { k: 'companion', e: '🎧', n: '陪伴', go: G(function () { openCompanion(); }) },
+    { k: 'tide', e: '🌊', n: '潮汐', go: G(function () { openTide(); }) },
+    { k: 'more', e: '✳️', n: '更多', go: G(function () { openMoreFeatures(); }) },
+    { k: 'here', e: '🫧', n: '此刻', go: G(function () { dmOpenHub('here'); }) },
+    { k: 'todo', e: '📝', n: '备忘', go: G(function () { dmOpenHub('todo'); }) },
+    { k: 'tool', e: '🧺', n: '小工具', go: G(function () { dmOpenHub('tool'); }) },
+    { k: 'wish', e: '🌠', n: '心愿', go: G(function () { dmOpenHub('wish'); }) },
+    { k: 'game', e: '🎮', n: '小游戏', go: G(function () { dmOpenGame(); }) },
+    { k: 'drift', e: '🍾', n: '漂流瓶', go: G(function () { dmOpenDrift(); }) },
+    { k: 'collect', e: '💗', n: '收藏', go: G(function () { dmOpenCollect(); }) },
+    { k: 'hubindex', e: '🗂', n: '功能大全', go: G(function () { dmOpenHubIndex(); }) },
+    { k: 'store', e: '📦', n: '存储', go: G(function () { dmOpenStore(); }) },
+    { k: 'inputbar', e: '✏️', n: '输入栏', go: G(function () { dmOpenInputBar(); }) }
+  ];
+  var ICMAP = {};
+  ICONS.forEach(function (x) { ICMAP[x.k] = x; });
+
+  /* ---------- 部件 ---------- */
+  var WID = {};
+
+  WID.anniv = {
+    n: '纪念日', e: '💜', s: 2, go: function () { try { openTimeManagerModal(); } catch (e) {} },
+    html: function () {
+      var d = txt('#anni-days') || '1';
+      var t = txt('#anni-title') || '💜 我们相识';
+      return '<div class="dk-w-t">' + esc(t.replace(/^[^\u4e00-\u9fa5A-Za-z]+/, '')) + '</div>' +
+        '<div class="dk-w-big">' + esc(d) + '<small>天</small></div>' +
+        '<div class="dk-w-sub">' + esc(txt('#anni-desc') || '在一起的第 ' + d + ' 天') + '</div>';
+    }
+  };
+
+  WID.mood = {
+    n: 'TA 心情', e: '😊', s: 2, go: function () { try { refreshMood(); } catch (e) {} },
+    html: function () {
+      var em = txt('#mood-emoji') || '😊';
+      var mt = txt('#mood-text') || '平静';
+      var lk = txt('#link-status-text') || '共鸣中';
+      return '<div class="dk-w-t">TA 今日心情</div>' +
+        '<div class="dk-w-row"><div class="dk-w-big" style="font-size:1.5em">' + esc(em) + '</div>' +
+        '<div class="dk-heart"><i></i><i></i><i></i><i></i><i></i></div></div>' +
+        '<div class="dk-w-sub">' + esc(mt) + ' · ' + esc(lk) + '</div>';
+    }
+  };
+
+  WID.time = {
+    n: '双时区', e: '🕐', s: 2, go: null,
+    html: function () {
+      var r = txt('#role-time') || '--:--';
+      var m = txt('#my-time') || hhmm(new Date());
+      return '<div class="dk-w-t">时间</div>' +
+        '<div class="dk-w-row" style="align-items:flex-start">' +
+        '<div><div style="font-size:.62em;color:var(--dk-ink3);margin-bottom:3px">TA 那边</div>' +
+        '<div class="dk-w-big" style="font-size:1.35em">' + esc(r) + '</div></div>' +
+        '<div style="text-align:right"><div style="font-size:.62em;color:var(--dk-ink3);margin-bottom:3px">我这边</div>' +
+        '<div class="dk-w-big" style="font-size:1.35em;opacity:.6">' + esc(m) + '</div></div>' +
+        '</div>';
+    }
+  };
+
+  WID.word = {
+    n: '今日一句', e: '💌', s: 4, go: function () { try { refreshDailyWords(); } catch (e) {} },
+    html: function () {
+      var t = txt('#daily-words-content');
+      if (!t) t = '今天还没有想说的话，晚点再来看看。';
+      return '<div class="dk-w-t">💌 TA 今天想对你说</div><div class="dk-quote">' + esc(t) + '</div>';
+    }
+  };
+
+  WID.here = {
+    n: '此间', e: '🫧', s: 2, go: function () { try { dmOpenHub('here'); } catch (e) {} },
+    html: function () {
+      var st = hereData();
+      var map = {
+        free: ['有空', '这会儿没什么事'],
+        busy: ['有事', '手上正忙着'],
+        rest: ['休息', '在歇着'],
+        sleep: ['睡着', '已经睡了']
+      };
+      var s = map[st.st] || map.free;
+      return '<div class="dk-w-t">此间</div>' +
+        '<div class="dk-st" data-st="' + st.st + '"><i></i>' + s[0] + '</div>' +
+        '<div class="dk-w-sub" style="margin-top:8px">' + esc(st.note || s[1]) + '</div>';
+    }
+  };
+
+  WID.tide = {
+    n: '潮汐', e: '🌊', s: 2, go: function () { try { openTide(); } catch (e) {} },
+    html: function () {
+      var tip = txt('.tide-tip') || '注意保暖 多喝热水';
+      return '<div class="dk-w-t">潮汐</div>' +
+        '<div class="dk-w-big" style="font-size:1.5em">🌊</div>' +
+        '<div class="dk-w-sub">' + esc(tip) + '</div>';
+    }
+  };
+
+  WID.water = {
+    n: '喝水', e: '💧', s: 2,
+    go: function () {
+      var d = waterData();
+      d.cups = (d.cups || 0) + 1;
+      d.last = now();
+      ss('dmx:water', d);
+      if (d.cups === d.goal) toast('今天的水喝够了 💧');
+      vib(10);
+      refresh();
+    },
+    html: function () {
+      var d = waterData();
+      var pct = clamp(Math.round((d.cups / (d.goal || 8)) * 100), 0, 100);
+      return '<div class="dk-w-t">喝水</div>' +
+        '<div class="dk-w-row"><div class="dk-w-big">' + d.cups + '<small>/' + (d.goal || 8) + '</small></div>' +
+        '<div style="font-size:.68em;color:var(--dk-ink3)">点一下<br>加一杯</div></div>' +
+        '<div class="dk-bar"><i style="width:' + pct + '%"></i></div>';
+    }
+  };
+
+  WID.piggy = {
+    n: '存钱罐', e: '🐷', s: 2, go: function () { try { dmOpenHub('tool'); } catch (e) {} },
+    html: function () {
+      var d = piggyData();
+      var pct = d.target ? clamp(Math.round((d.saved / d.target) * 100), 0, 100) : 0;
+      return '<div class="dk-w-t">存钱罐</div>' +
+        '<div class="dk-w-big">' + (d.saved || 0) + '<small>/' + (d.target || 0) + '</small></div>' +
+        '<div class="dk-w-sub">' + esc(d.name || '想买的那件东西') + '</div>' +
+        '<div class="dk-bar"><i style="width:' + pct + '%"></i></div>';
+    }
+  };
+
+  WID.todo = {
+    n: '备忘', e: '📝', s: 4, go: function () { try { dmOpenHub('todo'); } catch (e) {} },
+    html: function () {
+      var arr = ls('dmx:todo', []) || [];
+      arr = arr.filter(function (x) { return !x.done; }).sort(function (a, b) {
+        if (!!a.star !== !!b.star) return a.star ? -1 : 1;
+        return (a.due || 9e15) - (b.due || 9e15);
+      }).slice(0, 3);
+      var body = arr.length
+        ? '<div class="dk-todo">' + arr.map(function (x, i) {
+            var soon = x.due && x.due - now() < 864e5;
+            var ds = x.due ? fmtDue(x.due) : '';
+            return '<div class="dk-todo-row' + (x.done ? ' done' : '') + '" data-ti="' + i + '">' +
+              '<i class="box"></i><span>' + esc(x.text) + '</span>' +
+              (ds ? '<em class="due' + (soon ? ' soon' : '') + '">' + ds + '</em>' : '') + '</div>';
+          }).join('') + '</div>'
+        : '<div class="dk-w-sub">今天没有要做的事。</div>';
+      return '<div class="dk-w-t">备忘 · 还剩 ' + countTodo() + ' 件</div>' + body;
+    },
+    after: function (root) {
+      $$('.dk-todo-row', root).forEach(function (row) {
+        row.onclick = function (ev) {
+          ev.stopPropagation();
+          var arr = ls('dmx:todo', []) || [];
+          var pend = arr.filter(function (x) { return !x.done; }).sort(function (a, b) {
+            if (!!a.star !== !!b.star) return a.star ? -1 : 1;
+            return (a.due || 9e15) - (b.due || 9e15);
+          });
+          var t = pend[parseInt(row.dataset.ti, 10)];
+          if (!t) return;
+          arr.forEach(function (x) { if (x.id === t.id) x.done = true; });
+          ss('dmx:todo', arr);
+          vib(10);
+          refresh();
+        };
+      });
+    }
+  };
+
+  WID.music = {
+    n: '在播', e: '🎵', s: 4, go: function () { try { openMusicRoom(); } catch (e) {} },
+    html: function () {
+      var st = null;
+      try { if (typeof musicPlayerState !== 'undefined') st = musicPlayerState; } catch (e) {}
+      var name = '', art = '';
+      try {
+        if (st && st.currentTrack) { name = st.currentTrack.name || ''; art = st.currentTrack.artist || ''; }
+      } catch (e) {}
+      if (!name) {
+        return '<div class="dk-w-t">🎵 在播</div><div class="dk-w-sub">现在没有在放歌。<br>点进来听一首吧。</div>';
+      }
+      return '<div class="dk-w-t">🎵 在播</div>' +
+        '<div class="dk-w-b" style="font-size:.92em">' + esc(name) + '</div>' +
+        '<div class="dk-w-sub">' + esc(art || '正在播放') + '</div>';
+    }
+  };
+
+  WID.count = {
+    n: '倒计时', e: '⏳', s: 2, custom: true,
+    go: null,
+    edit: function (w, done) { editCustom(w, done); },
+    html: function (w) {
+      var t = w.t || '还有多久';
+      var d = w.d ? new Date(w.d + 'T00:00:00').getTime() : 0;
+      var n = d ? Math.ceil((dayStart(d) - dayStart(now())) / 864e5) : 0;
+      return '<div class="dk-w-t">' + esc(t) + '</div>' +
+        '<div class="dk-cd"><b>' + (n >= 0 ? n : -n) + '</b><span style="font-size:.72em;color:var(--dk-ink3)">' +
+        (n >= 0 ? '天后' : '天前') + '</span></div>' +
+        '<div class="dk-w-sub">' + esc(w.d || '点一下设个日子') + '</div>';
+    }
+  };
+
+  WID.text = {
+    n: '文字卡', e: '✍️', s: 4, custom: true,
+    go: null,
+    edit: function (w, done) { editCustom(w, done); },
+    html: function (w) {
+      var t = w.t ? esc(w.t) : '点一下，写一句想留在桌面上的话';
+      return '<div class="dk-w-t">留言</div><div class="dk-quote" style="' +
+        (w.t ? '' : 'opacity:.42;') + '">' + t + '</div>';
+    }
+  };
+
+  WID.img = {
+    n: '图片卡', e: '🖼', s: 4, custom: true,
+    go: null,
+    edit: function (w, done) { pickImageFor(w, done); },
+    html: function (w) {
+      if (!w.img) {
+        return '<div class="dk-w-t">图片</div><div class="dk-w-sub">点一下放一张图上来</div>';
+      }
+      return '<div class="dk-img-cap">' + esc(w.t || '') + '</div>';
+    },
+    after: function (root, w) {
+      if (w.img) {
+        var b = wallUrl(w.img);
+        if (b) root.style.backgroundImage = 'url("' + b + '")';
+      }
+    },
+    cls: 'dk-w-img'
+  };
+
+  WID.wish = {
+    n: '心愿', e: '🌠', s: 4, go: function () { try { dmOpenHub('wish'); } catch (e) {} },
+    html: function () {
+      var arr = ls('dmx:wish', []) || [];
+      var open = arr.filter(function (x) { return !x.done; });
+      if (!open.length) {
+        return '<div class="dk-w-t">心愿单</div><div class="dk-w-sub">还没有许过愿。点进来写一个，TA 也许会挑一件送你。</div>';
+      }
+      return '<div class="dk-w-t">心愿单 · ' + open.length + ' 个还没实现</div>' +
+        '<div class="dk-w-b" style="font-size:.86em">' + esc(open[0].t || open[0].text || '') + '</div>' +
+        '<div class="dk-w-sub">' + (open.length > 1 ? '还有 ' + (open.length - 1) + ' 个' : '') + '</div>';
+    }
+  };
+
+  var WORDER = ['anniv', 'mood', 'word', 'time', 'here', 'tide', 'water', 'piggy', 'todo', 'wish', 'music', 'count', 'text', 'img'];
+
+  /* ---------- 小工具数据 ---------- */
+  function waterData() {
+    var d = ls('dmx:water', null);
+    var today = dayKey();
+    if (!d || d.day !== today) d = { day: today, cups: 0, goal: (d && d.goal) || 8, last: 0 };
+    return d;
+  }
+  function piggyData() {
+    return ls('dmx:piggy', { name: '想买的那件东西', target: 500, saved: 0 });
+  }
+  function hereData() {
+    var id = rid();
+    var d = id ? ls('dmx:here:' + id, null) : null;
+    if (d && d.st) return d;
+    // 按时间猜一个
+    var h = new Date().getHours();
+    var st = h >= 23 || h < 7 ? 'sleep' : (h >= 12 && h < 14 ? 'rest' : (h >= 9 && h < 18 ? 'busy' : 'free'));
+    return { st: st, note: '', manual: false };
+  }
+  function countTodo() {
+    var arr = ls('dmx:todo', []) || [];
+    return arr.filter(function (x) { return !x.done; }).length;
+  }
+  function fmtDue(t) {
+    var n = Math.ceil((dayStart(t) - dayStart(now())) / 864e5);
+    if (n < 0) return '逾期';
+    if (n === 0) return '今天';
+    if (n === 1) return '明天';
+    return n + ' 天';
+  }
+
+  /* ============================================================
+     2. 配置
+     ============================================================ */
+  function defCfg() {
+    return {
+      v: 1,
+      on: false,
+      wall: 'mist',
+      look: {
+        font: 100, card: 100, radius: 22, alpha: 52,
+        icon: 56, irad: 30, label: true,
+        accent: '', scale: 100, blur: 0, dim: 12,
+        clock: true
+      },
+      pages: [
+        {
+          icons: ['messages', 'moments', 'diary', 'mailbox', 'tarot', 'companion', 'tide', 'more'],
+          ws: [{ k: 'anniv', s: 2 }, { k: 'mood', s: 2 }, { k: 'word', s: 4 }]
+        },
+        {
+          icons: ['here', 'todo', 'tool', 'wish'],
+          ws: [{ k: 'here', s: 2 }, { k: 'water', s: 2 }, { k: 'todo', s: 4 }]
+        }
+      ],
+      hidden: {},
+      schemes: []
+    };
+  }
+
+  var cfg = null;
+  function D() {
+    if (cfg) return cfg;
+    var c = ls(K, null);
+    if (!c || !c.pages || !c.pages.length) c = defCfg();
+    // 兜底
+    var d = defCfg();
+    for (var k in d.look) if (c.look[k] === undefined) c.look[k] = d.look[k];
+    c.hidden = c.hidden || {};
+    c.schemes = c.schemes || [];
+    cfg = c;
+    return cfg;
+  }
+  function save() { ss(K, D()); }
+
+  /* ============================================================
+     3. 壁纸图库（IndexedDB）
+     ============================================================ */
+  var DBNAME = 'DmDeskDB', DBS = 'walls';
+  var dbp = null;
+  function db() {
+    if (dbp) return dbp;
+    dbp = new Promise(function (res, rej) {
+      var r;
+      try { r = indexedDB.open(DBNAME, 1); } catch (e) { rej(e); return; }
+      r.onupgradeneeded = function () {
+        var d = r.result;
+        if (!d.objectStoreNames.contains(DBS)) d.createObjectStore(DBS, { keyPath: 'id' });
+      };
+      r.onsuccess = function () { res(r.result); };
+      r.onerror = function () { rej(r.error); };
+    });
+    return dbp;
+  }
+  function dbAct(mode, fn) {
+    return db().then(function (d) {
+      return new Promise(function (res, rej) {
+        var tx = d.transaction(DBS, mode);
+        var st = tx.objectStore(DBS);
+        var q = fn(st);
+        q.onsuccess = function () { res(q.result); };
+        q.onerror = function () { rej(q.error); };
+      });
+    });
+  }
+  function dbAll() { return dbAct('readonly', function (s) { return s.getAll(); }).catch(function () { return []; }); }
+  function dbPut(rec) { return dbAct('readwrite', function (s) { return s.put(rec); }).catch(function () { return null; }); }
+  function dbDel(id) {
+    return dbAct('readwrite', function (s) { return s.delete(id); }).catch(function () { return null; });
+  }
+
+  var urls = {};
+  function wallUrl(id) {
+    if (urls[id]) return urls[id];
+    return '';
+  }
+  function primeUrls(recs) {
+    recs.forEach(function (r) {
+      if (!urls[r.id] && r.blob) {
+        try { urls[r.id] = URL.createObjectURL(r.blob); } catch (e) {}
+      }
+    });
+  }
+
+  function shrink(file, max, q) {
+    return new Promise(function (res, rej) {
+      var url = '';
+      try { url = URL.createObjectURL(file); } catch (e) { rej(e); return; }
+      var im = new Image();
+      im.onload = function () {
+        var w = im.width, h = im.height;
+        var k = Math.min(1, max / Math.max(w, h));
+        var c = document.createElement('canvas');
+        c.width = Math.max(1, Math.round(w * k));
+        c.height = Math.max(1, Math.round(h * k));
+        var g = c.getContext('2d');
+        g.drawImage(im, 0, 0, c.width, c.height);
+        try { URL.revokeObjectURL(url); } catch (e) {}
+        if (c.toBlob) c.toBlob(function (b) { b ? res(b) : rej(new Error('encode')); }, 'image/jpeg', q);
+        else {
+          try {
+            var d = c.toDataURL('image/jpeg', q);
+            res(dataURLtoBlob(d));
+          } catch (e) { rej(e); }
+        }
+      };
+      im.onerror = function () { rej(new Error('decode')); };
+      im.src = url;
+    });
+  }
+  function dataURLtoBlob(u) {
+    var p = u.split(','), m = /:(.*?);/.exec(p[0])[1], b = atob(p[1]);
+    var arr = new Uint8Array(b.length);
+    for (var i = 0; i < b.length; i++) arr[i] = b.charCodeAt(i);
+    return new Blob([arr], { type: m });
+  }
+  function accentOf(blob) {
+    return new Promise(function (res) {
+      var url = '';
+      try { url = URL.createObjectURL(blob); } catch (e) { res(null); return; }
+      var im = new Image();
+      im.onload = function () {
+        try {
+          var c = document.createElement('canvas');
+          c.width = 24; c.height = 24;
+          var g = c.getContext('2d');
+          g.drawImage(im, 0, 0, 24, 24);
+          var d = g.getImageData(0, 0, 24, 24).data;
+          var r = 0, gg = 0, b = 0, n = 0;
+          for (var i = 0; i < d.length; i += 4) {
+            if (d[i + 3] < 40) continue;
+            r += d[i]; gg += d[i + 1]; b += d[i + 2]; n++;
+          }
+          if (!n) { res(null); return; }
+          var mr = r / n, mg = gg / n, mb = b / n;
+          var lum = (0.2126 * mr + 0.7152 * mg + 0.0722 * mb) / 255;
+          var hsl = rgb2hsl(mr, mg, mb);
+          hsl[1] = clamp(hsl[1] * 1.35, .34, .68);
+          hsl[2] = clamp(hsl[2], .42, .58);
+          res({ hex: hsl2hex(hsl[0], hsl[1], hsl[2]), lum: lum });
+        } catch (e) { res(null); }
+        try { URL.revokeObjectURL(url); } catch (e) {}
+      };
+      im.onerror = function () { res(null); };
+      im.src = url;
+    });
+  }
+  function rgb2hsl(r, g, b) {
+    r /= 255; g /= 255; b /= 255;
+    var mx = Math.max(r, g, b), mn = Math.min(r, g, b), h = 0, s = 0, l = (mx + mn) / 2, d = mx - mn;
+    if (d) {
+      s = l > .5 ? d / (2 - mx - mn) : d / (mx + mn);
+      if (mx === r) h = ((g - b) / d + (g < b ? 6 : 0)) / 6;
+      else if (mx === g) h = ((b - r) / d + 2) / 6;
+      else h = ((r - g) / d + 4) / 6;
+    }
+    return [h, s, l];
+  }
+  function hsl2hex(h, s, l) {
+    function f(p, q, t) {
+      if (t < 0) t += 1; if (t > 1) t -= 1;
+      if (t < 1 / 6) return p + (q - p) * 6 * t;
+      if (t < 1 / 2) return q;
+      if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
+      return p;
+    }
+    var r, g, b;
+    if (!s) { r = g = b = l; }
+    else {
+      var q = l < .5 ? l * (1 + s) : l + s - l * s, p = 2 * l - q;
+      r = f(p, q, h + 1 / 3); g = f(p, q, h); b = f(p, q, h - 1 / 3);
+    }
+    function x(v) { var s2 = Math.round(v * 255).toString(16); return s2.length === 1 ? '0' + s2 : s2; }
+    return '#' + x(r) + x(g) + x(b);
+  }
+
+  var wallRecs = [];
+
+  /* ============================================================
+     4. 桌面 DOM
+     ============================================================ */
+  function ensure() {
+    var home = $('#page-home');
+    if (!home) return null;
+    var box = $('#dm-desk');
+    if (!box) {
+      box = el('div', '');
+      box.id = 'dm-desk';
+      box.innerHTML =
+        '<div id="dk-wall" data-w="mist"></div>' +
+        '<div id="dk-dim"></div>' +
+        '<div class="dk-tools">' +
+          '<button class="dk-tbtn" id="dk-t-decor" title="装修">✎</button>' +
+          '<button class="dk-tbtn" id="dk-t-beauty" title="美化">◎</button>' +
+        '</div>' +
+        '<div id="dk-scroll"><div id="dk-pages"></div></div>' +
+        '<div class="dk-dots" id="dk-dots"></div>' +
+        '<div class="dk-decor-tip" id="dk-tip">按住可拖动 · 点 − 删除 · 松手后记得保存</div>' +
+        '<div class="dk-hint" id="dk-hint"></div>';
+      home.appendChild(box);
+
+      $('#dk-t-decor', box).onclick = function () { setDecor(!box.classList.contains('dk-decor')); };
+      $('#dk-t-beauty', box).onclick = function () { openBeauty(); };
+      bindScroll();
+      bindLongPress();
+    }
+    return box;
+  }
+
+  var decor = false;
+  function setDecor(v) {
+    var box = $('#dm-desk');
+    if (!box) return;
+    decor = !!v;
+    box.classList.toggle('dk-decor', decor);
+    var b = $('#dk-t-decor');
+    if (b) b.classList.toggle('on', decor);
+    if (decor) {
+      vib(12);
+      showHint('装修模式：拖动可换位置，点左上角 − 可删除');
+      setTimeout(function () { hideHint(); }, 2600);
+    }
+    renderAll();
+  }
+
+  var hintTimer = null;
+  function showHint(t) {
+    var h = $('#dk-hint');
+    if (!h) return;
+    h.textContent = t;
+    h.classList.add('show');
+    clearTimeout(hintTimer);
+  }
+  function hideHint() {
+    var h = $('#dk-hint');
+    if (h) h.classList.remove('show');
+  }
+
+  function bindLongPress() {
+    var box = $('#dm-desk');
+    if (!box) return;
+    var t = null, x0 = 0, y0 = 0;
+    box.addEventListener('pointerdown', function (ev) {
+      if (ev.target.closest('.dk-del') || ev.target.closest('.dk-tbtn')) return;
+      if (ev.target.closest('.dk-dot')) return;
+      x0 = ev.clientX; y0 = ev.clientY;
+      t = setTimeout(function () {
+        if (!decor) { setDecor(true); }
+      }, 620);
+    }, { passive: true });
+    function cancel() { clearTimeout(t); t = null; }
+    box.addEventListener('pointerup', cancel, { passive: true });
+    box.addEventListener('pointercancel', cancel, { passive: true });
+    box.addEventListener('pointermove', function (ev) {
+      if (!t) return;
+      if (Math.abs(ev.clientX - x0) > 8 || Math.abs(ev.clientY - y0) > 8) cancel();
+    }, { passive: true });
+  }
+
+  /* ---------- 翻页 ---------- */
+  var pageIdx = 0;
+  function bindScroll() {
+    var sc = $('#dk-scroll');
+    if (!sc || sc.__bound) return;
+    sc.__bound = true;
+    var pend = false;
+    sc.addEventListener('scroll', function () {
+      if (pend) return;
+      pend = true;
+      (window.requestAnimationFrame || function (f) { setTimeout(f, 16); })(function () {
+        pend = false;
+        var w = sc.clientWidth || 1;
+        var i = Math.round(sc.scrollLeft / w);
+        if (i !== pageIdx) { pageIdx = i; syncDots(); }
+      });
+    }, { passive: true });
+  }
+  function syncDots() {
+    $$('#dk-dots .dk-dot').forEach(function (d, i) {
+      d.classList.toggle('on', i === pageIdx);
+    });
+  }
+  function renderDots() {
+    var box = $('#dk-dots');
+    var n = D().pages.length;
+    if (!box) return;
+    box.innerHTML = '';
+    if (n < 2) { box.style.display = 'none'; return; }
+    box.style.display = '';
+    for (var i = 0; i < n; i++) {
+      (function (i) {
+        var d = el('div', 'dk-dot' + (i === pageIdx ? ' on' : ''));
+        d.onclick = function () {
+          var sc = $('#dk-scroll');
+          if (sc) sc.scrollTo ? sc.scrollTo({ left: i * sc.clientWidth, behavior: 'smooth' }) :
+            (sc.scrollLeft = i * sc.clientWidth);
+        };
+        box.appendChild(d);
+      })(i);
+    }
+  }
+
+  /* ---------- 应用外观 ---------- */
+  function applyLook() {
+    var box = $('#dm-desk');
+    if (!box) return;
+    var L = D().look;
+    box.style.setProperty('--dk-font', (L.font / 100).toFixed(3));
+    box.style.setProperty('--dk-card', (L.card / 100).toFixed(3));
+    box.style.setProperty('--dk-radius', L.radius + 'px');
+    box.style.setProperty('--dk-a', (L.alpha / 100).toFixed(3));
+    box.style.setProperty('--dk-icon', L.icon + 'px');
+    box.style.setProperty('--dk-ir', (L.irad / 100).toFixed(3));
+    box.style.setProperty('--dk-wall-scale', (L.scale / 100).toFixed(3));
+    box.style.setProperty('--dk-wall-blur', L.blur + 'px');
+    box.classList.toggle('dk-nolabel', !L.label);
+
+    var acc = L.accent;
+    if (!acc) {
+      var w = curWallKey();
+      if (w.indexOf('img:') === 0) acc = '';
+      else {
+        for (var i = 0; i < WALLS.length; i++) if (WALLS[i].k === w) acc = WALLS[i].a;
+      }
+    }
+    box.style.setProperty('--dk-accent', acc || '#8b5cf6');
+
+    var wall = $('#dk-wall');
+    if (wall) {
+      var key = curWallKey();
+      if (key.indexOf('img:') === 0) {
+        var b = wallUrl(key.slice(4));
+        if (b) {
+          wall.className = 'dk-wall-img';
+          wall.removeAttribute('data-w');
+          wall.style.setProperty('--dk-wall-img', 'url("' + b + '")');
+          wall.style.backgroundImage = 'url("' + b + '")';
+        } else {
+          wall.className = '';
+          wall.setAttribute('data-w', 'mist');
+          wall.style.backgroundImage = '';
+        }
+      } else {
+        wall.className = '';
+        wall.style.backgroundImage = '';
+        wall.style.removeProperty('--dk-wall-img');
+        wall.setAttribute('data-w', key || 'mist');
+      }
+      /* 文字色跟随壁纸明暗（不跟随系统主题）：深壁纸 / 深图片 / 深色主题 → 浅字 */
+      var isDarkTheme = document.documentElement.getAttribute('data-theme') === 'dark' ||
+        (document.body && document.body.classList.contains('dark-mode'));
+      var imgDark = false;
+      if (key.indexOf('img:') === 0) {
+        var want = key.slice(4);
+        for (var ri = 0; ri < wallRecs.length; ri++) {
+          if (wallRecs[ri].id === want) { imgDark = !!wallRecs[ri].dark; break; }
+        }
+      }
+      var needLight = !!DARKWALL[key] || imgDark || !!isDarkTheme;
+      box.classList.toggle('dk-wall-dark', needLight);
+      var add = isDarkTheme ? .42 : (needLight ? .24 : 0);
+      box.style.setProperty('--dk-dim', (L.dim / 100 + add).toFixed(3));
+      var dim = $('#dk-dim');
+      if (dim) dim.classList.toggle('dk-dim-dark', needLight);
+    }
+  }
+  function curWallKey() { return D().wall || 'mist'; }
+
+  /* ---------- 渲染 ---------- */
+  function renderAll() {
+    var box = ensure();
+    if (!box) return;
+    applyLook();
+    var wrap = $('#dk-pages', box);
+    if (!wrap) return;
+    var keep = pageIdx;
+    wrap.innerHTML = '';
+    D().pages.forEach(function (p, i) {
+      wrap.appendChild(buildPage(p, i));
+    });
+    box.classList.toggle('dk-decor', decor);
+    pageIdx = clamp(keep, 0, D().pages.length - 1);
+    renderDots();
+    requestAnimationFrame(function () {
+      var sc = $('#dk-scroll');
+      if (sc) sc.scrollLeft = pageIdx * sc.clientWidth;
+    });
+  }
+
+  function renderPage(i, soft) {
+    var box = $('#dm-desk');
+    if (!box) return;
+    var wrap = $('#dk-pages');
+    var p = D().pages[i];
+    if (!p || !wrap) return;
+    var old = wrap.children[i];
+    var node = buildPage(p, i);
+    if (old) wrap.replaceChild(node, old);
+    else wrap.appendChild(node);
+  }
+
+  function clockEl() {
+    var d = new Date();
+    var wk = ['日', '一', '二', '三', '四', '五', '六'][d.getDay()];
+    var box = el('div', 'dk-clock');
+    box.innerHTML =
+      '<div class="dk-clock-main" data-clock>' + hhmm(d) + '</div>' +
+      '<div class="dk-clock-sub">' + (d.getMonth() + 1) + ' 月 ' + d.getDate() + ' 日 · 周' + wk + '</div>';
+    return box;
+  }
+
+  function buildPage(p, i) {
+    var sec = el('section', 'dk-page');
+    sec.dataset.pi = i;
+    var L = D().look;
+    if (L.clock && i === 0) sec.appendChild(clockEl());
+
+    /* 图标区 */
+    var ig = el('div', 'dk-grid dk-icons');
+    ig.dataset.zone = 'icons';
+    ig.dataset.pi = i;
+    (p.icons || []).forEach(function (k) {
+      if (D().hidden[k]) return;
+      var def = ICMAP[k];
+      if (!def) return;
+      ig.appendChild(iconEl(k, def));
+    });
+    if (!ig.children.length) {
+      var ph = el('div', 'dk-empty dk-s4');
+      ph.textContent = decor ? '这一页还没有图标。去美化 → 图标里挑几个。' : '';
+      if (!ph.textContent) ph.style.display = 'none';
+      ig.appendChild(ph);
+    }
+    sec.appendChild(ig);
+
+    /* 部件区 */
+    var wg = el('div', 'dk-grid dk-widgets');
+    wg.dataset.zone = 'ws';
+    wg.dataset.pi = i;
+    (p.ws || []).forEach(function (w, wi) {
+      wg.appendChild(widgetEl(w, i, wi));
+    });
+    if (!wg.children.length) {
+      var ph2 = el('div', 'dk-empty dk-s4');
+      ph2.textContent = '这一页还是空的。长按桌面进入装修，点 ◎ 加几个小部件上来。';
+      wg.appendChild(ph2);
+    }
+    sec.appendChild(wg);
+    return sec;
+  }
+
+  function iconEl(k, def) {
+    var d = D();
+    var node = el('div', 'dk-icon dk-s1');
+    node.dataset.k = k;
+    node.dataset.type = 'icon';
+    var icon = el('div', 'dk-ico');
+    icon.innerHTML = '<span>' + def.e + '</span>';
+    if (d.hidden[k]) node.style.display = 'none';
+    var lab = el('div', 'dk-label');
+    lab.textContent = def.n;
+    node.appendChild(icon);
+    node.appendChild(lab);
+
+    if (decor) {
+      var del = el('button', 'dk-del');
+      del.onclick = function (ev) {
+        ev.stopPropagation();
+        var p = D().pages[parseInt(node.closest('.dk-page').dataset.pi, 10)];
+        var idx = p.icons.indexOf(k);
+        if (idx >= 0) p.icons.splice(idx, 1);
+        save(); vib(10); renderAll();
+      };
+      node.appendChild(del);
+      makeDrag(node);
+    } else {
+      node.onclick = function () { def.go(); };
+    }
+    return node;
+  }
+
+  function widgetEl(w, pi, wi) {
+    var def = WID[w.k];
+    if (!def) return el('div', '');
+    var s = w.s || def.s || 2;
+    var node = el('div', 'dk-w dk-s' + s + (def.cls ? ' ' + def.cls : ''));
+    node.dataset.k = w.k;
+    node.dataset.type = 'w';
+    node.dataset.pi = pi;
+    node.dataset.wi = wi;
+    try { node.innerHTML = def.html(w) || ''; } catch (e) { node.textContent = def.n; }
+    if (def.after) { try { def.after(node, w); } catch (e) {} }
+
+    if (decor) {
+      var del = el('button', 'dk-del');
+      del.onclick = function (ev) {
+        ev.stopPropagation();
+        var pg = D().pages[pi];
+        pg.ws.splice(wi, 1);
+        save(); vib(10); renderAll();
+      };
+      node.appendChild(del);
+      makeDrag(node);
+    } else {
+      node.onclick = function () {
+        if (def.custom) {
+          if (def.edit) def.edit(w, function () { save(); refresh(); });
+          return;
+        }
+        if (def.go) def.go();
+      };
+    }
+    return node;
+  }
+
+  function refresh() {
+    // 只重建部件与图标，保留滚动位置
+    var sc = $('#dk-scroll');
+    var l = sc ? sc.scrollLeft : 0;
+    renderAll();
+    if (sc) sc.scrollLeft = l;
+  }
+
+  /* ---------- 拖动排序 ---------- */
+  var drag = null;
+  function makeDrag(node) {
+    node.style.touchAction = 'none';
+    node.addEventListener('pointerdown', function (ev) {
+      if (!decor) return;
+      if (ev.target.closest('.dk-del')) return;
+      ev.preventDefault();
+      drag = { node: node, x0: ev.clientX, y0: ev.clientY, moved: false };
+      node.classList.add('dk-drag');
+      /* 关掉命中，避免 elementFromPoint 抓到正在拖的节点自己 */
+      node.style.pointerEvents = 'none';
+    });
+  }
+  document.addEventListener('pointermove', function (ev) {
+    if (!drag) return;
+    if (!drag.moved && (Math.abs(ev.clientX - drag.x0) > 5 || Math.abs(ev.clientY - drag.y0) > 5)) {
+      drag.moved = true;
+      vib(6);
+    }
+    if (!drag.moved) return;
+    var under = document.elementFromPoint(ev.clientX, ev.clientY);
+    var tgt = under && under.closest && under.closest('.dk-icon, .dk-w');
+    if (!tgt || tgt === drag.node) return;
+    var zone = drag.node.parentNode;
+    if (tgt.parentNode !== zone) return;
+    var r = tgt.getBoundingClientRect();
+    var after = ev.clientY > r.top + r.height / 2;
+    if (zone.dataset.zone === 'icons') {
+      after = ev.clientX > r.left + r.width / 2;
+    }
+    zone.insertBefore(drag.node, after ? tgt.nextSibling : tgt);
+  }, { passive: true });
+  document.addEventListener('pointerup', function () {
+    if (!drag) return;
+    var node = drag.node, moved = drag.moved;
+    drag = null;
+    node.classList.remove('dk-drag');
+    node.style.pointerEvents = '';
+    if (moved) persistOrder();
+  });
+  document.addEventListener('pointercancel', function () {
+    if (!drag) return;
+    drag.node.classList.remove('dk-drag');
+    drag.node.style.pointerEvents = '';
+    drag = null;
+  });
+
+  function persistOrder() {
+    /* dataset.wi 是渲染时的真实下标，拖动只改 DOM 顺序不改它，
+       所以「新顺序 = 按 DOM 依次取 wi 对应的旧对象」。 */
+    var d = D();
+    $$('#dk-pages .dk-page').forEach(function (sec, pi) {
+      var p = d.pages[pi];
+      if (!p) return;
+      var icons = $$('.dk-icons .dk-icon', sec).map(function (n) { return n.dataset.k; });
+      var old = (p.ws || []).slice();
+      var ws = [];
+      $$('.dk-widgets .dk-w', sec).forEach(function (n) {
+        var i = parseInt(n.dataset.wi, 10);
+        if (old[i]) ws.push(old[i]);
+      });
+      if (icons.length) p.icons = icons;
+      p.ws = ws;
+    });
+    save();
+    renderAll();
+  }
+
+  /* ============================================================
+     5. 自定义部件编辑
+     ============================================================ */
+  function editCustom(w, done) {
+    var mask = el('div', '');
+    mask.style.cssText = 'position:fixed;inset:0;z-index:9700;background:rgba(26,16,34,.4);' +
+      'display:flex;align-items:center;justify-content:center;padding:24px;backdrop-filter:blur(4px)';
+    var card = el('div', '');
+    card.style.cssText = 'width:100%;max-width:340px;background:#fdfbfd;color:#2b2230;border-radius:20px;' +
+      'padding:20px;box-shadow:0 20px 60px rgba(30,14,50,.3);font:14px/1.5 inherit';
+    if (document.documentElement.getAttribute('data-theme') === 'dark') {
+      card.style.background = '#2a2330';
+      card.style.color = '#f2eaf3';
+    }
+    var h = '<div style="font-size:15px;font-weight:600;margin-bottom:14px">' + esc(WID[w.k].n) + '</div>';
+    if (w.k === 'text') {
+      h += '<textarea id="dk-ed-t" maxlength="120" rows="4" placeholder="写一句想留在桌面上的话" ' +
+        'style="width:100%;box-sizing:border-box;border-radius:12px;border:1px solid rgba(120,90,140,.24);' +
+        'padding:10px 12px;font:13px/1.6 inherit;background:transparent;color:inherit;resize:none">' +
+        esc(w.t || '') + '</textarea>';
+    } else if (w.k === 'count') {
+      h += '<div style="font-size:12px;opacity:.6;margin-bottom:6px">标题</div>' +
+        '<input id="dk-ed-t" maxlength="20" value="' + esc(w.t || '') + '" placeholder="生日 / 见面那天" ' +
+        'style="width:100%;box-sizing:border-box;border-radius:12px;border:1px solid rgba(120,90,140,.24);' +
+        'padding:10px 12px;font:13px inherit;background:transparent;color:inherit;margin-bottom:12px">' +
+        '<div style="font-size:12px;opacity:.6;margin-bottom:6px">目标日期</div>' +
+        '<input id="dk-ed-d" type="date" value="' + esc(w.d || '') + '" ' +
+        'style="width:100%;box-sizing:border-box;border-radius:12px;border:1px solid rgba(120,90,140,.24);' +
+        'padding:10px 12px;font:13px inherit;background:transparent;color:inherit">';
+    }
+    h += '<div style="display:flex;gap:9px;margin-top:18px">' +
+      '<button id="dk-ed-c" style="flex:1;padding:10px;border-radius:12px;border:1px solid rgba(120,90,140,.2);' +
+      'background:transparent;color:inherit;font:13px inherit;cursor:pointer">取消</button>' +
+      '<button id="dk-ed-s" style="flex:1;padding:10px;border-radius:12px;border:0;background:#8b5cf6;' +
+      'color:#fff;font:13px inherit;cursor:pointer">好</button></div>';
+    card.innerHTML = h;
+    mask.appendChild(card);
+    document.body.appendChild(mask);
+    function close() { if (mask.parentNode) mask.parentNode.removeChild(mask); }
+    $('#dk-ed-c', card).onclick = close;
+    mask.onclick = function (ev) { if (ev.target === mask) close(); };
+    $('#dk-ed-s', card).onclick = function () {
+      var t = $('#dk-ed-t', card);
+      if (t) w.t = t.value.trim();
+      var d = $('#dk-ed-d', card);
+      if (d) w.d = d.value;
+      close();
+      save();
+      if (done) done();
+      refresh();
+    };
+    setTimeout(function () { var t = $('#dk-ed-t', card); t && t.focus(); }, 80);
+  }
+
+  function pickImageFor(w, done) {
+    var inp = document.createElement('input');
+    inp.type = 'file';
+    inp.accept = 'image/*';
+    inp.onchange = function () {
+      var f = inp.files && inp.files[0];
+      if (!f) return;
+      toast('正在处理图片…');
+      shrink(f, 1400, .84).then(function (blob) {
+        var id = 'im' + now() + Math.floor(Math.random() * 900);
+        return dbPut({ id: id, blob: blob, at: now(), name: f.name || '' }).then(function () {
+          urls[id] = URL.createObjectURL(blob);
+          w.img = id;
+          save();
+          if (done) done();
+          refresh();
+          toast('图片放上去了');
+        });
+      }).catch(function () { toast('这张图处理不了，换一张试试'); });
+    };
+    inp.click();
+  }
+
+  /* ============================================================
+     6. 美化抽屉
+     ============================================================ */
+  var bvTab = 'look';
+
+  function buildBeauty() {
+    if ($('#dk-beauty')) return;
+    var box = el('div', '');
+    box.id = 'dk-beauty';
+    box.innerHTML =
+      '<div id="dk-bv-mask"></div>' +
+      '<div id="dk-bv-panel">' +
+        '<div class="dkb-top">' +
+          '<button class="dkb-back" id="dkb-close">‹</button>' +
+          '<div class="dkb-title">桌面美化<small>壁纸 · 外观 · 小部件 · 方案</small></div>' +
+        '</div>' +
+        '<div class="dkb-nav">' +
+          '<i data-jump="wall" class="on">壁纸</i><i data-jump="look">外观</i>' +
+          '<i data-jump="wid">小部件</i><i data-jump="plan">方案</i>' +
+        '</div>' +
+        '<div class="dkb-body" id="dkb-body"></div>' +
+      '</div>';
+    document.body.appendChild(box);
+    $('#dkb-close').onclick = closeBeauty;
+    $('#dk-bv-mask').onclick = closeBeauty;
+    $$('.dkb-nav i', box).forEach(function (n) {
+      n.onclick = function () {
+        $$('.dkb-nav i', box).forEach(function (x) { x.classList.remove('on'); });
+        n.classList.add('on');
+        var target = $('#dkb-s-' + n.dataset.jump);
+        var body = $('#dkb-body');
+        if (target && body) {
+          if (body.scrollTo) body.scrollTo({ top: Math.max(0, target.offsetTop - 6), behavior: 'smooth' });
+          else body.scrollTop = Math.max(0, target.offsetTop - 6);
+        }
+      };
+    });
+  }
+
+  function openBeauty(tab) {
+    buildBeauty();
+    var b = $('#dk-beauty');
+    if (!b) return;
+    b.classList.add('open');
+    renderBeauty(tab || bvTab);
+  }
+  function closeBeauty() {
+    var b = $('#dk-beauty');
+    if (b) b.classList.remove('open');
+  }
+
+  function renderBeauty(tab) {
+    bvTab = tab || bvTab;
+    var body = $('#dkb-body');
+    if (!body) return;
+    var L = D().look;
+    var h = '';
+
+    /* ---- 总开关 ---- */
+    h += '<div class="dkb-sec"><div class="dkb-sw"><div>使用桌面' +
+      '<div class="desc">首页换成可装修的多页桌面。关掉就回到原来的首页。</div></div>' +
+      '<div class="dkb-toggle' + (D().on ? ' on' : '') + '" data-act="on"></div></div></div>';
+
+    /* ---- 壁纸 ---- */
+    h += '<div class="dkb-sec" id="dkb-s-wall"><div class="dkb-h">壁纸</div><div class="dkb-walls">';
+    var cw = curWallKey();
+    WALLS.forEach(function (w) {
+      h += '<div class="dkb-wall' + (cw === w.k ? ' on' : '') + '" data-wall="' + w.k + '" ' +
+        'data-w="' + w.k + '"><span>' + w.n + '</span></div>';
+    });
+    wallRecs.forEach(function (r) {
+      var u = urls[r.id] || '';
+      h += '<div class="dkb-wall' + (cw === 'img:' + r.id ? ' on' : '') + '" data-wall="img:' + r.id + '" ' +
+        'style="background-image:url(\'' + u + '\')">' +
+        '<span>' + esc(r.name || '我的图') + '</span></div>';
+    });
+    h += '<div class="dkb-wall add" data-act="up"><span style="position:static;background:none;color:inherit">＋</span></div>';
+    h += '</div>';
+    h += '<div class="dkb-note">壁纸存在本机（不进云、不上传）。' +
+      (wallRecs.length ? '已保存 ' + wallRecs.length + ' 张自己的图，长按可删。' : '') + '</div></div>';
+
+    /* ---- 外观 ---- */
+    h += '<div class="dkb-sec" id="dkb-s-look"><div class="dkb-h">外观</div>';
+    h += slider('字号', 'font', L.font, 85, 120, '%');
+    h += slider('卡片', 'card', L.card, 80, 120, '%');
+    h += slider('圆角', 'radius', L.radius, 8, 32, 'px');
+    h += slider('透明度', 'alpha', L.alpha, 16, 92, '%');
+    h += slider('图标', 'icon', L.icon, 42, 72, 'px');
+    h += slider('压暗', 'dim', L.dim, 0, 46, '%');
+    h += slider('壁纸缩放', 'scale', L.scale, 100, 132, '%');
+    h += slider('壁纸模糊', 'blur', L.blur, 0, 12, 'px');
+    h += '<div class="dkb-sw"><div>图标文字<div class="desc">关掉只留图标，更干净</div></div>' +
+      '<div class="dkb-toggle' + (L.label ? ' on' : '') + '" data-act="label"></div></div>';
+    h += '<div class="dkb-sw"><div>首页显示时钟<div class="desc">只在第 1 页显示大时钟</div></div>' +
+      '<div class="dkb-toggle' + (L.clock ? ' on' : '') + '" data-act="clock"></div></div>';
+    h += '<div style="margin-top:12px"><div class="dkb-h" style="margin-bottom:8px">主题色</div>' +
+      '<div class="dkb-colors">';
+    h += '<div class="dkb-color' + (!L.accent ? ' on' : '') + '" data-accent="" ' +
+      'style="background:linear-gradient(135deg,#c4b5fd,#8b5cf6);color:#8b5cf6"></div>';
+    ['#8b5cf6', '#c2739c', '#e08b6a', '#5fa8a0', '#5b87c9', '#a4885f', '#8f7bdd', '#4a4458'].forEach(function (c) {
+      h += '<div class="dkb-color' + (L.accent === c ? ' on' : '') + '" data-accent="' + c + '" ' +
+        'style="background:' + c + ';color:' + c + '"></div>';
+    });
+    h += '</div></div></div>';
+
+    /* ---- 小部件 ---- */
+    h += '<div class="dkb-sec" id="dkb-s-wid"><div class="dkb-h">加小部件到第 ' + (pageIdx + 1) + ' 页</div><div class="dkb-store">';
+    WORDER.forEach(function (k) {
+      var w = WID[k];
+      h += '<div class="dkb-app" data-add="' + k + '"><div class="e">' + w.e + '</div>' +
+        '<div class="n">' + w.n + '</div></div>';
+    });
+    h += '</div>';
+    h += '<div class="dkb-h" style="margin-top:18px">第 ' + (pageIdx + 1) + ' 页的图标</div><div class="dkb-store">';
+    ICONS.forEach(function (ic) {
+      var p = D().pages[pageIdx] || { icons: [] };
+      var on = (p.icons || []).indexOf(ic.k) >= 0;
+      h += '<div class="dkb-app' + (on ? ' off' : '') + '" data-icon="' + ic.k + '"><div class="e">' + ic.e + '</div>' +
+        '<div class="n">' + ic.n + '</div></div>';
+    });
+    h += '</div>';
+    h += '<div class="dkb-btns" style="margin-top:14px">' +
+      '<button class="dkb-btn" data-act="addpage">新增一页</button>' +
+      '<button class="dkb-btn" data-act="delpage">删掉这一页</button></div></div>';
+
+    /* ---- 方案 ---- */
+    h += '<div class="dkb-sec" id="dkb-s-plan"><div class="dkb-h">美化方案</div>';
+    h += '<div class="dkb-btns"><button class="dkb-btn primary" data-act="schemesave">保存当前方案</button>' +
+      '<button class="dkb-btn" data-act="schemeexport">复制方案码</button>' +
+      '<button class="dkb-btn" data-act="schemeimport">粘贴方案码</button></div>';
+    h += '<div class="dkb-schemes" style="margin-top:12px">';
+    if (!D().schemes.length) {
+      h += '<div class="dkb-note">还没有保存过方案。调好之后存一个，可以随时换回来，也能把码发给别人。</div>';
+    } else {
+      D().schemes.forEach(function (s, i) {
+        h += '<div class="dkb-scheme"><div style="flex:1;min-width:0">' +
+          '<div class="nm">' + esc(s.n || '方案 ' + (i + 1)) + '</div>' +
+          '<div class="meta">' + (s.at ? new Date(s.at).toLocaleDateString() : '') + '</div></div>' +
+          '<button data-sapply="' + i + '">应用</button>' +
+          '<button data-sdel="' + i + '">删除</button></div>';
+      });
+    }
+    h += '</div></div>';
+
+    h += '<div class="dkb-sec"><div class="dkb-h">关于</div><div class="dkb-note">' +
+      '桌面格局参考 mochi 字卡（小红书 @言序）的多页桌面与美化方案机制，代码与壁纸素材全部自写，' +
+      '未使用其任何内置素材。功能借鉴已在「此刻 → 关于」标注来源。</div></div>';
+
+    body.innerHTML = h;
+
+    /* ---------- 事件 ---------- */
+    $$('.dkb-toggle', body).forEach(function (t) {
+      t.onclick = function () {
+        var a = t.dataset.act;
+        if (a === 'on') {
+          var v = !D().on;
+          setOn(v);
+          renderBeauty();
+          return;
+        }
+        D().look[a] = !D().look[a];
+        save(); applyLook(); renderBeauty();
+      };
+    });
+    $$('input[type="range"]', body).forEach(function (inp) {
+      inp.oninput = function () {
+        var key = inp.dataset.k;
+        D().look[key] = parseInt(inp.value, 10);
+        var v = inp.parentNode.querySelector('.v');
+        if (v) v.textContent = inp.value + (inp.dataset.u || '');
+        applyLook();
+      };
+      inp.onchange = function () { save(); };
+    });
+    $$('.dkb-color', body).forEach(function (c) {
+      c.onclick = function () {
+        D().look.accent = c.dataset.accent;
+        save(); applyLook(); renderBeauty();
+      };
+    });
+    $$('.dkb-wall', body).forEach(function (w) {
+      if (w.dataset.act === 'up') {
+        w.onclick = uploadWall;
+      } else {
+        w.onclick = function () {
+          D().wall = w.dataset.wall;
+          save(); applyLook(); renderBeauty();
+        };
+        /* 自定义图长按删除 */
+        if (w.dataset.wall.indexOf('img:') === 0) {
+          var t = null;
+          var id = w.dataset.wall.slice(4);
+          w.addEventListener('pointerdown', function () {
+            t = setTimeout(function () {
+              if (confirm('删掉这张壁纸？')) {
+                dbDel(id).then(function () {
+                  wallRecs = wallRecs.filter(function (r) { return r.id !== id; });
+                  if (D().wall === 'img:' + id) { D().wall = 'mist'; save(); }
+                  applyLook(); renderBeauty();
+                });
+              }
+            }, 700);
+          });
+          ['pointerup', 'pointercancel', 'pointerleave'].forEach(function (ev) {
+            w.addEventListener(ev, function () { clearTimeout(t); });
+          });
+        }
+      }
+    });
+    $$('[data-add]', body).forEach(function (a) {
+      a.onclick = function () {
+        var k = a.dataset.add;
+        var p = D().pages[pageIdx];
+        if (!p) return;
+        var def = WID[k];
+        var item = { k: k, s: def.s || 2 };
+        if (k === 'count') { item.t = '还有多久'; item.d = ''; }
+        p.ws = p.ws || [];
+        // 新部件放在最前，方便看到
+        p.ws.unshift(item);
+        save();
+        renderAll();
+        toast('已加到第 ' + (pageIdx + 1) + ' 页');
+        if (k === 'count' || k === 'text') {
+          setTimeout(function () { def.edit && def.edit(item, function () { save(); refresh(); }); }, 260);
+        }
+      };
+    });
+    $$('[data-icon]', body).forEach(function (a) {
+      a.onclick = function () {
+        var k = a.dataset.icon;
+        var p = D().pages[pageIdx];
+        if (!p) return;
+        p.icons = p.icons || [];
+        var i = p.icons.indexOf(k);
+        if (i >= 0) p.icons.splice(i, 1);
+        else p.icons.push(k);
+        save();
+        renderAll();
+        renderBeauty();
+      };
+    });
+    $$('[data-act]', body).forEach(function (b) {
+      var a = b.dataset.act;
+      if (a === 'up' || a === 'on' || a === 'label' || a === 'clock') return;
+      b.onclick = function () {
+        if (a === 'addpage') {
+          if (D().pages.length >= 5) { toast('最多 5 页'); return; }
+          D().pages.push({ icons: [], ws: [] });
+          pageIdx = D().pages.length - 1;
+          save(); renderAll(); renderBeauty();
+          var sc = $('#dk-scroll');
+          if (sc) sc.scrollLeft = pageIdx * sc.clientWidth;
+        } else if (a === 'delpage') {
+          if (D().pages.length <= 1) { toast('至少要留一页'); return; }
+          D().pages.splice(pageIdx, 1);
+          pageIdx = clamp(pageIdx, 0, D().pages.length - 1);
+          save(); renderAll(); renderBeauty();
+        } else if (a === 'schemesave') {
+          var n = prompt('给这个方案起个名字', '方案 ' + (D().schemes.length + 1));
+          if (n == null) return;
+          D().schemes.push({ n: n.slice(0, 16), at: now(), cfg: snap() });
+          save(); renderBeauty();
+          toast('已保存');
+        } else if (a === 'schemeexport') {
+          exportCode();
+        } else if (a === 'schemeimport') {
+          importCode();
+        }
+      };
+    });
+    $$('[data-sapply]', body).forEach(function (b) {
+      b.onclick = function () {
+        var s = D().schemes[parseInt(b.dataset.sapply, 10)];
+        if (!s || !s.cfg) return;
+        applySnap(s.cfg);
+        save(); renderAll(); applyLook();
+        toast('已应用「' + (s.n || '方案') + '」');
+      };
+    });
+    $$('[data-sdel]', body).forEach(function (b) {
+      b.onclick = function () {
+        D().schemes.splice(parseInt(b.dataset.sdel, 10), 1);
+        save(); renderBeauty();
+      };
+    });
+  }
+
+  function slider(nm, key, val, mn, mx, unit) {
+    return '<div class="dkb-row"><div class="nm">' + nm + '</div>' +
+      '<input type="range" min="' + mn + '" max="' + mx + '" value="' + val + '" data-k="' + key + '" data-u="' + unit + '">' +
+      '<div class="v">' + val + unit + '</div></div>';
+  }
+
+  /* ---------- 壁纸上传 ---------- */
+  function uploadWall() {
+    var inp = document.createElement('input');
+    inp.type = 'file';
+    inp.accept = 'image/*';
+    inp.onchange = function () {
+      var f = inp.files && inp.files[0];
+      if (!f) return;
+      toast('正在压缩…');
+      shrink(f, 1600, .86).then(function (blob) {
+        var id = 'w' + now() + Math.floor(Math.random() * 900);
+        return accentOf(blob).then(function (acc) {
+          var nm = (f.name || '我的图').replace(/\.[^.]+$/, '').slice(0, 10);
+          var dark = !!(acc && acc.lum < .46);
+          return dbPut({ id: id, blob: blob, at: now(), name: nm, dark: dark })
+            .then(function () {
+              urls[id] = URL.createObjectURL(blob);
+              wallRecs.push({ id: id, at: now(), name: nm, dark: dark });
+              D().wall = 'img:' + id;
+              if (acc && acc.hex) D().look.accent = acc.hex;
+              save(); applyLook(); renderBeauty();
+              toast('壁纸换好了');
+            });
+        });
+      }).catch(function () { toast('这张图处理不了，换一张试试'); });
+    };
+    inp.click();
+  }
+
+  /* ============================================================
+     7. 方案快照 / 导出导入
+     ============================================================ */
+  function snap() {
+    var d = D();
+    return {
+      wall: d.wall,
+      look: JSON.parse(JSON.stringify(d.look)),
+      pages: JSON.parse(JSON.stringify(d.pages))
+    };
+  }
+  function applySnap(s) {
+    if (!s) return;
+    var d = D();
+    if (s.wall) d.wall = s.wall;
+    if (s.look) for (var k in s.look) d.look[k] = s.look[k];
+    if (s.pages && s.pages.length) {
+      d.pages = s.pages;
+      pageIdx = 0;
+    }
+  }
+  function exportCode() {
+    var s = snap();
+    var json = JSON.stringify(s);
+    var b64 = '';
+    try {
+      b64 = btoa(unescape(encodeURIComponent(json)));
+    } catch (e) { toast('生成失败'); return; }
+    var code = 'DM1.' + b64;
+    copy(code);
+  }
+  function importCode() {
+    var code = prompt('粘贴方案码（DM1. 开头的一长串）');
+    if (!code) return;
+    code = code.trim();
+    if (code.indexOf('DM1.') === 0) code = code.slice(4);
+    var s = null;
+    try {
+      s = JSON.parse(decodeURIComponent(escape(atob(code))));
+    } catch (e) {
+      // 容错：去掉空白与换行
+      try {
+        s = JSON.parse(decodeURIComponent(escape(atob(code.replace(/\s+/g, '')))));
+      } catch (e2) { toast('这串码读不出来'); return; }
+    }
+    if (!s || !s.look) { toast('这串码不是桌面方案'); return; }
+    applySnap(s);
+    save(); renderAll(); applyLook();
+    toast('方案已导入');
+  }
+  function copy(t) {
+    function ok() { toast('方案码已复制，可以直接发出去'); }
+    function fail() { prompt('复制下面的方案码', t); }
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(t).then(ok).catch(fail);
+        return;
+      }
+    } catch (e) {}
+    var ta = document.createElement('textarea');
+    ta.value = t;
+    ta.style.cssText = 'position:fixed;left:-9999px;top:0';
+    document.body.appendChild(ta);
+    ta.select();
+    var ok2 = false;
+    try { ok2 = document.execCommand('copy'); } catch (e) {}
+    document.body.removeChild(ta);
+    ok2 ? ok() : fail();
+  }
+
+  /* ============================================================
+     8. 开关 / 刷新循环
+     ============================================================ */
+  function setOn(v) {
+    var d = D();
+    d.on = !!v;
+    save();
+    var home = $('#page-home');
+    if (home) home.classList.toggle('dm-desk-on', d.on);
+    if (d.on) {
+      ensure();
+      renderAll();
+      startClock();
+      if (!ls(KHINT, false)) {
+        ss(KHINT, true);
+        setTimeout(function () {
+          showHint('长按桌面可进入装修 · 右上角 ◎ 是美化');
+          setTimeout(hideHint, 4200);
+        }, 900);
+      }
+    } else {
+      stopClock();
+      if (home) home.classList.remove('dm-desk-on');
+    }
+    var sw = $('#dkb-body');
+    if (sw) renderBeauty();
+  }
+  window.dmDeskOn = function () { setOn(true); };
+  window.dmDeskOff = function () { setOn(false); };
+  window.dmDeskBeauty = function () { openBeauty(); };
+
+  var clockTimer = null;
+  function startClock() {
+    stopClock();
+    clockTimer = setInterval(function () {
+      var d = new Date();
+      $$('#dm-desk [data-clock]').forEach(function (n) { n.textContent = hhmm(d); });
+      if (pageIdx === 0 && D().look.clock) {
+        var sub = $('#dm-desk .dk-clock-sub');
+        if (sub) {
+          var wk = ['日', '一', '二', '三', '四', '五', '六'][d.getDay()];
+          sub.textContent = (d.getMonth() + 1) + ' 月 ' + d.getDate() + ' 日 · 周' + wk;
+        }
+      }
+    }, 20000);
+  }
+  function stopClock() { if (clockTimer) { clearInterval(clockTimer); clockTimer = null; } }
+
+  /* 每 5 分钟轻刷一次部件（此间状态会随时间变） */
+  var refreshTimer = null;
+  function startRefresh() {
+    if (refreshTimer) return;
+    refreshTimer = setInterval(function () {
+      if (!D().on) return;
+      if (document.visibilityState !== 'visible') return;
+      var home = $('#page-home');
+      if (!home || !home.classList.contains('active')) return;
+      if (decor) return;
+      refresh();
+    }, 5 * 6e4);
+  }
+
+  /* ============================================================
+     9. 挂载：设置入口 / 引导横幅
+     ============================================================ */
+  function addSettingsEntry() {
+    var page = $('#page-settings');
+    if (!page || page.querySelector('[data-dk="set"]')) return;
+    var host = page.querySelector('.settings-content') || page.querySelector('.settings-list') ||
+      page.querySelector('.page-content') || page;
+    var box = el('div', '');
+    box.setAttribute('data-dk', 'set');
+    box.style.cssText = 'margin:14px;border-radius:18px;background:var(--card-bg,rgba(255,255,255,.7));' +
+      'border:1px solid var(--card-border,rgba(255,255,255,.8));overflow:hidden';
+    box.innerHTML =
+      '<div data-dk="open" style="display:flex;align-items:center;gap:12px;padding:15px 16px;cursor:pointer">' +
+        '<div style="width:34px;height:34px;border-radius:12px;display:grid;place-items:center;' +
+          'background:rgba(139,92,246,.14);font-size:17px">▦</div>' +
+        '<div style="flex:1">' +
+          '<div style="font-size:14px;color:var(--text-primary,#2b2230);font-weight:500">桌面装修</div>' +
+          '<div style="font-size:11px;color:var(--text-tertiary,#a89ca8);margin-top:3px">' +
+            '壁纸 · 小部件 · 图标 · 美化方案</div>' +
+        '</div>' +
+        '<div style="color:var(--text-tertiary,#a89ca8);font-size:17px">›</div>' +
+      '</div>';
+    host.appendChild(box);
+    box.querySelector('[data-dk="open"]').onclick = function () { openBeauty(); };
+  }
+
+  function addBanner() {
+    var hp = $('.home-page');
+    if (!hp || $('#dk-banner') || D().on) return;
+    /* 点过就歇 3 天；开了桌面就永久收起来 */
+    var bd = ls(KBANNER, 0);
+    if (bd && now() - bd < 3 * 864e5) return;
+    var b = el('div', '');
+    b.id = 'dk-banner';
+    b.style.cssText = 'display:flex;align-items:center;gap:9px;margin:12px 0 2px;padding:11px 14px;' +
+      'border-radius:16px;background:linear-gradient(135deg,rgba(196,181,253,.34),rgba(244,114,182,.18));' +
+      'border:1px solid rgba(167,139,250,.24);font-size:12.5px;color:var(--text-secondary,#6b5b7a);' +
+      'cursor:pointer;backdrop-filter:blur(8px)';
+    b.innerHTML = '<span style="font-size:15px">▦</span><span style="flex:1">桌面可以装修了 —— 换壁纸、摆小部件</span>' +
+      '<span style="font-size:11px;opacity:.6">去看看</span>';
+    b.onclick = function () {
+      ss(KBANNER, now());
+      b.remove();
+      openBeauty();
+    };
+    var anchor = $('.anniversary-card', hp);
+    if (anchor && anchor.parentNode) anchor.parentNode.insertBefore(b, anchor);
+    else hp.insertBefore(b, hp.firstChild);
+  }
+
+  function addLayoutEntry() {
+    /* 首页布局选择器里补一项「桌面」（若结构在） */
+    try {
+      var sel = $('#style-select');
+      if (!sel || sel.querySelector('[data-dk="layout"]')) return;
+      var o = document.createElement('option');
+      o.value = '__desk';
+      o.textContent = '桌面';
+      o.setAttribute('data-dk', 'layout');
+      sel.appendChild(o);
+      sel.addEventListener('change', function () {
+        if (sel.value === '__desk') setOn(true);
+        else if (D().on) setOn(false);
+      });
+    } catch (e) {}
+  }
+
+  /* ============================================================
+     10. 启动
+     ============================================================ */
+  function boot() {
+    var home = $('#page-home');
+    if (!home) { setTimeout(boot, 600); return; }
+    ensure();
+    dbAll().then(function (recs) {
+      wallRecs = (recs || []).sort(function (a, b) { return (b.at || 0) - (a.at || 0); });
+      primeUrls(wallRecs);
+      applyLook();
+    });
+    if (D().on) {
+      home.classList.add('dm-desk-on');
+      renderAll();
+      startClock();
+    }
+    addSettingsEntry();
+    addBanner();
+    addLayoutEntry();
+    startRefresh();
+
+    /* 切回首页时校正宽度（横竖屏切换后 scroll-snap 位置会错） */
+    window.addEventListener('resize', function () {
+      if (!D().on) return;
+      var sc = $('#dk-scroll');
+      if (sc) sc.scrollLeft = pageIdx * sc.clientWidth;
+    });
+    /* 系统主题随时可能被切换，切了要重算壁纸明暗与文字色 */
+    try {
+      var tank = null;
+      var kick = function () {
+        if (tank) return;
+        tank = setTimeout(function () { tank = null; applyLook(); }, 60);
+      };
+      var mo = new MutationObserver(kick);
+      mo.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'class'] });
+      if (document.body) mo.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+    } catch (e) {}
+
+    document.addEventListener('visibilitychange', function () {
+      if (document.visibilityState === 'visible' && D().on) {
+        var sc = $('#dk-scroll');
+        if (sc) sc.scrollLeft = pageIdx * sc.clientWidth;
+        refresh();
+      }
+    });
+
+    /* 原站切页后设置入口可能被重建，补一次 */
+    setInterval(function () {
+      addSettingsEntry();
+      addLayoutEntry();
+      if (!D().on) addBanner();
+    }, 4000);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function () { setTimeout(boot, 900); });
+  } else {
+    setTimeout(boot, 900);
+  }
 })();
 
 </script>
